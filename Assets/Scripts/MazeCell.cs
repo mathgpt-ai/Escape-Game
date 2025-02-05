@@ -18,7 +18,7 @@ public class MazeCell : MonoBehaviour
     public bool IsVisited { get; private set; }
 
 
-    public void Visited()
+    public void Visit()
     {
         IsVisited= true;
 
