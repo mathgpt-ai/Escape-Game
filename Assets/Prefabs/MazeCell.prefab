@@ -685,11 +685,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ecd96073978edc4b8e51cdbc50089cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontWall: {fileID: 2310816677018769444}
-  backWall: {fileID: 2443043061601336633}
-  leftWall: {fileID: 2107104168714370374}
-  rightWall: {fileID: 3575823170490289529}
-  UnvisitedCell: {fileID: 7937492902853569604}
+  _leftWall: {fileID: 2107104168714370374}
+  _rightWall: {fileID: 3575823170490289529}
+  _frontWall: {fileID: 2310816677018769444}
+  _backWall: {fileID: 2443043061601336633}
+  _unvisitedBlock: {fileID: 7937492902853569604}
 --- !u!1 &7937492902853569604
 GameObject:
   m_ObjectHideFlags: 0
