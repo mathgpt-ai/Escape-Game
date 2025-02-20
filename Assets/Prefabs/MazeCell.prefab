@@ -170,7 +170,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: da15d61953c934d4db01a5ba22aaddfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -262,8 +262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f167bb23e5e01840b40902686393069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _leftWall: {fileID: 7813620779213081177}
-  _rightWall: {fileID: 1228713791535191050}
+  _leftWall: {fileID: 1228713791535191050}
+  _rightWall: {fileID: 7813620779213081177}
   _frontWall: {fileID: 4513254552694501035}
   _backWall: {fileID: 2800972892013274497}
   _unvisitedBlock: {fileID: 1411689653101393741}
@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 8008790658166149960}
   - component: {fileID: 757837020936504125}
   m_Layer: 0
-  m_Name: BackWall
+  m_Name: FrontWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -383,7 +383,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: da15d61953c934d4db01a5ba22aaddfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -488,7 +488,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: da15d61953c934d4db01a5ba22aaddfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -593,7 +593,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: da15d61953c934d4db01a5ba22aaddfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -647,7 +647,7 @@ GameObject:
   - component: {fileID: 7016757405726480058}
   - component: {fileID: 1120628093743923836}
   m_Layer: 0
-  m_Name: FrontWall
+  m_Name: BackWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,7 +752,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: da15d61953c934d4db01a5ba22aaddfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
