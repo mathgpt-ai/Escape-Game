@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,29 +15,34 @@ public class MazeGenerator : MonoBehaviour
     private int _mazeDepth; // Profondeur du labyrinthe
 
     private MazeCell[,] _mazeGrid;
+    [SerializeField]  float CellSize = 5f; // Facteur d'agrandissement
 
     void Start()
     {
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
 
-        // Création de la grille avec toutes les cellules
+        // CrÃ©ation de la grille avec toutes les cellules
         for (int x = 0; x < _mazeWidth; x++)
         {
             for (int z = 0; z < _mazeDepth; z++)
             {
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x, 0, z), Quaternion.identity);
+                _mazeGrid[x, z] = Instantiate(
+                    _mazeCellPrefab,
+                    new Vector3(x * CellSize, 0, z * CellSize), // Multiplie les positions par 5
+                    Quaternion.identity
+                );
             }
         }
 
         GenerateMazeWithRandomizedDFS();
-        CreateEntryAndExit(); // Ajoute une entrée et une sortie au labyrinthe
+        CreateEntryAndExit(); // Ajoute une entrÃ©e et une sortie au labyrinthe
     }
 
-    // ?? Génération du labyrinthe avec DFS aléatoire amélioré
+    // ðŸ”¹ GÃ©nÃ©ration du labyrinthe avec DFS alÃ©atoire amÃ©liorÃ©
     void GenerateMazeWithRandomizedDFS()
     {
         Stack<MazeCell> stack = new Stack<MazeCell>();
-        MazeCell startCell = _mazeGrid[0, 0]; // Cellule de départ
+        MazeCell startCell = _mazeGrid[0, 0]; // Cellule de dÃ©part
         startCell.Visit();
         stack.Push(startCell);
 
@@ -45,7 +50,7 @@ public class MazeGenerator : MonoBehaviour
         {
             MazeCell currentCell;
 
-            // 20% de chance de choisir une cellule aléatoire dans la pile
+            // 20% de chance de choisir une cellule alÃ©atoire dans la pile
             if (Random.value < 0.2f && stack.Count > 1)
             {
                 int randomIndex = Random.Range(0, stack.Count - 1);
@@ -67,25 +72,25 @@ public class MazeGenerator : MonoBehaviour
             }
             else
             {
-                stack.Pop(); // Retour en arrière
+                stack.Pop(); // Retour en arriÃ¨re
             }
         }
     }
 
-    // ?? Sélection d'une cellule non visitée aléatoirement
+    // ðŸ”¹ SÃ©lection d'une cellule non visitÃ©e alÃ©atoirement
     private MazeCell GetNextUnvisitedCell(MazeCell currentCell)
     {
         var unvisitedCells = GetUnvisitedCells(currentCell).ToList();
-        unvisitedCells = unvisitedCells.OrderBy(_ => Random.Range(1, 10)).ToList(); // Mélange des cellules
+        unvisitedCells = unvisitedCells.OrderBy(_ => Random.Range(1, 10)).ToList(); // MÃ©lange des cellules
 
         return unvisitedCells.FirstOrDefault();
     }
 
-    // ?? Récupère les cellules adjacentes non visitées
+    // ðŸ”¹ RÃ©cupÃ¨re les cellules adjacentes non visitÃ©es
     private IEnumerable<MazeCell> GetUnvisitedCells(MazeCell currentCell)
     {
-        int x = (int)currentCell.transform.position.x;
-        int z = (int)currentCell.transform.position.z;
+        int x = (int)(currentCell.transform.position.x / CellSize); // Ajuste les coordonnÃ©es
+        int z = (int)(currentCell.transform.position.z / CellSize);
 
         if (x + 1 < _mazeWidth)
         {
@@ -112,7 +117,7 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    // ?? Suppression des murs entre deux cellules adjacentes
+    // ðŸ”¹ Suppression des murs entre deux cellules adjacentes
     private void ClearWalls(MazeCell previousCell, MazeCell currentCell)
     {
         if (previousCell == null) return;
@@ -122,33 +127,33 @@ public class MazeGenerator : MonoBehaviour
 
         if (prevPos.x < currPos.x) // Droite
         {
-            if (currPos.x < _mazeWidth) previousCell.ClearRightWall();
+            if (currPos.x < _mazeWidth * CellSize) previousCell.ClearRightWall();
             if (prevPos.x >= 0) currentCell.ClearLeftWall();
         }
         else if (prevPos.x > currPos.x) // Gauche
         {
             if (currPos.x >= 0) previousCell.ClearLeftWall();
-            if (prevPos.x < _mazeWidth) currentCell.ClearRightWall();
+            if (prevPos.x < _mazeWidth * CellSize) currentCell.ClearRightWall();
         }
         else if (prevPos.z < currPos.z) // Avant
         {
-            if (currPos.z < _mazeDepth) previousCell.ClearFrontWall();
+            if (currPos.z < _mazeDepth * CellSize) previousCell.ClearFrontWall();
             if (prevPos.z >= 0) currentCell.ClearBackWall();
         }
-        else if (prevPos.z > currPos.z) // Arrière
+        else if (prevPos.z > currPos.z) // ArriÃ¨re
         {
             if (currPos.z >= 0) previousCell.ClearBackWall();
-            if (prevPos.z < _mazeDepth) currentCell.ClearFrontWall();
+            if (prevPos.z < _mazeDepth * CellSize) currentCell.ClearFrontWall();
         }
     }
 
-    // ?? Création d'une entrée et d'une sortie
+    // ðŸ”¹ CrÃ©ation d'une entrÃ©e et d'une sortie
     private void CreateEntryAndExit()
     {
-        // Entrée : Cellule en bas à gauche
-        _mazeGrid[0, 0].ClearBackWall(); // Ouvre vers l'extérieur
+        // EntrÃ©e : Cellule en bas Ã  gauche
+        _mazeGrid[0, 0].ClearBackWall(); // Ouvre vers l'extÃ©rieur
 
-        // Sortie : Cellule en haut à droite
-        _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall(); // Ouvre vers l'extérieur
+        // Sortie : Cellule en haut Ã  droite
+        _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall(); // Ouvre vers l'extÃ©rieur
     }
 }
