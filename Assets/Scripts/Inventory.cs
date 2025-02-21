@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -35,27 +35,23 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             if (i == selected)
-            { 
-                inventorySlots[i].tintColor = selectedColor;
+            {
+                inventorySlots[i].color = selectedColor;
             }
             else
             {
-                inventorySlots[i].tintColor = slotColor;
+                inventorySlots[i].color = slotColor;
             }
         }
     }
 
     public void AddItem()
     {
-        for (int i = 0; i < inventoryItems.Length; i++)
-        {
-            if (i == selected)
-            {
-                //if (ItemPicked(wtv))
-                //{
-                //    inventoryItems[i].sprite = ItemSprite(wtv);
-                //}
-            }
-        }
+       
+    }
+
+    public void DropItem()
+    {
+        
     }
 }
