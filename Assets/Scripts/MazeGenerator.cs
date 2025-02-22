@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,11 @@ public class MazeGenerator : MonoBehaviour
 
     private MazeCell[,] _mazeGrid;
     [SerializeField]  float CellSize = 5f; // Facteur d'agrandissement
+
+    [SerializeField]private GameObject dragon1;
+    [SerializeField] private GameObject dragon2;
+    [SerializeField] private GameObject dragon3;
+
 
     void Start()
     {
@@ -51,9 +57,9 @@ public class MazeGenerator : MonoBehaviour
             MazeCell currentCell;
 
             // 20% de chance de choisir une cellule aléatoire dans la pile
-            if (Random.value < 0.2f && stack.Count > 1)
+            if (UnityEngine.Random.value < 0.2f && stack.Count > 1)
             {
-                int randomIndex = Random.Range(0, stack.Count - 1);
+                int randomIndex = UnityEngine.Random.Range(0, stack.Count - 1);
                 currentCell = stack.ElementAt(randomIndex);
                 stack = new Stack<MazeCell>(stack.Where(c => c != currentCell)); // Supprime de la pile
             }
@@ -81,7 +87,7 @@ public class MazeGenerator : MonoBehaviour
     private MazeCell GetNextUnvisitedCell(MazeCell currentCell)
     {
         var unvisitedCells = GetUnvisitedCells(currentCell).ToList();
-        unvisitedCells = unvisitedCells.OrderBy(_ => Random.Range(1, 10)).ToList(); // Mélange des cellules
+        unvisitedCells = unvisitedCells.OrderBy(_ => UnityEngine.Random.Range(1, 10)).ToList(); // Mélange des cellules
 
         return unvisitedCells.FirstOrDefault();
     }
@@ -155,5 +161,18 @@ public class MazeGenerator : MonoBehaviour
 
         // Sortie : Cellule en haut à droite
         _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall(); // Ouvre vers l'extérieur
+    }
+
+    private void SpawnDragons()
+    {
+      MazeCell cell1=GenerateRandomCell();
+      
+    }
+
+    private MazeCell GenerateRandomCell()
+    {
+        int RandomWidth = UnityEngine.Random.Range(0, _mazeWidth+1);
+        int RandomDepth = UnityEngine.Random.Range(0, _mazeDepth+1);
+        return _mazeGrid[RandomWidth, RandomDepth];
     }
 }

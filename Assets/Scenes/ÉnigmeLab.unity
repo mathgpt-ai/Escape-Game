@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: a00013af81304728b2be1f4309ee2433, type: 2}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -432,6 +432,9 @@ MonoBehaviour:
   _mazeWidth: 10
   _mazeDepth: 10
   CellSize: 4
+  dragon1: {fileID: 6873538883688257781, guid: 76023e90201f6b24f9dc75dc9b65a426, type: 3}
+  dragon2: {fileID: 4494590695808793621, guid: aba7566d4dc27f842a5154fa97f49665, type: 3}
+  dragon3: {fileID: 2754484875781096863, guid: 67eb8a1c058ab8644ae7c6c66d5c1e5d, type: 3}
 --- !u!4 &1808078321
 Transform:
   m_ObjectHideFlags: 0
