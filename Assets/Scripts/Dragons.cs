@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,21 +6,22 @@ public class Dragons : MonoBehaviour,IInteractable
 {
     [SerializeField] private AudioClip clip;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private LockedDoor lockedDoor;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        lockedDoor = FindObjectOfType<LockedDoor>(); // 🔹 Trouve la porte
     }
-   
-
     public void Interact()
     {
         AudioSource.PlayClipAtPoint(clip,transform.position);
-        gameObject.SetActive(false);
+        Destroy(this.gameObject);
+    }
+    private void OnDestroy()
+    {
+        if (lockedDoor != null)
+        {
+            lockedDoor.DragonDefeated();
+        }
     }
 }
