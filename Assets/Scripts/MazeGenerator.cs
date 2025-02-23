@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
@@ -21,6 +22,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField]private GameObject dragon1;
     [SerializeField] private GameObject dragon2;
     [SerializeField] private GameObject dragon3;
+    [SerializeField] private GameObject door;
 
 
     void Start()
@@ -163,6 +165,14 @@ public class MazeGenerator : MonoBehaviour
 
         // Sortie : Cellule en haut à droite
         _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall(); // Ouvre vers l'extérieur
+        Vector3 end = new Vector3(_mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.x, _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.y, _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.z + 2);
+        Instantiate(door,end,Quaternion.identity);
+
+       
+
+        
+
+
     }
 
     private void SpawnDragons()
