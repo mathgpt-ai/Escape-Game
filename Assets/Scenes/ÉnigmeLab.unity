@@ -1134,6 +1134,7 @@ MonoBehaviour:
   dragon1: {fileID: 6873538883688257781, guid: 76023e90201f6b24f9dc75dc9b65a426, type: 3}
   dragon2: {fileID: 4494590695808793621, guid: aba7566d4dc27f842a5154fa97f49665, type: 3}
   dragon3: {fileID: 2754484875781096863, guid: 67eb8a1c058ab8644ae7c6c66d5c1e5d, type: 3}
+  door: {fileID: 643687962771416460, guid: dc357c6b7b6de344283b5a7f42a1ac74, type: 3}
 --- !u!4 &1808078321
 Transform:
   m_ObjectHideFlags: 0
