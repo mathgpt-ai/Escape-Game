@@ -1016,7 +1016,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 41.209953, y: 41.209953, z: 41.209953}
+  m_LocalScale: {x: 374.1328, y: 374.1328, z: 374.1328}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1156,8 +1156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mazeCellPrefab: {fileID: 8204938229750970474, guid: d4a9009786e916a4db863fd58ba9c4f9, type: 3}
-  _mazeWidth: 100
-  _mazeDepth: 100
+  _mazeWidth: 10
+  _mazeDepth: 10
   CellSize: 4
   dragon1: {fileID: 6873538883688257781, guid: 76023e90201f6b24f9dc75dc9b65a426, type: 3}
   dragon2: {fileID: 4494590695808793621, guid: aba7566d4dc27f842a5154fa97f49665, type: 3}
