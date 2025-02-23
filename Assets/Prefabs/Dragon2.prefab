@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 51714485754526682}
   - component: {fileID: 610197364421834303}
   - component: {fileID: 2370160349522903722}
+  - component: {fileID: 3345367645122604505}
   m_Layer: 0
   m_Name: Dragon2
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.6079, y: 4.1704364, z: 5.530251}
-  m_LocalScale: {x: 0.010589091, y: 0.010589091, z: 0.010589091}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,3 +107,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &3345367645122604505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4494590695808793621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f561dcb899d7f1f4ea80c10a7bed94ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 67e07baf300cd2e429b6d4a6ae59ee7a, type: 3}

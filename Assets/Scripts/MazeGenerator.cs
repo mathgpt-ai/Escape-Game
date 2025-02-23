@@ -42,6 +42,8 @@ public class MazeGenerator : MonoBehaviour
 
         GenerateMazeWithRandomizedDFS();
         CreateEntryAndExit(); // Ajoute une entrée et une sortie au labyrinthe
+        SpawnDragons();
+        
     }
 
     // 🔹 Génération du labyrinthe avec DFS aléatoire amélioré
@@ -165,14 +167,73 @@ public class MazeGenerator : MonoBehaviour
 
     private void SpawnDragons()
     {
-      MazeCell cell1=GenerateRandomCell();
-      
+        // On va placer 3 dragons, en utilisant dragon1, dragon2 et dragon3
+        GameObject[] dragons = { dragon1, dragon2, dragon3 };
+
+        for (int i = 0; i < 3; i++)
+        {
+            MazeCell randomCell = GenerateRandomCell();
+            InstantiateDragon(randomCell, dragons[i]);
+        }
     }
 
+    private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
+    {
+        List<string> availableWalls = new List<string>();
+
+        int cellX = (int)(cell.transform.position.x / CellSize);
+        int cellY = (int)(cell.transform.position.z / CellSize);
+
+        // On check les murs actifs, mais faut pas prendre ceux qui sont vers l'extérieur
+        if (cell.IsBackWallActive && cellY > 0) // Pas en bas de la sortie
+        {
+            availableWalls.Add("Back");
+        }
+        if (cell.IsFrontWallActive && cellY < _mazeDepth - 1) // Pas en haut de la sortie
+        {
+            availableWalls.Add("Front");
+        }
+        if (cell.IsLeftWallActive && cellX > 0) // Pas à gauche de la sortie
+        {
+            availableWalls.Add("Left");
+        }
+        if (cell.IsRightWallActive && cellX < _mazeWidth - 1) // Pas à droite de la sortie
+        {
+            availableWalls.Add("Right");
+        }
+
+        // Si on a au moins un mur disponible, on place un dragon
+        if (availableWalls.Count > 0)
+        {
+            string chosenWall = availableWalls[UnityEngine.Random.Range(0, availableWalls.Count)];
+
+            // On place le dragon sur le mur sélectionné
+            switch (chosenWall)
+            {
+                case "Back": // Face vers l'avant (Z+)
+                    Instantiate(dragonPrefab, cell.transform.position + new Vector3(0, 1, -1.5f), Quaternion.Euler(90, 0, 0));
+                    break;
+                case "Front": // Face vers l'arrière (Z-)
+                    Instantiate(dragonPrefab, cell.transform.position + new Vector3(0, 1, 1.5f), Quaternion.Euler(90, 180, 0));
+                    break;
+                case "Left": // Face vers la droite (X+)
+                    Instantiate(dragonPrefab, cell.transform.position + new Vector3(-1.5f, 1, 0), Quaternion.Euler(90, 90, 0));
+                    break;
+                case "Right": // Face vers la gauche (X-)
+                    Instantiate(dragonPrefab, cell.transform.position + new Vector3(1.5f, 1, 0), Quaternion.Euler(90, -90, 0));
+                    break;
+            }
+
+
+        }
+    }
+
+    // Permet de choisir une cellule aléatoire, incluant les bords mais pas à l'extérieur du labyrinthe
     private MazeCell GenerateRandomCell()
     {
-        int RandomWidth = UnityEngine.Random.Range(0, _mazeWidth+1);
-        int RandomDepth = UnityEngine.Random.Range(0, _mazeDepth+1);
-        return _mazeGrid[RandomWidth, RandomDepth];
+        int randomX = UnityEngine.Random.Range(0, _mazeWidth);
+        int randomZ = UnityEngine.Random.Range(0, _mazeDepth);
+        return _mazeGrid[randomX, randomZ];
     }
+
 }
