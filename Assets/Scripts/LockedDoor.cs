@@ -8,6 +8,7 @@ public class LockedDoor : MonoBehaviour
     public bool isLock = true;
     private Animator Animator;
     private int dragonsRemaining = 3; // 🔹 Nombre total de dragons
+    [SerializeField] private AudioClip doorUnlocked;
 
     void Start()
     {
@@ -42,6 +43,8 @@ public class LockedDoor : MonoBehaviour
     private void UnlockDoor()
     {
         isLock = false;
+        AudioSource.PlayClipAtPoint(doorUnlocked,Camera.main.transform.position,5f);
+        
         
     }
 }

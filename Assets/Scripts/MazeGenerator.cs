@@ -129,25 +129,40 @@ public class MazeGenerator : MonoBehaviour
     private void SpawnDragons()
     {
         GameObject[] dragons = { dragon1, dragon2, dragon3 };
+        int attempts = 0;
 
         for (int i = 0; i < dragons.Length; i++)
         {
             MazeCell randomCell;
+            List<string> availableWalls;
+
             do
             {
                 randomCell = GenerateRandomCell();
-            } while (usedCells.Contains(randomCell));
+                availableWalls = GetAvailableWalls(randomCell);
+                attempts++;
+
+                if (attempts > 1000)
+                {
+                    Debug.LogWarning("Failed to place all dragons due to wall limitations.");
+                    return;
+                }
+
+            } while (usedCells.Contains(randomCell) || availableWalls.Count == 0);
 
             usedCells.Add(randomCell);
             InstantiateDragon(randomCell, dragons[i]);
         }
+
+        if (usedCells.Count < 3)
+        {
+            Debug.LogError($"Only {usedCells.Count} dragons were placed instead of 3.");
+        }
     }
 
-    // 🔹 Place un dragon sur un mur disponible
-    private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
+    private List<string> GetAvailableWalls(MazeCell cell)
     {
         List<string> availableWalls = new List<string>();
-
         int cellX = (int)(cell.transform.position.x / CellSize);
         int cellY = (int)(cell.transform.position.z / CellSize);
 
@@ -156,15 +171,17 @@ public class MazeGenerator : MonoBehaviour
         if (cell.IsLeftWallActive && cellX > 0) availableWalls.Add("Left");
         if (cell.IsRightWallActive && cellX < _mazeWidth - 1) availableWalls.Add("Right");
 
-        if (availableWalls.Count == 0) return;
+        return availableWalls;
+    }
 
-        if (!usedWalls.ContainsKey(cell))
-            usedWalls[cell] = new List<string>();
-
-        List<string> freeWalls = availableWalls.Except(usedWalls[cell]).ToList();
+    // 🔹 Place un dragon sur un mur disponible
+    private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
+    {
+        List<string> freeWalls = GetAvailableWalls(cell);
         if (freeWalls.Count == 0) return;
 
         string chosenWall = freeWalls[UnityEngine.Random.Range(0, freeWalls.Count)];
+        usedWalls[cell] = usedWalls.ContainsKey(cell) ? usedWalls[cell] : new List<string>();
         usedWalls[cell].Add(chosenWall);
 
         switch (chosenWall)
@@ -178,8 +195,6 @@ public class MazeGenerator : MonoBehaviour
 
     private MazeCell GenerateRandomCell()
     {
-        int randomX = UnityEngine.Random.Range(0, _mazeWidth);
-        int randomZ = UnityEngine.Random.Range(0, _mazeDepth);
-        return _mazeGrid[randomX, randomZ];
+        return _mazeGrid[UnityEngine.Random.Range(0, _mazeWidth), UnityEngine.Random.Range(0, _mazeDepth)];
     }
 }

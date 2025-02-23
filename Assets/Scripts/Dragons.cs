@@ -7,6 +7,7 @@ public class Dragons : MonoBehaviour,IInteractable
     [SerializeField] private AudioClip clip;
     // Start is called before the first frame update
     private LockedDoor lockedDoor;
+    
 
     private void Start()
     {
@@ -14,7 +15,7 @@ public class Dragons : MonoBehaviour,IInteractable
     }
     public void Interact()
     {
-        AudioSource.PlayClipAtPoint(clip,transform.position);
+        AudioSource.PlayClipAtPoint(clip,transform.position,2f);
         Destroy(this.gameObject);
     }
     private void OnDestroy()
