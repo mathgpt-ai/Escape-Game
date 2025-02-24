@@ -206,8 +206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e24114fdd0d974bba5c6aec49fb5d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InteractorSource: {fileID: 4459864851310106429}
+  Source: {fileID: 4459864851310106429}
   interactRange: 3
+  interactionText: {fileID: 0}
 --- !u!1 &4459864850190357393
 GameObject:
   m_ObjectHideFlags: 0

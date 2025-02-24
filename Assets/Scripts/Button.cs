@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core.Reporting.Builders.Rendering;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,10 @@ public class Button : MonoBehaviour, IInteractable
         // Start the timer to reset after 2 seconds
         StartCoroutine(ResetButton());
     }
-
+    public string GetText()
+    {
+        return "Press E to Open";
+    }
     private IEnumerator ResetButton()
     {
         yield return new WaitForSeconds(2f);
