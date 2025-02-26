@@ -29,6 +29,7 @@ public class Inventory : MonoBehaviour
                 selected = i;
             }
         }
+        SelectedItem();
     }
     public void SelectedItem()
     {
