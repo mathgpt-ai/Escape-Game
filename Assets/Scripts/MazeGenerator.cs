@@ -1,3 +1,4 @@
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,38 +6,47 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private MazeCell _mazeCellPrefab;
-
-    [SerializeField]
-    private int _mazeWidth;
-
-    [SerializeField]
-    private int _mazeDepth;
-
+    [SerializeField] private MazeCell _mazeCellPrefab;
+    [SerializeField] private int _mazeWidth; // Largeur du labyrinthe
+    [SerializeField] private int _mazeDepth; // Profondeur du labyrinthe
     private MazeCell[,] _mazeGrid;
+    [SerializeField] private float CellSize = 5f; // Facteur d'agrandissement
+
+    [SerializeField] private GameObject dragon1;
+    [SerializeField] private GameObject dragon2;
+    [SerializeField] private GameObject dragon3;
+    [SerializeField] private GameObject door;
+
+    private List<MazeCell> usedCells = new List<MazeCell>(); // Pour garder en mÃ©moire les cellules utilisÃ©es
+    private Dictionary<MazeCell, List<string>> usedWalls = new Dictionary<MazeCell, List<string>>(); // Pour Ã©viter que deux dragons spawn sur le mÃªme mur
 
     void Start()
     {
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
 
-        // Création de la grille du labyrinthe
+        // ðŸ”¹ CrÃ©ation de la grille
         for (int x = 0; x < _mazeWidth; x++)
         {
             for (int z = 0; z < _mazeDepth; z++)
             {
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x, 0, z), Quaternion.identity);
+                _mazeGrid[x, z] = Instantiate(
+                    _mazeCellPrefab,
+                    new Vector3(x * CellSize, 0, z * CellSize),
+                    Quaternion.identity
+                );
             }
         }
 
         GenerateMazeWithRandomizedDFS();
-        CreateEntryAndExit(); // Ajoute une entrée et une sortie au labyrinthe
+        CreateEntryAndExit();
+        SpawnDragons();
     }
 
+    // ðŸ”¹ GÃ©nÃ©ration du labyrinthe avec DFS
     void GenerateMazeWithRandomizedDFS()
     {
         Stack<MazeCell> stack = new Stack<MazeCell>();
-        MazeCell startCell = _mazeGrid[0, 0]; // Définir la cellule de départ
+        MazeCell startCell = _mazeGrid[0, 0];
         startCell.Visit();
         stack.Push(startCell);
 
@@ -44,12 +54,12 @@ public class MazeGenerator : MonoBehaviour
         {
             MazeCell currentCell;
 
-            // 20% de chance de prendre une cellule aléatoire dans la pile au lieu de la dernière
-            if (Random.value < 0.2f && stack.Count > 1)
+            // 20% de chance de piger une cellule alÃ©atoire dans la pile
+            if (UnityEngine.Random.value < 0.2f && stack.Count > 1)
             {
-                int randomIndex = Random.Range(0, stack.Count - 1);
+                int randomIndex = UnityEngine.Random.Range(0, stack.Count - 1);
                 currentCell = stack.ElementAt(randomIndex);
-                stack = new Stack<MazeCell>(stack.Where(c => c != currentCell)); // Supprime de la pile
+                stack = new Stack<MazeCell>(stack.Where(c => c != currentCell));
             }
             else
             {
@@ -66,81 +76,125 @@ public class MazeGenerator : MonoBehaviour
             }
             else
             {
-                stack.Pop(); // Retour en arrière
+                stack.Pop();
             }
         }
     }
 
+    // ðŸ”¹ RÃ©cupÃ¨re une cellule non visitÃ©e alÃ©atoirement
     private MazeCell GetNextUnvisitedCell(MazeCell currentCell)
     {
-        var unvisitedCells = GetUnvisitedCells(currentCell).ToList();
-        unvisitedCells = unvisitedCells.OrderBy(_ => Random.Range(1, 10)).ToList(); // Mélanger les cellules
-
+        var unvisitedCells = GetUnvisitedCells(currentCell).OrderBy(_ => UnityEngine.Random.Range(1, 10)).ToList();
         return unvisitedCells.FirstOrDefault();
     }
 
+    // ðŸ”¹ VÃ©rifie les cellules adjacentes non visitÃ©es
     private IEnumerable<MazeCell> GetUnvisitedCells(MazeCell currentCell)
     {
-        int x = (int)currentCell.transform.position.x;
-        int z = (int)currentCell.transform.position.z;
+        int x = (int)(currentCell.transform.position.x / CellSize);
+        int z = (int)(currentCell.transform.position.z / CellSize);
 
-        if (x + 1 < _mazeWidth)
-        {
-            var cellToRight = _mazeGrid[x + 1, z];
-            if (!cellToRight.IsVisited) yield return cellToRight;
-        }
-
-        if (x - 1 >= 0)
-        {
-            var cellToLeft = _mazeGrid[x - 1, z];
-            if (!cellToLeft.IsVisited) yield return cellToLeft;
-        }
-
-        if (z + 1 < _mazeDepth)
-        {
-            var cellToFront = _mazeGrid[x, z + 1];
-            if (!cellToFront.IsVisited) yield return cellToFront;
-        }
-
-        if (z - 1 >= 0)
-        {
-            var cellToBack = _mazeGrid[x, z - 1];
-            if (!cellToBack.IsVisited) yield return cellToBack;
-        }
+        if (x + 1 < _mazeWidth && !_mazeGrid[x + 1, z].IsVisited) yield return _mazeGrid[x + 1, z];
+        if (x - 1 >= 0 && !_mazeGrid[x - 1, z].IsVisited) yield return _mazeGrid[x - 1, z];
+        if (z + 1 < _mazeDepth && !_mazeGrid[x, z + 1].IsVisited) yield return _mazeGrid[x, z + 1];
+        if (z - 1 >= 0 && !_mazeGrid[x, z - 1].IsVisited) yield return _mazeGrid[x, z - 1];
     }
 
+    // ðŸ”¹ EnlÃ¨ve les murs entre les cellules adjacentes
     private void ClearWalls(MazeCell previousCell, MazeCell currentCell)
     {
         if (previousCell == null) return;
 
-        if (previousCell.transform.position.x < currentCell.transform.position.x)
+        Vector3 prevPos = previousCell.transform.position;
+        Vector3 currPos = currentCell.transform.position;
+
+        if (prevPos.x < currPos.x) { previousCell.ClearRightWall(); currentCell.ClearLeftWall(); }
+        else if (prevPos.x > currPos.x) { previousCell.ClearLeftWall(); currentCell.ClearRightWall(); }
+        else if (prevPos.z < currPos.z) { previousCell.ClearFrontWall(); currentCell.ClearBackWall(); }
+        else if (prevPos.z > currPos.z) { previousCell.ClearBackWall(); currentCell.ClearFrontWall(); }
+    }
+
+    // ðŸ”¹ Ajoute une entrÃ©e et une sortie
+    private void CreateEntryAndExit()
+    {
+        _mazeGrid[0, 0].ClearBackWall();
+        _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall();
+        Vector3 end = new Vector3(_mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.x,
+                                  _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.y,
+                                  _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.z + 2);
+        Instantiate(door, end, Quaternion.identity);
+    }
+
+    // ðŸ”¹ Spawn des dragons
+    private void SpawnDragons()
+    {
+        GameObject[] dragons = { dragon1, dragon2, dragon3 };
+        int attempts = 0;
+
+        for (int i = 0; i < dragons.Length; i++)
         {
-            previousCell.ClearRightWall();
-            currentCell.ClearLeftWall();
+            MazeCell randomCell;
+            List<string> availableWalls;
+
+            do
+            {
+                randomCell = GenerateRandomCell();
+                availableWalls = GetAvailableWalls(randomCell);
+                attempts++;
+
+                if (attempts > 1000)
+                {
+                    Debug.LogWarning("Failed to place all dragons due to wall limitations.");
+                    return;
+                }
+
+            } while (usedCells.Contains(randomCell) || availableWalls.Count == 0);
+
+            usedCells.Add(randomCell);
+            InstantiateDragon(randomCell, dragons[i]);
         }
-        else if (previousCell.transform.position.x > currentCell.transform.position.x)
+
+        if (usedCells.Count < 3)
         {
-            previousCell.ClearLeftWall();
-            currentCell.ClearRightWall();
-        }
-        else if (previousCell.transform.position.z < currentCell.transform.position.z)
-        {
-            previousCell.ClearFrontWall();
-            currentCell.ClearBackWall();
-        }
-        else if (previousCell.transform.position.z > currentCell.transform.position.z)
-        {
-            previousCell.ClearBackWall();
-            currentCell.ClearFrontWall();
+            Debug.LogError($"Only {usedCells.Count} dragons were placed instead of 3.");
         }
     }
 
-    private void CreateEntryAndExit()
+    private List<string> GetAvailableWalls(MazeCell cell)
     {
-        // Création de l'entrée (première cellule en bas à gauche)
-        _mazeGrid[0, 0].ClearLeftWall();
+        List<string> availableWalls = new List<string>();
+        int cellX = (int)(cell.transform.position.x / CellSize);
+        int cellY = (int)(cell.transform.position.z / CellSize);
 
-        // Création de la sortie (dernière cellule en haut à droite)
-        _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearRightWall();
+        if (cell.IsBackWallActive && cellY > 0) availableWalls.Add("Back");
+        if (cell.IsFrontWallActive && cellY < _mazeDepth - 1) availableWalls.Add("Front");
+        if (cell.IsLeftWallActive && cellX > 0) availableWalls.Add("Left");
+        if (cell.IsRightWallActive && cellX < _mazeWidth - 1) availableWalls.Add("Right");
+
+        return availableWalls;
+    }
+
+    // ðŸ”¹ Place un dragon sur un mur disponible
+    private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
+    {
+        List<string> freeWalls = GetAvailableWalls(cell);
+        if (freeWalls.Count == 0) return;
+
+        string chosenWall = freeWalls[UnityEngine.Random.Range(0, freeWalls.Count)];
+        usedWalls[cell] = usedWalls.ContainsKey(cell) ? usedWalls[cell] : new List<string>();
+        usedWalls[cell].Add(chosenWall);
+
+        switch (chosenWall)
+        {
+            case "Back": Instantiate(dragonPrefab, cell.transform.position + new Vector3(0, 1, -1.5f), Quaternion.Euler(90, 0, 0)); break;
+            case "Front": Instantiate(dragonPrefab, cell.transform.position + new Vector3(0, 1, 1.5f), Quaternion.Euler(90, 180, 0)); break;
+            case "Left": Instantiate(dragonPrefab, cell.transform.position + new Vector3(-1.5f, 1, 0), Quaternion.Euler(90, 90, 0)); break;
+            case "Right": Instantiate(dragonPrefab, cell.transform.position + new Vector3(1.5f, 1, 0), Quaternion.Euler(90, -90, 0)); break;
+        }
+    }
+
+    private MazeCell GenerateRandomCell()
+    {
+        return _mazeGrid[UnityEngine.Random.Range(0, _mazeWidth), UnityEngine.Random.Range(0, _mazeDepth)];
     }
 }

@@ -95,7 +95,7 @@ Material:
     - _FresnelExponent: 2.526316
     - _FresnelLevel: 0.9
     - _GlossMapScale: 1
-    - _Glossiness: 0.956
+    - _Glossiness: 1
     - _GlossyReflections: 1
     - _Mode: 3
     - _OcclusionStrength: 1

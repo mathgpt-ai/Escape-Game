@@ -7,11 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: sala00_framemetal
+  m_Name: PlankWhite
   m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _NORMALMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -24,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 1a279088330665e448df8f81dfeba594, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1be3756662acff240a7ed56746aa2070, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -41,11 +42,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 100, y: 100}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 2, y: 2}
+        m_Texture: {fileID: 2800000, guid: dbbaf21d6c969954bb6f85afb787926f, type: 3}
+        m_Scale: {x: 100, y: 100}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -59,30 +60,47 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionCube:
+        m_Texture: {fileID: 8900000, guid: 9b2d3ffa79837de4eb9a3cc995c07db3, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Specular:
+        m_Texture: {fileID: 2800000, guid: d5f797187f67285409d37a1668c863c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BumpScale: 0.13
+    - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DetailNormalMapScale: 0.36
+    - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EmissionScaleUI: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.787
+    - _Glossiness: 0.486
     - _GlossyReflections: 1
-    - _Metallic: 0.648
+    - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _ReflectionAmmount: 1
+    - _ReflectionFresnel: 2.255639
+    - _RimLevel: 2.805166
+    - _Shininess: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularLevel: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.33737022, g: 0.42407885, b: 0.7058823, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.74264705, g: 0.74264705, b: 0.74264705, a: 1}
+    - _Color: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
+    - _ColorReflection: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0.9926471, g: 0.9926471, b: 0.9926471, a: 1}
+    - _SpecColor: {r: 0.25735295, g: 0.22139923, b: 0.22139923, a: 1}
   m_BuildTextureStacks: []
