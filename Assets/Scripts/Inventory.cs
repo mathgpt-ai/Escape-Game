@@ -29,9 +29,7 @@ public class Inventory : MonoBehaviour
                 selected = i;
             }
         }
-    }
-    public void SelectedItem()
-    {
+
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             if (i == selected)
@@ -43,15 +41,7 @@ public class Inventory : MonoBehaviour
                 inventorySlots[i].color = slotColor;
             }
         }
+
     }
 
-    public void AddItem()
-    {
-       
-    }
-
-    public void DropItem()
-    {
-        
-    }
 }
