@@ -43,5 +43,20 @@ public class Inventory : MonoBehaviour
         }
 
     }
-
+    public bool AddItem(Sprite newItem)
+    {
+        for (int i = 0; i < inventoryItems.Length; i++)
+        {
+            if (inventoryItems[i].sprite == null) // Check for an empty slot
+            {
+                inventoryItems[i].sprite = newItem; // Assign the sprite
+                inventoryItems[i].enabled = true;   // Make sure it's visible
+                return true; // Item added successfully
+            }
+        }
+        return false; // Inventory is full
+    }
 }
+
+
+
