@@ -30,8 +30,5 @@ public class Dragons : MonoBehaviour,IInteractable
         }
     }
 
-    public string GetText()
-    {
-        throw new System.NotImplementedException();
-    }
+   
 }
