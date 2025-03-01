@@ -18,6 +18,10 @@ public class Dragons : MonoBehaviour,IInteractable
         AudioSource.PlayClipAtPoint(clip,transform.position,2f);
         Destroy(this.gameObject);
     }
+    public string GetText()
+    {
+        return "press E";
+    }
     private void OnDestroy()
     {
         if (lockedDoor != null)
