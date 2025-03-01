@@ -25,4 +25,9 @@ public class Dragons : MonoBehaviour,IInteractable
             lockedDoor.DragonDefeated();
         }
     }
+
+    public string GetText()
+    {
+        throw new System.NotImplementedException();
+    }
 }
