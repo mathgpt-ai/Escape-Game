@@ -6,28 +6,37 @@ public class Gun : MonoBehaviour,IInteractable
 {
     [SerializeField] private Sprite sp;
     Canvas can;
-    Inventory inventory;
+    GameObject go;
+
+    private Inventory inventory;
     public string GetText()
     {
-        throw new System.NotImplementedException();
+        return "yolo";
     }
 
     public void Interact()
     {
-        inventory.AddItem(sp);
+        if (inventory != null)
+        {
+            inventory.AddItem(sp); // Example function call
+            print("jeaddSprite");
+        }
     }
 
     // Start is called before the first frame update
+   
+    
+
     void Start()
     {
-        can = FindObjectOfType<Canvas>();
-        if(can!=null)
-        inventory = can.GetComponent<Inventory>();
+        inventory = FindObjectOfType<Inventory>(); // Find the Inventory script in the scene
+
+        if (inventory == null)
+        {
+            Debug.LogError("Inventory script not found!");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
 }

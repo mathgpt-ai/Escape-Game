@@ -43,7 +43,7 @@ public class Inventory : MonoBehaviour
         }
 
     }
-    public bool AddItem(Sprite newItem)
+    public void AddItem(Sprite newItem)
     {
         for (int i = 0; i < inventoryItems.Length; i++)
         {
@@ -51,10 +51,12 @@ public class Inventory : MonoBehaviour
             {
                 inventoryItems[i].sprite = newItem; // Assign the sprite
                 inventoryItems[i].enabled = true;   // Make sure it's visible
-                return true; // Item added successfully
+                print("item added");
+                
             }
         }
-        return false; // Inventory is full
+
+        print("item not aded");
     }
 }
 
