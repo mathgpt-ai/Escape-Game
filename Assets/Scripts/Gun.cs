@@ -4,16 +4,17 @@ using UnityEngine;
 public class Gun : MonoBehaviour, IInteractable
 {
     [SerializeField] private Sprite sp;
-    Canvas can;
-    GameObject go;
+
+    Canvas canvas;
 
     private Inventory inventory;
 
-    public string GetText()
+   
+    public Canvas GetCanvas()
     {
-        return "yolo";
+        
+        return canvas;
     }
-
     public void Interact()
     {
         if (inventory != null)
@@ -25,6 +26,7 @@ public class Gun : MonoBehaviour, IInteractable
 
     void Start()
     {
+        canvas = GetComponentInChildren<Canvas>();
         // Démarre une coroutine pour chercher l'inventaire après 3 secondes
         StartCoroutine(FindInventoryAfterDelay());
     }

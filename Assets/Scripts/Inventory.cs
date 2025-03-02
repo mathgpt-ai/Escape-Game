@@ -50,18 +50,29 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Sprite newItem)
     {
-        // Ajoute un item dans le premier slot vide disponible
+        // Vérifie si l'objet est déjà dans l'inventaire
+        for (int i = 0; i < inventoryItems.Length; i++)
+        {
+            if (inventoryItems[i].enabled && inventoryItems[i].sprite == newItem)
+            {
+                // Si l'objet est déjà dans l'inventaire, on arrête l'ajout
+                Debug.Log("Cet objet est déjà dans l'inventaire.");
+                return; // Retourne immédiatement pour éviter d'ajouter à nouveau cet item
+            }
+        }
+
+        // Ajoute l'item dans le premier slot vide disponible
         for (int i = 0; i < inventoryItems.Length; i++)
         {
             if (!inventoryItems[i].enabled) // Vérifie si le slot est vide
             {
                 inventoryItems[i].sprite = newItem; // Assigne l’image au slot
                 inventoryItems[i].enabled = true;   // Active l’image pour l’afficher
-               return;
-                
+                return; // Arrête après avoir ajouté l'item
             }
         }
 
-        
+        // Si aucun slot vide n'est trouvé, on peut afficher un message ou gérer la situation
+        Debug.Log("L'inventaire est plein.");
     }
 }

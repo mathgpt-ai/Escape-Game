@@ -1,47 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.UI;
 
 interface IInteractable
 {
-    public void Interact();
-    public string GetText();
+    void Interact();
+    Canvas GetCanvas(); // Ajout d'une méthode pour récupérer le Canvas
 }
 
 public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-    public Text interactionText; // Assign a UI Text in the Inspector
+
+    private IInteractable lastInteractable = null; // Pour éviter d’activer/désactiver en boucle
 
     private void Update()
     {
+        bool foundInteractable = false; // Vérifier si on a trouvé un interactable
+
         Ray ray = new Ray(Source.position, Source.forward);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+            if (hitInfo.collider.gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
-                // Update interaction text dynamically
-                interactionText.text = interactObj.GetText();
-                interactionText.gameObject.SetActive(true);
+                foundInteractable = true;
 
-                // If player presses 'E', interact with the object
+                // Récupérer et activer le Canvas de l’objet interactif
+                Canvas objCanvas = interactObj.GetCanvas();
+                if (objCanvas != null)
+                {
+                    objCanvas.gameObject.SetActive(true);
+                }
+
+                // Si le joueur appuie sur "E", on interagit
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     interactObj.Interact();
                 }
-            }
-            else
-            {
-                interactionText.gameObject.SetActive(false);
+
+                // Désactiver le dernier interactable si c'est un autre
+                if (lastInteractable != null && lastInteractable != interactObj)
+                {
+                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+                }
+
+                lastInteractable = interactObj;
             }
         }
-        else
+
+        // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
+        if (!foundInteractable && lastInteractable != null)
         {
-            interactionText.gameObject.SetActive(false);
+            lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+            lastInteractable = null;
         }
     }
-
 }
