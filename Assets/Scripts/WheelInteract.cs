@@ -6,23 +6,20 @@ public class WheelInteract : MonoBehaviour , IInteractable
 {
     public float rotationSpeed = 5f;
     private bool isInteracting = false;
-    private Vector3 lastMousePosition;
 
     private void Update()
     {
         if (isInteracting)
         {
-            // Get mouse
-            Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
+            // Get mouse movement
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
 
-            // Calculate rotation
-            float rotationAmount = (mouseDelta.x + mouseDelta.y) * rotationSpeed;
+            // Combine horizontal and vertical movement into a single rotation value
+            float rotationAmount = (mouseX + mouseY) * rotationSpeed;
 
-            // Apply rotation on the Z-axis
+            // Apply rotation ONLY on the Z-axis
             transform.Rotate(Vector3.forward, rotationAmount);
-
-            // Update last mouse position
-            lastMousePosition = Input.mousePosition;
         }
 
         // Stop interaction when left mouse button is released
@@ -38,7 +35,6 @@ public class WheelInteract : MonoBehaviour , IInteractable
         if (Input.GetMouseButtonDown(0))
         {
             isInteracting = !isInteracting;
-            lastMousePosition = Input.mousePosition;
         }
     }
 
