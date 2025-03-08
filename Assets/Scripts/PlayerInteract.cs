@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 interface IInteractable
 {
@@ -14,7 +15,8 @@ public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-    public Text interactionText; // Assign a UI Text in the Inspector
+    public Text interactionText;
+    public GameObject panel;
 
     private void Update()
     {
@@ -23,11 +25,11 @@ public class PlayerInteract : MonoBehaviour
         {
             if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
-                // Update interaction text dynamically
+
                 interactionText.text = interactObj.GetText();
                 interactionText.gameObject.SetActive(true);
+                panel.gameObject.SetActive(true);
 
-                // If player presses 'E', interact with the object
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     interactObj.Interact();
@@ -36,11 +38,13 @@ public class PlayerInteract : MonoBehaviour
             else
             {
                 interactionText.gameObject.SetActive(false);
+                panel.gameObject.SetActive(false);
             }
         }
         else
         {
             interactionText.gameObject.SetActive(false);
+            panel.gameObject.SetActive(false);
         }
     }
 
