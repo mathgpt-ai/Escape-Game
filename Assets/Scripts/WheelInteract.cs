@@ -27,6 +27,9 @@ public class WheelInteract : MonoBehaviour , IInteractable
         {
             isInteracting = false;
         }
+
+
+
     }
 
     public void Interact()
