@@ -63,22 +63,31 @@ public class GridManager : MonoBehaviour
     }
     private void Path()
     {
-
+        //if(PlayerInteract.rigidBody)
 
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        Tile tile = other.GetComponent<Tile>();
+        Debug.Log("Collision detected with: " + collision.gameObject.name);
+
+        Tile tile = collision.gameObject.GetComponent<Tile>();
+        if (tile == null)
+        {
+            Debug.Log("Tile script not found on object.");
+            return;
+        }
 
         (int, int) playerPosition = (tile.x, tile.y);
+        Debug.Log($"Player stepped on tile: ({playerPosition.Item1}, {playerPosition.Item2})");
 
-        if (currentPath.Contains(playerPosition))
+        if (!currentPath.Contains(playerPosition))
         {
-            Debug.Log("Le joueur est sur une tuile correcte !");
+            Debug.Log("Tuile incorrecte ! Le joueur tombe dans l’espace...");
+            tile.Dissolve();
         }
         else
         {
-            Debug.Log("Tuile incorrecte ! Le joueur tombe dans l’espace...");
+            Debug.Log("Le joueur est sur une tuile correcte !");
         }
     }
 }
