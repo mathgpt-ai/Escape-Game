@@ -37,7 +37,7 @@ public class WheelInteract : MonoBehaviour , IInteractable
         // Start interaction only when the left mouse button is pressed
         if (Input.GetMouseButtonDown(0))
         {
-            isInteracting = !isInteracting;
+            isInteracting = true;
         }
     }
 
