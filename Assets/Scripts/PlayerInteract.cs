@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+<<<<<<< HEAD
+=======
+using UnityEngine.UI;
+using UnityEngine.UIElements;
+>>>>>>> main
 
 interface IInteractable
 {
@@ -12,8 +17,13 @@ public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
+<<<<<<< HEAD
 
     private IInteractable lastInteractable = null; // Pour éviter d’activer/désactiver en boucle
+=======
+    public Text interactionText;
+    public GameObject panel;
+>>>>>>> main
 
     private void Update()
     {
@@ -24,6 +34,7 @@ public class PlayerInteract : MonoBehaviour
         {
             if (hitInfo.collider.gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
+<<<<<<< HEAD
                 foundInteractable = true;
 
                 // Récupérer et activer le Canvas de l’objet interactif
@@ -34,10 +45,18 @@ public class PlayerInteract : MonoBehaviour
                 }
 
                 // Si le joueur appuie sur "E", on interagit
+=======
+
+                interactionText.text = interactObj.GetText();
+                interactionText.gameObject.SetActive(true);
+                panel.gameObject.SetActive(true);
+
+>>>>>>> main
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     interactObj.Interact();
                 }
+<<<<<<< HEAD
 
                 // Désactiver le dernier interactable si c'est un autre
                 if (lastInteractable != null && lastInteractable != interactObj)
@@ -46,14 +65,26 @@ public class PlayerInteract : MonoBehaviour
                 }
 
                 lastInteractable = interactObj;
+=======
+            }
+            else
+            {
+                interactionText.gameObject.SetActive(false);
+                panel.gameObject.SetActive(false);
+>>>>>>> main
             }
         }
 
         // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
         if (!foundInteractable && lastInteractable != null)
         {
+<<<<<<< HEAD
             lastInteractable.GetCanvas()?.gameObject.SetActive(false);
             lastInteractable = null;
+=======
+            interactionText.gameObject.SetActive(false);
+            panel.gameObject.SetActive(false);
+>>>>>>> main
         }
     }
 }
