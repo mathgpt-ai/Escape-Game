@@ -20,6 +20,10 @@ public class MazeCell : MonoBehaviour
     private GameObject _unvisitedBlock;
 
     public bool IsVisited { get; private set; }
+    public bool IsLeftWallActive => _leftWall.activeSelf;
+    public bool IsRightWallActive => _rightWall.activeSelf;
+    public bool IsFrontWallActive => _frontWall.activeSelf;
+    public bool IsBackWallActive => _backWall.activeSelf;
 
     public void Visit()
     {
