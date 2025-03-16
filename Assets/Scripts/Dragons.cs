@@ -5,7 +5,7 @@ using UnityEngine;
 public class Dragons : MonoBehaviour,IInteractable
 {
     [SerializeField] private AudioClip clip;
-    // Start is called before the first frame update
+
     private LockedDoor lockedDoor;
     Canvas canvas;
     

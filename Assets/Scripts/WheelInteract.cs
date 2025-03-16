@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class WheelInteract : MonoBehaviour , IInteractable
 {
+    Canvas canvas;
     public float rotationSpeed = 5f;
     private bool isInteracting = false;
 
+    private void Start()
+    {
+        canvas = GetComponentInChildren<Canvas>();
+    }
     private void Update()
     {
         if (isInteracting)
@@ -41,8 +46,8 @@ public class WheelInteract : MonoBehaviour , IInteractable
         }
     }
 
-    public string GetText()
+    public Canvas GetCanvas()
     {
-        return "Hold Left Click and Move Mouse to Rotate the Wheel";
+        return canvas;
     }
 }
