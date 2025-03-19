@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour
     private float t = 0.0f;
     private bool isDissolving = false;
     private GridManager gridManager; // Référence au GridManager
-
+    private float timer =0.0f;
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -22,16 +22,12 @@ public class Tile : MonoBehaviour
     {
         if (isDissolving)
         {
+            
             t += Time.deltaTime * speed;
             float dissolveAmount = Mathf.Sin(t);
             Material[] mats = meshRenderer.materials;
             mats[0].SetFloat("_Cutoff", dissolveAmount);
             meshRenderer.materials = mats;
-
-            if (t >= Mathf.PI / 2)
-            {
-                Destroy(gameObject);
-            }
         }
     }
 
@@ -48,23 +44,16 @@ public class Tile : MonoBehaviour
     {
         this.x = x;
         this.y = y;
-        this.gridManager = manager; // Assigner le GridManager
+        this.gridManager = manager;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player")) // Vérifie si c'est bien le joueur
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Joueur sur tuile ({x}, {y})");
-
-            if (!gridManager.IsTileOnPath(x, y)) // Vérifie si la tuile fait partie du chemin
+            if (!gridManager.IsTileOnPath(x, y))
             {
-                Debug.Log("Tuile incorrecte ! Le joueur tombe dans l’espace...");
                 Dissolve();
-            }
-            else
-            {
-                Debug.Log("Le joueur est sur une tuile correcte !");
             }
         }
     }

@@ -19,14 +19,12 @@ public class GridManager : MonoBehaviour
     private void GeneratePaths()
     {
         List<(int, int)>[] paths = new List<(int, int)>[3];
-        paths[0] = new List<(int, int)> { (1, 1), (1, 2), (1, 3), (1, 4), (1, 5) };
-        paths[1] = new List<(int, int)> { (2, 1), (2, 2), (2, 3), (2, 4), (2, 5) };
-        paths[2] = new List<(int, int)> { (3, 1), (3, 2), (3, 3), (3, 4), (3, 5) };
+        paths[0] = new List<(int, int)> { (1, 0), (1, 1), (2, 2), (3, 2), (1, 4), (1, 5) };
+        paths[1] = new List<(int, int)> { (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5) };
+        paths[2] = new List<(int, int)> { (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5) };
 
         int index = Random.Range(0, paths.Length);
         currentPath = new List<(int, int)>(paths[index]);
-
-        Debug.Log("Chemin sélectionné: " + string.Join(" -> ", currentPath));
     }
 
     private void GenerateGrid()
