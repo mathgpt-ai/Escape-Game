@@ -7,21 +7,20 @@ public class Dragons : MonoBehaviour,IInteractable
     [SerializeField] private AudioClip clip;
     // Start is called before the first frame update
     private LockedDoor lockedDoor;
+    Canvas canvas;
     
 
     private void Start()
     {
         lockedDoor = FindObjectOfType<LockedDoor>(); // 🔹 Trouve la porte
+        canvas = GetComponentInChildren<Canvas>();
     }
     public void Interact()
     {
         AudioSource.PlayClipAtPoint(clip,transform.position,2f);
         Destroy(this.gameObject);
     }
-    public string GetText()
-    {
-        return "press E";
-    }
+    
     private void OnDestroy()
     {
         if (lockedDoor != null)
@@ -30,5 +29,8 @@ public class Dragons : MonoBehaviour,IInteractable
         }
     }
 
-   
+    public Canvas GetCanvas()
+    {
+        return canvas;
+    }
 }
