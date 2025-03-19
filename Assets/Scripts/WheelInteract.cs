@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WheelInteract : MonoBehaviour , IInteractable
+public class WheelInteract : MonoBehaviour, IInteractable
 {
-    public float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
+    [SerializeField]
+    private float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
+    [SerializeField]
+    private Canvas canvas;
     private bool isInteracting = false; // Suivi de l'état d'interaction
 
     private void Update()
@@ -32,9 +35,8 @@ public class WheelInteract : MonoBehaviour , IInteractable
         Debug.Log("Interaction avec la valve : " + (isInteracting ? "Activée" : "Désactivée"));
     }
 
-    public string GetText()
+    public Canvas GetCanvas()
     {
-        return isInteracting ? "Appuyez sur L ou R pour tourner, E pour arrêter"
-                             : "Appuyez sur E pour interagir avec la valve";
+        return canvas;
     }
 }
