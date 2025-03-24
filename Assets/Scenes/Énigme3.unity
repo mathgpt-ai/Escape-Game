@@ -1103,9 +1103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ad067f7dc3fcd4f939fe8869f3e642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 8036441948437461691, guid: d2263c37f59e1c840b513128ef2dbd33, type: 3}
+  tilePrefab: {fileID: 6671081081290876915, guid: 5c7400ec71b088b4db62a815a898cafd, type: 3}
   width: 5
-  height: 10
+  height: 11
   tileSize: 3
 --- !u!4 &1335057405
 Transform:
@@ -2296,6 +2296,37 @@ Transform:
   - {fileID: 1771261157}
   m_Father: {fileID: 439272269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2086028757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2086028758}
+  m_Layer: 0
+  m_Name: CanvasSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2086028758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086028757}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 84.26, y: 4.47, z: 43.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2141876606
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,3 +2421,4 @@ SceneRoots:
   - {fileID: 1289188874}
   - {fileID: 1782758598}
   - {fileID: 469468782}
+  - {fileID: 2086028758}
