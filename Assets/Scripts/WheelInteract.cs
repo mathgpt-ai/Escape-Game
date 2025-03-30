@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class WheelInteract : MonoBehaviour, IInteractable
 {
+//<<<<<<< HEAD
     [SerializeField]
     private float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
     [SerializeField]
     private Canvas canvas;
-    private bool isInteracting = false; // Suivi de l'état d'interaction
-
+    private bool isInteracting = false; // Suivi de l'état d'interaction=======
+    private void Start()
+    {
+        canvas = GetComponentInChildren<Canvas>();
+    }
     private void Update()
     {
         if (isInteracting)
