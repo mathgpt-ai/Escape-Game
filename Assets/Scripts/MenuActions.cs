@@ -22,10 +22,7 @@ public class MenuActions : MonoBehaviour
 
     public void SettingsButton()
     {
-        if (!SceneManager.GetSceneByBuildIndex(Settings).isLoaded)
-        {
-            SceneManager.LoadScene(Settings, LoadSceneMode.Additive);
-        }
+        SceneManager.LoadScene(Settings, LoadSceneMode.Single);
     }
 
     public void ExitGameButton()
@@ -35,10 +32,6 @@ public class MenuActions : MonoBehaviour
 
     public void BackButton()
     {
-        if (SceneManager.GetSceneByBuildIndex(Settings).isLoaded)
-        {
-            SceneManager.UnloadSceneAsync(Settings);
-        }
-
+        SceneManager.LoadScene(MainMenu, LoadSceneMode.Single);
     }
 }

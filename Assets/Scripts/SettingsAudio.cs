@@ -8,8 +8,8 @@ public class SettingsAudio : MonoBehaviour
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
 
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioSource sfxSource;
+    //[SerializeField] private AudioSource musicSource;
+    //[SerializeField] private AudioSource sfxSource;
 
 
 
@@ -30,21 +30,21 @@ public class SettingsAudio : MonoBehaviour
 
     private void SetMusicVolume(float volume)
     {
-        musicSource.volume = volume;
+       // musicSource.volume = volume;
         PlayerPrefs.SetFloat("MusicVolume", volume);
     }
 
 
     private void SetSFXVolume(float volume)
     {
-        sfxSource.volume = volume;
+        //sfxSource.volume = volume;
         PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 
 
     private void ApplyVolumes()
     {
-        musicSource.volume = musicSlider.value;
-        sfxSource.volume = sfxSlider.value;
+        //musicSource.volume = musicSlider.value;
+        //sfxSource.volume = sfxSlider.value;
     }
 }
