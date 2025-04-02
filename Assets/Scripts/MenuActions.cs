@@ -22,7 +22,10 @@ public class MenuActions : MonoBehaviour
 
     public void SettingsButton()
     {
-        SceneManager.LoadScene(Settings, LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByBuildIndex(Settings).isLoaded)
+        {
+            SceneManager.LoadScene(Settings, LoadSceneMode.Additive);
+        }
     }
 
     public void ExitGameButton()
@@ -30,8 +33,12 @@ public class MenuActions : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
     }
 
-    public void Back()
+    public void BackButton()
     {
-        SceneManager.LoadScene(MainMenu, LoadSceneMode.Single);
+        if (SceneManager.GetSceneByBuildIndex(Settings).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(Settings);
+        }
+
     }
 }
