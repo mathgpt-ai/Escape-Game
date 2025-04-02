@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Settings.unity
     guid: 9e03f35dc6ed5a94c843183a118e7b70
+  - enabled: 1
+    path: "Assets/Scenes/\xC9nigmeTuyeaux.unity"
+    guid: 89e2c8d5abfe7d0478db738d81d9b873
   m_configObjects: {}
