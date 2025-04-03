@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LaMap.unity
+    guid: 92041b126b4b8734ba17d870746c34e9
+  - enabled: 1
+    path: Assets/Scenes/GUI.unity
+    guid: 728a113a6a9a6dc40be1072430be6b57
+  - enabled: 1
+    path: "Assets/Scenes/\xC9nigme3.unity"
+    guid: c35fa54bbb2d7f847a3bc160f9c1de09
   m_configObjects: {}
