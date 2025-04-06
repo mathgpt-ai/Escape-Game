@@ -45,6 +45,7 @@ public class LockedDoor : MonoBehaviour
         isLock = false;
         AudioSource.PlayClipAtPoint(doorUnlocked,Camera.main.transform.position,5f);
         
-        
+        MiniMap.Instance.EnableMiniMap();
+
     }
 }
