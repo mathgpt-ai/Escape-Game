@@ -65,6 +65,7 @@ public class PlayerInteract : MonoBehaviour
                 }
 
                 lastInteractable = interactObj;
+<<<<<<< HEAD
 =======
             }
             else
