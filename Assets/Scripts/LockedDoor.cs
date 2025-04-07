@@ -63,7 +63,7 @@ public class LockedDoor : MonoBehaviour
     private void UnlockDoor()
     {
         isLock = false;
-        AudioSource.PlayClipAtPoint(doorUnlocked, Camera.main.transform.position, 5f);
+        AudioSource.PlayClipAtPoint(doorUnlocked, transform.position, 40f);
 
         // Enable the minimap
         MiniMap.Instance.EnableMiniMap();

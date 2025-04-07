@@ -95,7 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLock: 1
-  doorUnlocked: {fileID: 8300000, guid: 15bf9f54daa80784296b29880c2bc481, type: 3}
+  doorUnlocked: {fileID: 8300000, guid: 9359bfc590ca51b43a9d4f1db1b35766, type: 3}
+  timerText: {fileID: 0}
 --- !u!1 &1680495753903606669
 GameObject:
   m_ObjectHideFlags: 0
