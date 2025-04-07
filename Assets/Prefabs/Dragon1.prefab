@@ -116,8 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7256470fa165b0649b4b79822a3d5250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 0.1
-  minDistance: 0.1
+  fixedDistance: 0.5
 --- !u!1 &4010006910743852979
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,4 +446,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f561dcb899d7f1f4ea80c10a7bed94ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 15bf9f54daa80784296b29880c2bc481, type: 3}
+  clip: {fileID: 8300000, guid: 6be44a1008d35da4481810d6642fd306, type: 3}

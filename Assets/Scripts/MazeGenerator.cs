@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI; // Add this for UI elements
+using UnityEngine.SceneManagement; // For scene reloading
 
 public class MazeGenerator : MonoBehaviour
 {
@@ -10,18 +12,84 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private int _mazeWidth; // Largeur du labyrinthe
     [SerializeField] private int _mazeDepth; // Profondeur du labyrinthe
     private MazeCell[,] _mazeGrid;
-    [SerializeField] private float CellSize = 5f; // Facteur d'agrandissement
+    [SerializeField] private float CellSize = 4f; // Changed to 4 to match your cell scale
 
     [SerializeField] private GameObject dragon1;
     [SerializeField] private GameObject dragon2;
     [SerializeField] private GameObject dragon3;
     [SerializeField] private GameObject door;
+    [SerializeField] private Transform playerStartPosition; // Position where player starts/respawns
+
+    // Timer related variables
+    [SerializeField] private Text timerText; // Reference to the Text component that will display the timer
+    [SerializeField] private float startingTime = 120f; // Starting time in seconds (2 minutes by default)
+    [SerializeField] private AudioClip tickSound; // Sound to play every second
+    [SerializeField] private AudioClip timeUpSound; // Sound to play when timer reaches zero
+    [SerializeField] private AudioClip tenSecondsSound; // Sound to play when 10 seconds remain
+    [SerializeField] private float resetDelay = 2f; // Delay before reloading the scene
+
+    // Sound volume properties - these will be controlled by the audio settings script
+    public static float TickSoundVolume { get; set; } = 1.0f;
+    public static float TimeUpSoundVolume { get; set; } = 1.0f;
+    public static float TenSecondsSoundVolume { get; set; } = 1.0f;
+
+    private float timer; // Current timer value
+    private int lastSecond = -1;
+    private bool isTimerRunning = false;
+    private bool isResetting = false;
+    private bool tenSecondsWarningPlayed = false;
+    private FirstPersonController playerController;
+    private Rigidbody playerRigidbody;
+
+    public static MazeGenerator Instance { get; private set; } // Singleton pattern
 
     private List<MazeCell> usedCells = new List<MazeCell>(); // Pour garder en mémoire les cellules utilisées
     private Dictionary<MazeCell, List<string>> usedWalls = new Dictionary<MazeCell, List<string>>(); // Pour éviter que deux dragons spawn sur le même mur
 
+    void Awake()
+    {
+        // Set up singleton instance
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        // Set default volumes if they haven't been set yet
+        if (TickSoundVolume <= 0) TickSoundVolume = 0.5f;
+        if (TimeUpSoundVolume <= 0) TimeUpSoundVolume = 1.0f;
+        if (TenSecondsSoundVolume <= 0) TenSecondsSoundVolume = 0.8f;
+    }
+
     void Start()
     {
+        // Find player controller
+        playerController = FindObjectOfType<FirstPersonController>();
+        if (playerController != null)
+        {
+            playerRigidbody = playerController.GetComponent<Rigidbody>();
+
+            // If playerStartPosition wasn't assigned, set it to player's current position
+            if (playerStartPosition == null)
+            {
+                GameObject startPoint = new GameObject("PlayerStartPosition");
+                startPoint.transform.position = playerController.transform.position;
+                startPoint.transform.rotation = playerController.transform.rotation;
+                playerStartPosition = startPoint.transform;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("FirstPersonController not found! Player respawn will not work.");
+        }
+
+        // Initialize timer
+        timer = startingTime;
+        UpdateTimerDisplay();
+
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
 
         // 🔹 Création de la grille
@@ -40,6 +108,191 @@ public class MazeGenerator : MonoBehaviour
         GenerateMazeWithRandomizedDFS();
         CreateEntryAndExit();
         SpawnDragons();
+
+        // Start the timer after a 5-second delay
+        StartCoroutine(StartTimerAfterDelay(5f));
+    }
+
+    void Update()
+    {
+        // Update the timer if it's running
+        if (isTimerRunning && !isResetting)
+        {
+            // Countdown timer
+            timer -= Time.deltaTime;
+
+            // Check if timer has ended
+            if (timer <= 0)
+            {
+                timer = 0;
+                StopTimer();
+                OnTimerEnd();
+            }
+            // Check if timer is at 10 seconds
+            else if (timer <= 10f && !tenSecondsWarningPlayed)
+            {
+                PlayTenSecondsSound();
+                tenSecondsWarningPlayed = true;
+            }
+
+            UpdateTimerDisplay();
+
+            // Check if a new second has passed to play the tick sound
+            int currentSecond = Mathf.FloorToInt(timer);
+            if (currentSecond != lastSecond)
+            {
+                PlayTickSound();
+                lastSecond = currentSecond;
+            }
+        }
+    }
+
+    // Play the tick sound at the specified position
+    private void PlayTickSound()
+    {
+        if (tickSound != null)
+        {
+            // Play the sound at the camera position for best audio experience
+            AudioSource.PlayClipAtPoint(tickSound, Camera.main.transform.position, TickSoundVolume);
+        }
+    }
+
+    // Play the 10 seconds warning sound
+    private void PlayTenSecondsSound()
+    {
+        if (tenSecondsSound != null)
+        {
+            AudioSource.PlayClipAtPoint(tenSecondsSound, Camera.main.transform.position, TenSecondsSoundVolume);
+            Debug.Log("10 seconds remaining!");
+        }
+    }
+
+    // Format and display the timer
+    private void UpdateTimerDisplay()
+    {
+        if (timerText != null)
+        {
+            int minutes = Mathf.FloorToInt(timer / 60);
+            int seconds = Mathf.FloorToInt(timer % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            // Make the timer text flash red when 10 seconds or less remain
+            if (timer <= 10f)
+            {
+                // Use a sine wave to oscillate the alpha value for a flashing effect
+                float alpha = Mathf.Sin(Time.time * 10f) * 0.5f + 0.5f;
+                timerText.color = new Color(1f, 0f, 0f, alpha);
+            }
+            else
+            {
+                timerText.color = Color.white;
+            }
+        }
+    }
+
+    // Called when timer reaches zero
+    private void OnTimerEnd()
+    {
+        if (isResetting) return; // Prevent multiple calls
+
+        isResetting = true;
+        Debug.Log("Time's up!");
+
+        // Play the time up sound
+        if (timeUpSound != null)
+        {
+            AudioSource.PlayClipAtPoint(timeUpSound, Camera.main.transform.position, TimeUpSoundVolume);
+        }
+
+        // Wait before reloading the scene
+        StartCoroutine(ReloadSceneAfterDelay(resetDelay));
+    }
+
+    // Reload the current scene after a delay
+    private IEnumerator ReloadSceneAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Move player back to start position
+        RespawnPlayer();
+
+        // Reload the scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // Respawn the player at the starting position
+    private void RespawnPlayer()
+    {
+        if (playerController != null && playerStartPosition != null)
+        {
+            // Stop all player movement
+            if (playerRigidbody != null)
+            {
+                playerRigidbody.velocity = Vector3.zero;
+                playerRigidbody.angularVelocity = Vector3.zero;
+            }
+
+            // Move player back to start
+            playerController.transform.position = playerStartPosition.position;
+            playerController.transform.rotation = playerStartPosition.rotation;
+
+            Debug.Log("Player respawned at starting position");
+        }
+    }
+
+    // Coroutine to start the timer after a delay
+    private IEnumerator StartTimerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartTimer();
+    }
+
+    // Public methods to control the timer
+    public void StartTimer()
+    {
+        isTimerRunning = true;
+        tenSecondsWarningPlayed = false;
+        Debug.Log("Timer started!");
+    }
+
+    public void StopTimer()
+    {
+        isTimerRunning = false;
+        Debug.Log("Timer stopped at: " + timer.ToString("F2") + " seconds");
+    }
+
+    public void ResetTimer()
+    {
+        timer = startingTime;
+        tenSecondsWarningPlayed = false;
+        UpdateTimerDisplay();
+    }
+
+    // Set a new duration for the timer
+    public void SetTimerDuration(float seconds)
+    {
+        startingTime = seconds;
+        timer = seconds;
+        tenSecondsWarningPlayed = timer <= 10f;
+        UpdateTimerDisplay();
+    }
+
+    // Add time to the current timer
+    public void AddTime(float seconds)
+    {
+        timer += seconds;
+        // Reset the 10 seconds warning if we're now above 10 seconds
+        if (timer > 10f)
+        {
+            tenSecondsWarningPlayed = false;
+        }
+        UpdateTimerDisplay();
+    }
+
+    // Get the current timer value (useful for other scripts)
+    public float GetTimerValue()
+    {
+        return timer;
     }
 
     // 🔹 Génération du labyrinthe avec DFS
@@ -178,7 +431,7 @@ public class MazeGenerator : MonoBehaviour
     private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
     {
         List<string> freeWalls = GetAvailableWalls(cell);
-        if (freeWalls.Count == 0) return;
+        if (freeWalls.Count == .0) return;
 
         string chosenWall = freeWalls[UnityEngine.Random.Range(0, freeWalls.Count)];
         usedWalls[cell] = usedWalls.ContainsKey(cell) ? usedWalls[cell] : new List<string>();
@@ -203,7 +456,9 @@ public class MazeGenerator : MonoBehaviour
         // Wait for 3 seconds
         yield return new WaitForSeconds(3f);
 
-        MiniMap.Instance.DisableMiniMap();
-
+        if (MiniMap.Instance != null)
+        {
+            MiniMap.Instance.DisableMiniMap();
+        }
     }
 }

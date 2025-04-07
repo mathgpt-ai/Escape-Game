@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f561dcb899d7f1f4ea80c10a7bed94ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 15bf9f54daa80784296b29880c2bc481, type: 3}
+  clip: {fileID: 8300000, guid: 032dd9bcef0349b4fbabdfd5c954811c, type: 3}
 --- !u!1 &3420007084367967622
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7256470fa165b0649b4b79822a3d5250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fixedDistance: 0.5
 --- !u!1 &6460535172939038449
 GameObject:
   m_ObjectHideFlags: 0
