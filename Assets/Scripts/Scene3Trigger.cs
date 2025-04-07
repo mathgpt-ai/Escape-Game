@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class Scene3Trigger : MonoBehaviour
 {
     public string sceneName;
-    private float timer = 0.0f;
     private bool isActive = false;
     private bool isPlayerInside = false;
 
