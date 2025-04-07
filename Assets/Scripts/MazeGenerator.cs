@@ -105,12 +105,193 @@ public class MazeGenerator : MonoBehaviour
             }
         }
         StartCoroutine(DisableMiniMapAfterDelay());
-        GenerateMazeWithRandomizedDFS();
+
+        // Generate maze and verify it's solvable
+        bool isSolvable = false;
+        int attempts = 0;
+        const int MAX_ATTEMPTS = 5;
+
+        while (!isSolvable && attempts < MAX_ATTEMPTS)
+        {
+            // Clear previous generation if this is a retry
+            if (attempts > 0)
+            {
+                ResetMazeCells();
+            }
+
+            // Generate the maze
+            GenerateMazeWithRandomizedDFS();
+
+            // Check if maze is solvable from start to end
+            isSolvable = IsMazeSolvable();
+
+            attempts++;
+        }
+
+        if (!isSolvable)
+        {
+            Debug.LogWarning("Could not generate a solvable maze after " + MAX_ATTEMPTS + " attempts. Using fallback maze generation.");
+            ResetMazeCells();
+            GenerateFallbackMaze(); // Generate a simpler, guaranteed-solvable maze
+        }
+
         CreateEntryAndExit();
         SpawnDragons();
 
         // Start the timer after a 5-second delay
         StartCoroutine(StartTimerAfterDelay(5f));
+    }
+
+    // Check if the maze is solvable from start to end
+    private bool IsMazeSolvable()
+    {
+        // Create a visited array
+        bool[,] visited = new bool[_mazeWidth, _mazeDepth];
+
+        // Start from the entry point (0, 0)
+        return CanReachExit(0, 0, visited);
+    }
+
+    // Recursive method to check if we can reach the exit from a given cell
+    private bool CanReachExit(int x, int z, bool[,] visited)
+    {
+        // Check if we're out of bounds or already visited
+        if (x < 0 || x >= _mazeWidth || z < 0 || z >= _mazeDepth || visited[x, z])
+        {
+            return false;
+        }
+
+        // Check if we reached the exit
+        if (x == _mazeWidth - 1 && z == _mazeDepth - 1)
+        {
+            return true;
+        }
+
+        // Mark current cell as visited
+        visited[x, z] = true;
+
+        // Check all four directions
+        MazeCell currentCell = _mazeGrid[x, z];
+
+        // Check right
+        if (!currentCell.IsRightWallActive && CanReachExit(x + 1, z, visited))
+        {
+            return true;
+        }
+
+        // Check left
+        if (!currentCell.IsLeftWallActive && CanReachExit(x - 1, z, visited))
+        {
+            return true;
+        }
+
+        // Check front
+        if (!currentCell.IsFrontWallActive && CanReachExit(x, z + 1, visited))
+        {
+            return true;
+        }
+
+        // Check back
+        if (!currentCell.IsBackWallActive && CanReachExit(x, z - 1, visited))
+        {
+            return true;
+        }
+
+        // No path found
+        return false;
+    }
+
+    // Reset all cells to unvisited with all walls active
+    private void ResetMazeCells()
+    {
+        for (int x = 0; x < _mazeWidth; x++)
+        {
+            for (int z = 0; z < _mazeDepth; z++)
+            {
+                Destroy(_mazeGrid[x, z].gameObject);
+                _mazeGrid[x, z] = Instantiate(
+                    _mazeCellPrefab,
+                    new Vector3(x * CellSize, 0, z * CellSize),
+                    Quaternion.identity
+                );
+            }
+        }
+    }
+
+    // Fallback method to generate a simple, guaranteed-solvable maze
+    private void GenerateFallbackMaze()
+    {
+        // Create a simple path from start to finish
+        for (int x = 0; x < _mazeWidth; x++)
+        {
+            for (int z = 0; z < _mazeDepth; z++)
+            {
+                _mazeGrid[x, z].Visit();
+            }
+        }
+
+        // Create a winding path from start to finish
+        int currentX = 0;
+        int currentZ = 0;
+
+        while (currentX < _mazeWidth - 1 || currentZ < _mazeDepth - 1)
+        {
+            if (currentX < _mazeWidth - 1 && (currentZ == _mazeDepth - 1 || UnityEngine.Random.value < 0.5f))
+            {
+                // Move right
+                _mazeGrid[currentX, currentZ].ClearRightWall();
+                _mazeGrid[currentX + 1, currentZ].ClearLeftWall();
+                currentX++;
+            }
+            else if (currentZ < _mazeDepth - 1)
+            {
+                // Move forward
+                _mazeGrid[currentX, currentZ].ClearFrontWall();
+                _mazeGrid[currentX, currentZ + 1].ClearBackWall();
+                currentZ++;
+            }
+        }
+
+        // Add some random connections to make it more interesting
+        for (int i = 0; i < (_mazeWidth * _mazeDepth) / 3; i++)
+        {
+            int x = UnityEngine.Random.Range(0, _mazeWidth);
+            int z = UnityEngine.Random.Range(0, _mazeDepth);
+
+            int direction = UnityEngine.Random.Range(0, 4);
+
+            switch (direction)
+            {
+                case 0: // Right
+                    if (x < _mazeWidth - 1)
+                    {
+                        _mazeGrid[x, z].ClearRightWall();
+                        _mazeGrid[x + 1, z].ClearLeftWall();
+                    }
+                    break;
+                case 1: // Left
+                    if (x > 0)
+                    {
+                        _mazeGrid[x, z].ClearLeftWall();
+                        _mazeGrid[x - 1, z].ClearRightWall();
+                    }
+                    break;
+                case 2: // Front
+                    if (z < _mazeDepth - 1)
+                    {
+                        _mazeGrid[x, z].ClearFrontWall();
+                        _mazeGrid[x, z + 1].ClearBackWall();
+                    }
+                    break;
+                case 3: // Back
+                    if (z > 0)
+                    {
+                        _mazeGrid[x, z].ClearBackWall();
+                        _mazeGrid[x, z - 1].ClearFrontWall();
+                    }
+                    break;
+            }
+        }
     }
 
     void Update()
@@ -431,7 +612,7 @@ public class MazeGenerator : MonoBehaviour
     private void InstantiateDragon(MazeCell cell, GameObject dragonPrefab)
     {
         List<string> freeWalls = GetAvailableWalls(cell);
-        if (freeWalls.Count == .0) return;
+        if (freeWalls.Count == 0) return; // Fixed the syntax error from .0 to 0
 
         string chosenWall = freeWalls[UnityEngine.Random.Range(0, freeWalls.Count)];
         usedWalls[cell] = usedWalls.ContainsKey(cell) ? usedWalls[cell] : new List<string>();

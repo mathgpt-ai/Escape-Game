@@ -1357,8 +1357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mazeCellPrefab: {fileID: 8204938229750970474, guid: d4a9009786e916a4db863fd58ba9c4f9, type: 3}
-  _mazeWidth: 5
-  _mazeDepth: 5
+  _mazeWidth: 7
+  _mazeDepth: 7
   CellSize: 4
   dragon1: {fileID: 6873538883688257781, guid: 76023e90201f6b24f9dc75dc9b65a426, type: 3}
   dragon2: {fileID: 4494590695808793621, guid: aba7566d4dc27f842a5154fa97f49665, type: 3}
@@ -1366,7 +1366,7 @@ MonoBehaviour:
   door: {fileID: 643687962771416460, guid: dc357c6b7b6de344283b5a7f42a1ac74, type: 3}
   playerStartPosition: {fileID: 1698544009}
   timerText: {fileID: 1201472900}
-  startingTime: 25
+  startingTime: 35
   tickSound: {fileID: 8300000, guid: eef1d75965f6b41488528bbad1d98440, type: 3}
   timeUpSound: {fileID: 8300000, guid: 15bf9f54daa80784296b29880c2bc481, type: 3}
   tenSecondsSound: {fileID: 8300000, guid: bf15f542c748db44aa02a8008a16bedf, type: 3}
