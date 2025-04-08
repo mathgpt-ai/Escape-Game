@@ -11,23 +11,32 @@ public class WheelInteract : MonoBehaviour, IInteractable
     [SerializeField]
     private Canvas canvas;
     private bool isInteracting = false; // Suivi de l'état d'interaction=======
+    private float currentRotation;
+
     private void Start()
     {
-        canvas = GetComponentInChildren<Canvas>();
+        canvas.gameObject.SetActive(false);
     }
     private void Update()
     {
         if (isInteracting)
         {
-            // Tourner vers la droite avec R
-            if (Input.GetKey(KeyCode.R))
+            if (isInteracting)
             {
-                transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-            }
-            // Tourner vers la gauche avec L
-            else if (Input.GetKey(KeyCode.L))
-            {
-                transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+                if (Input.GetKey(KeyCode.R))
+                {
+                    float delta = rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
+                else if (Input.GetKey(KeyCode.L))
+                {
+                    float delta = -rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
+
+                currentRotation = Mathf.Repeat(currentRotation, 360f); // Pour rester entre 0 et 360
             }
         }
     }
@@ -42,5 +51,10 @@ public class WheelInteract : MonoBehaviour, IInteractable
     public Canvas GetCanvas()
     {
         return canvas;
+    }
+
+    public float GetCurrentRotation()
+    {
+        return currentRotation;
     }
 }
