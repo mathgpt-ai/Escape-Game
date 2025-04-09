@@ -4,7 +4,8 @@ using UnityEngine;
 public class ObjectPickUp : MonoBehaviour, IInteractable
 {
     [SerializeField] private Sprite sp;
-
+    [SerializeField] Transform Holdpoint;
+    private bool IsHolding = false;
     Canvas canvas;
 
     private Inventory inventory;
@@ -50,4 +51,5 @@ public class ObjectPickUp : MonoBehaviour, IInteractable
             Debug.Log("Bon! L'inventaire est trouvé après 3 secondes.");
         }
     }
+    
 }
