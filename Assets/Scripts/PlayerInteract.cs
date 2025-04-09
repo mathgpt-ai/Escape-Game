@@ -12,7 +12,7 @@ public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-
+    GameObject gameObject;
     private IInteractable lastInteractable = null; // Pour éviter d’activer/désactiver en boucle
 
     private void Update()
@@ -22,7 +22,9 @@ public class PlayerInteract : MonoBehaviour
         Ray ray = new Ray(Source.position, Source.forward);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-            if (hitInfo.collider.gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
+            gameObject = hitInfo.collider.gameObject;
+
+            if (gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
                 foundInteractable = true;
 
@@ -40,9 +42,10 @@ public class PlayerInteract : MonoBehaviour
                 }
 
                 // Désactiver le dernier interactable si c'est un autre
-                if (lastInteractable != null && lastInteractable != interactObj)
+                if (lastInteractable != null && lastInteractable != interactObj && lastInteractable is ObjectPickUp pickup)
                 {
-                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+                    if(!pickup.IsHolding)
+                        lastInteractable.GetCanvas()?.gameObject.SetActive(false);
                 }
 
                 lastInteractable = interactObj;
@@ -50,10 +53,18 @@ public class PlayerInteract : MonoBehaviour
         }
 
         // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
+
         if (!foundInteractable && lastInteractable != null)
         {
-            lastInteractable.GetCanvas()?.gameObject.SetActive(false);
-            lastInteractable = null;
+            if (lastInteractable is ObjectPickUp pickup)
+            {
+                if (!pickup.IsHolding)
+                {
+                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+                }
+                lastInteractable = null;
+            }
+
         }
     }
 }

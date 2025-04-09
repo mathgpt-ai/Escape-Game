@@ -4,23 +4,33 @@ using UnityEngine;
 public class ObjectPickUp : MonoBehaviour, IInteractable
 {
     [SerializeField] private Sprite sp;
-    [SerializeField] Transform Holdpoint;
-    private bool IsHolding = false;
-    Canvas canvas;
+    [SerializeField] private Transform Holdpoint;
+    [SerializeField] private GameObject itemToHoldPrefab;
 
+    private bool isHolding = false;
+    public bool IsHolding => isHolding;
+
+    private Canvas canvas;
     private Inventory inventory;
 
-   
-    public Canvas GetCanvas()
-    {
-        
-        return canvas;
-    }
+    public Canvas GetCanvas() => canvas;
+
     public void Interact()
     {
         if (inventory != null)
         {
             inventory.AddItem(sp); // Ajoute l'item à l'inventaire si y'est trouvé
+
+            if (canvas != null)
+            {
+                canvas.gameObject.SetActive(false); // Optionally hide UI
+            }
+
+            gameObject.GetComponent<BoxCollider>().enabled = false; 
+            isHolding = true;
+            Instantiate(gameObject, Holdpoint);
+
+            Destroy(gameObject);
             
         }
     }
