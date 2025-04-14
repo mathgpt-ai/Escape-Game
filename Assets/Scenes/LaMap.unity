@@ -19970,6 +19970,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FirstPersonController
       objectReference: {fileID: 0}
+    - target: {fileID: 6857467516397417337, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: HoldPoint
+      value: 
+      objectReference: {fileID: 2104832728}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

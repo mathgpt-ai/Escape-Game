@@ -7,64 +7,65 @@ interface IInteractable
     void Interact();
     Canvas GetCanvas(); // Ajout d'une méthode pour récupérer le Canvas
 }
+interface IPickable : IInteractable
+{
+    void Interact(Transform holdPoint); // Méthode spécifique pour ramasser l'objet avec un point de prise
+}
 
 public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-    GameObject gameObject;
-    private IInteractable lastInteractable = null; // Pour éviter d’activer/désactiver en boucle
+    private IInteractable lastInteractable = null;
+    public Transform HoldPoint;
 
     private void Update()
     {
-        bool foundInteractable = false; // Vérifier si on a trouvé un interactable
+        bool foundInteractable = false;
 
         Ray ray = new Ray(Source.position, Source.forward);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-            gameObject = hitInfo.collider.gameObject;
-
-            if (gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
+            GameObject targetObject = hitInfo.collider.gameObject;
+            if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
                 foundInteractable = true;
 
-                // Récupérer et activer le Canvas de l’objet interactif
                 Canvas objCanvas = interactObj.GetCanvas();
                 if (objCanvas != null)
                 {
                     objCanvas.gameObject.SetActive(true);
                 }
 
-                // Si le joueur appuie sur "E", on interagit
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    interactObj.Interact();
+                    if (interactObj is IPickable pickableObj)
+                    {
+                        pickableObj.Interact(HoldPoint); // Passe le holdPoint pour les objets ramassables
+                    }
+                    else
+                    {
+                        interactObj.Interact(); // Pour les autres types d'objets
+                    }
                 }
 
-                // Désactiver le dernier interactable si c'est un autre
-                if (lastInteractable != null && lastInteractable != interactObj && lastInteractable is ObjectPickUp pickup)
+                if (lastInteractable != null && lastInteractable != interactObj)
                 {
-                    if(!pickup.IsHolding)
-                        lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
                 }
 
                 lastInteractable = interactObj;
             }
         }
 
-        // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
-
         if (!foundInteractable && lastInteractable != null)
         {
-            if (lastInteractable is ObjectPickUp pickup)
+            if (lastInteractable.GetCanvas() != null)
             {
-                if (!pickup.IsHolding)
-                {
-                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
-                }
-                lastInteractable = null;
+                lastInteractable.GetCanvas().gameObject.SetActive(false);
             }
 
+            lastInteractable = null;
         }
     }
 }
