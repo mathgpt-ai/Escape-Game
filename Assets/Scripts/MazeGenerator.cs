@@ -36,7 +36,7 @@ public class MazeGenerator : MonoBehaviour
                 );
             }
         }
-
+        StartCoroutine(DisableMiniMapAfterDelay());
         GenerateMazeWithRandomizedDFS();
         CreateEntryAndExit();
         SpawnDragons();
@@ -196,5 +196,14 @@ public class MazeGenerator : MonoBehaviour
     private MazeCell GenerateRandomCell()
     {
         return _mazeGrid[UnityEngine.Random.Range(0, _mazeWidth), UnityEngine.Random.Range(0, _mazeDepth)];
+    }
+
+    private IEnumerator DisableMiniMapAfterDelay()
+    {
+        // Wait for 3 seconds
+        yield return new WaitForSeconds(3f);
+
+        MiniMap.Instance.DisableMiniMap();
+
     }
 }
