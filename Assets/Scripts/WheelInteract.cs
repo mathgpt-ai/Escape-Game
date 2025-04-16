@@ -11,6 +11,8 @@ public class WheelInteract : MonoBehaviour, IInteractable
     [SerializeField]
     private Canvas canvas;
     private bool isInteracting = false; // Suivi de l'état d'interaction=======
+
+
     private void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
