@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class ObjectPickUp : MonoBehaviour, IInteractable
+public class ObjectPickUp : MonoBehaviour, IPickable
 {
     [SerializeField] private Sprite sp;
-    [SerializeField] private Transform Holdpoint;
     [SerializeField] private GameObject itemToHoldPrefab;
 
     private bool isHolding = false;
@@ -17,49 +16,46 @@ public class ObjectPickUp : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        Debug.LogWarning("Utilisez Interact(Transform holdPoint) au lieu de ça.");
+    }
+
+    public void Interact(Transform holdPoint)
+    {
         if (inventory != null)
         {
-            inventory.AddItem(sp); // Ajoute l'item à l'inventaire si y'est trouvé
+            inventory.AddItem(sp); // Ajoute l'item à l'inventaire
 
             if (canvas != null)
             {
-                canvas.gameObject.SetActive(false); // Optionally hide UI
+                canvas.gameObject.SetActive(false);
             }
 
-            gameObject.GetComponent<BoxCollider>().enabled = false; 
             isHolding = true;
-            Instantiate(gameObject, Holdpoint);
 
-            Destroy(gameObject);
-            
+            GameObject heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
+            Destroy(heldCopy.GetComponent<ObjectPickUp>());
+            Destroy(heldCopy.GetComponent<Collider>());
+
+            Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+
+            Destroy(gameObject); // Détruit l'objet initial
         }
     }
 
     void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
-        // Démarre une coroutine pour chercher l'inventaire après 3 secondes
         StartCoroutine(FindInventoryAfterDelay());
     }
 
     IEnumerator FindInventoryAfterDelay()
     {
-        yield return new WaitForSeconds(3f); // Attend 3 secondes avant d’exécuter la suite
-
-        GameObject hotbar = GameObject.Find("Hotbar"); // Cherche l’objet "Hotbar" dans la scène
+        yield return new WaitForSeconds(3f);
+        GameObject hotbar = GameObject.Find("Hotbar");
         if (hotbar != null)
         {
-            inventory = hotbar.GetComponent<Inventory>(); // Récupère le script Inventory
-        }
-
-        if (inventory == null)
-        {
-            Debug.LogError("Tabarnak! L'inventaire est pas trouvé dans Hotbar après l'attente!");
-        }
-        else
-        {
-            Debug.Log("Bon! L'inventaire est trouvé après 3 secondes.");
+            inventory = hotbar.GetComponent<Inventory>();
         }
     }
-    
 }
