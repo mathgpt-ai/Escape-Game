@@ -7,36 +7,21 @@ interface IInteractable
     void Interact();
     Canvas GetCanvas(); // Ajout d'une méthode pour récupérer le Canvas
 }
-interface IPickable : IInteractable
-{
-    void Interact(Transform holdPoint); // Méthode spécifique pour ramasser l'objet avec un point de prise
-}
 
 public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-<<<<<<< HEAD
     private IInteractable lastInteractable = null; // Pour éviter d'activer/désactiver en boucle
     private Canvas lastCanvas = null; // Référence directe au dernier Canvas
 
     private void Update()
     {
         bool foundInteractable = false; // Vérifier si on a trouvé un interactable
-=======
-    private IInteractable lastInteractable = null;
-    public Transform HoldPoint;
-
-    private void Update()
-    {
-        bool foundInteractable = false;
-
->>>>>>> FirstPerson
         Ray ray = new Ray(Source.position, Source.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-<<<<<<< HEAD
             if (hitInfo.collider.gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
                 foundInteractable = true;
@@ -54,19 +39,9 @@ public class PlayerInteract : MonoBehaviour
 
                 // Activer le Canvas si valide
                 if (objCanvas != null && objCanvas.gameObject != null)
-=======
-            GameObject targetObject = hitInfo.collider.gameObject;
-            if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
-            {
-                foundInteractable = true;
-
-                Canvas objCanvas = interactObj.GetCanvas();
-                if (objCanvas != null)
->>>>>>> FirstPerson
                 {
                     objCanvas.gameObject.SetActive(true);
 
-<<<<<<< HEAD
                     // Si le joueur appuie sur "E", on interagit
                     if (Input.GetKeyDown(KeyCode.E))
                     {
@@ -93,24 +68,6 @@ public class PlayerInteract : MonoBehaviour
                             // Le Canvas a déjà été détruit, ne rien faire
                         }
                     }
-=======
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    if (interactObj is IPickable pickableObj)
-                    {
-                        pickableObj.Interact(HoldPoint); // Passe le holdPoint pour les objets ramassables
-                    }
-                    else
-                    {
-                        interactObj.Interact(); // Pour les autres types d'objets
-                    }
-                }
-
-                if (lastInteractable != null && lastInteractable != interactObj)
-                {
-                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
-                }
->>>>>>> FirstPerson
 
                     lastInteractable = interactObj;
                     lastCanvas = objCanvas;
@@ -118,7 +75,6 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
-<<<<<<< HEAD
         // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
         if (!foundInteractable && lastCanvas != null)
         {
@@ -134,16 +90,6 @@ public class PlayerInteract : MonoBehaviour
 
             lastInteractable = null;
             lastCanvas = null;
-=======
-        if (!foundInteractable && lastInteractable != null)
-        {
-            if (lastInteractable.GetCanvas() != null)
-            {
-                lastInteractable.GetCanvas().gameObject.SetActive(false);
-            }
-
-            lastInteractable = null;
->>>>>>> FirstPerson
         }
     }
 

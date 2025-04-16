@@ -19936,7 +19936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -52.8
+      value: -87
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalRotation.w
@@ -19970,18 +19970,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: FirstPersonController
       objectReference: {fileID: 0}
-    - target: {fileID: 6857467516397417337, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: HoldPoint
-      value: 
-      objectReference: {fileID: 2104832728}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4459864851310106429, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2104832728}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+--- !u!4 &1172542223 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+  m_PrefabInstance: {fileID: 1172542222}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1183643905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30184,11 +30185,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 882393ad159f4224b806159c32794844, type: 3}
---- !u!4 &1688310387 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4459864851310106429, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-  m_PrefabInstance: {fileID: 1172542222}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1694615037
 GameObject:
   m_ObjectHideFlags: 0
@@ -35057,11 +35053,11 @@ Transform:
   m_GameObject: {fileID: 2104832727}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.208, y: -0.245, z: 0.608}
+  m_LocalPosition: {x: 0.39395142, y: 0.413, z: 0.119}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1688310387}
+  m_Father: {fileID: 1172542223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2108308184
 PrefabInstance:
