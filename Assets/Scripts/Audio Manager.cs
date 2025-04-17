@@ -16,9 +16,30 @@ public class AudioManager : MonoBehaviour
     // Reference to background music audio source (optional)
     [SerializeField] private AudioSource backgroundMusic;
 
+    // Static property for other scripts to access
+    public static float MasterVolume { get; private set; }
+
     // PlayerPrefs keys to save settings
     private const string MASTER_VOLUME_KEY = "MasterVolume";
     private const string MUSIC_VOLUME_KEY = "MusicVolume";
+
+    // Singleton pattern for easy access
+    public static AudioManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        // Set up singleton
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void Start()
     {
@@ -31,6 +52,9 @@ public class AudioManager : MonoBehaviour
 
         if (musicVolumeSlider != null)
             musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+
+        // Apply volume to any existing DoorTimer objects
+        UpdateAllDoorTimerVolumes();
     }
 
     private void LoadSettings()
@@ -46,10 +70,8 @@ public class AudioManager : MonoBehaviour
         if (musicVolumeSlider != null)
             musicVolumeSlider.value = musicVolume;
 
-        // Apply settings to the static properties in MazeGenerator
-        MazeGenerator.TickSoundVolume = masterVolume;
-        MazeGenerator.TimeUpSoundVolume = masterVolume;
-        MazeGenerator.TenSecondsSoundVolume = masterVolume;
+        // Save to static property
+        MasterVolume = masterVolume;
 
         // Apply to background music if it exists
         if (backgroundMusic != null)
@@ -59,11 +81,13 @@ public class AudioManager : MonoBehaviour
     // Callback for master volume slider
     public void OnMasterVolumeChanged(float value)
     {
-        // Apply master volume to all sound effects
-        MazeGenerator.TickSoundVolume = value;
-        MazeGenerator.TimeUpSoundVolume = value;
-        MazeGenerator.TenSecondsSoundVolume = value;
+        // Store the value for other scripts to access
+        MasterVolume = value;
 
+        // Apply master volume to all DoorTimer objects
+        UpdateAllDoorTimerVolumes();
+
+        // Save to PlayerPrefs
         PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, value);
         PlayerPrefs.Save();
     }
@@ -88,5 +112,30 @@ public class AudioManager : MonoBehaviour
             musicVolumeSlider.value = defaultMusicVolume;
 
         // This will trigger the onValueChanged events which will update everything
+    }
+
+    // Update all DoorTimer volumes using reflection
+    private void UpdateAllDoorTimerVolumes()
+    {
+        DoorTimer[] doorTimers = FindObjectsOfType<DoorTimer>();
+
+        foreach (DoorTimer timer in doorTimers)
+        {
+            // Use reflection to access the audioVolume field
+            var volumeField = timer.GetType().GetField("audioVolume",
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic);
+
+            if (volumeField != null)
+            {
+                volumeField.SetValue(timer, MasterVolume);
+            }
+        }
+    }
+
+    // Public method for other scripts to adjust their volume based on master volume
+    public static float GetAdjustedVolume(float originalVolume)
+    {
+        return originalVolume * MasterVolume;
     }
 }

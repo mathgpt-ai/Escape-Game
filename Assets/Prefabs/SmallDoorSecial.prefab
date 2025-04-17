@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3158667008049160889}
   m_Layer: 0
   m_Name: SmallDoorSecial
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 65
@@ -96,7 +96,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLock: 1
   doorUnlocked: {fileID: 8300000, guid: 9359bfc590ca51b43a9d4f1db1b35766, type: 3}
+  doorUnlockedVolume: 5
   timerText: {fileID: 0}
+  timerPanel: {fileID: 0}
 --- !u!1 &1680495753903606669
 GameObject:
   m_ObjectHideFlags: 0
