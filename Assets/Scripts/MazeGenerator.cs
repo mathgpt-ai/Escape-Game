@@ -9,9 +9,12 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private MazeCell _mazeCellPrefab;
     [SerializeField] private int _mazeWidth = 10;
     [SerializeField] private int _mazeDepth = 10;
-    private MazeCell[,] _mazeGrid;
     [SerializeField] private float CellSize = 5f;
 
+    // Reference to the transform to use as the maze origin
+    [SerializeField] private Transform mazeOriginTransform;
+
+    private MazeCell[,] _mazeGrid;
     [SerializeField] private GameObject dragon1;
     [SerializeField] private GameObject dragon2;
     [SerializeField] private GameObject dragon3;
@@ -22,6 +25,9 @@ public class MazeGenerator : MonoBehaviour
 
     // Store existing objects to clean up during regeneration
     private List<GameObject> generatedObjects = new List<GameObject>();
+
+    // Origin position for maze generation
+    private Vector3 mazeOrigin;
 
     void Start()
     {
@@ -94,6 +100,9 @@ public class MazeGenerator : MonoBehaviour
     // Main maze generation method
     private void GenerateMaze()
     {
+        // Set maze origin based on the origin transform if provided
+        mazeOrigin = (mazeOriginTransform != null) ? mazeOriginTransform.position : transform.position;
+
         // Initialize the maze grid
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
 
@@ -102,9 +111,12 @@ public class MazeGenerator : MonoBehaviour
         {
             for (int z = 0; z < _mazeDepth; z++)
             {
+                // Use the origin position as the reference point for creating cells
+                Vector3 cellPosition = mazeOrigin + new Vector3(x * CellSize, 0, z * CellSize);
+
                 MazeCell newCell = Instantiate(
                     _mazeCellPrefab,
-                    new Vector3(x * CellSize, 0, z * CellSize),
+                    cellPosition,
                     Quaternion.identity,
                     transform
                 );
@@ -178,8 +190,8 @@ public class MazeGenerator : MonoBehaviour
     private IEnumerable<MazeCell> GetUnvisitedCells(MazeCell currentCell)
     {
         // Calculate grid coordinates from world position
-        int x = Mathf.RoundToInt(currentCell.transform.position.x / CellSize);
-        int z = Mathf.RoundToInt(currentCell.transform.position.z / CellSize);
+        int x = Mathf.RoundToInt((currentCell.transform.position.x - mazeOrigin.x) / CellSize);
+        int z = Mathf.RoundToInt((currentCell.transform.position.z - mazeOrigin.z) / CellSize);
 
         // Check all four directions for unvisited cells
         if (x + 1 < _mazeWidth && !_mazeGrid[x + 1, z].IsVisited) yield return _mazeGrid[x + 1, z];
@@ -226,9 +238,7 @@ public class MazeGenerator : MonoBehaviour
         _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].ClearFrontWall();
 
         // Create the door at the exit
-        Vector3 end = new Vector3(_mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.x,
-                                 _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.y,
-                                 _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position.z + 2);
+        Vector3 end = _mazeGrid[_mazeWidth - 1, _mazeDepth - 1].transform.position + new Vector3(0, 0, 2);
 
         // Instantiate door at exit
         GameObject exitDoor = Instantiate(door, end, Quaternion.identity);
@@ -283,8 +293,8 @@ public class MazeGenerator : MonoBehaviour
         List<string> availableWalls = new List<string>();
 
         // Calculate grid position
-        int cellX = Mathf.RoundToInt(cell.transform.position.x / CellSize);
-        int cellZ = Mathf.RoundToInt(cell.transform.position.z / CellSize);
+        int cellX = Mathf.RoundToInt((cell.transform.position.x - mazeOrigin.x) / CellSize);
+        int cellZ = Mathf.RoundToInt((cell.transform.position.z - mazeOrigin.z) / CellSize);
 
         // Check which walls are active and within maze bounds
         if (cell.IsBackWallActive && cellZ > 0) availableWalls.Add("Back");
@@ -345,6 +355,25 @@ public class MazeGenerator : MonoBehaviour
         if (MiniMap.Instance != null)
         {
             MiniMap.Instance.DisableMiniMap();
+        }
+    }
+
+    // This method can be called to move an existing maze to a new position
+    public void SetMazePosition(Vector3 newPosition)
+    {
+        if (_mazeGrid == null)
+            return;
+
+        Vector3 positionOffset = newPosition - mazeOrigin;
+        mazeOrigin = newPosition;
+
+        // Move all maze cells
+        foreach (var obj in generatedObjects)
+        {
+            if (obj != null)
+            {
+                obj.transform.position += positionOffset;
+            }
         }
     }
 }

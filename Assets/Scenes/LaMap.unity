@@ -3935,6 +3935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 168596346}
   - component: {fileID: 168596345}
+  - component: {fileID: 168596347}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -3972,12 +3973,25 @@ Transform:
   m_GameObject: {fileID: 168596344}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -44.99, y: -34.21, z: 92.71}
+  m_LocalPosition: {x: -41.93, y: -32.58, z: 92.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &168596347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168596344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cac90afcffe1974caaa6665631e6390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skymat: {fileID: 2100000, guid: 1e5ef9e1dd81b054e9cb27711dee3f84, type: 2}
 --- !u!1001 &168919808
 PrefabInstance:
   m_ObjectHideFlags: 0
