@@ -3973,7 +3973,7 @@ Transform:
   m_GameObject: {fileID: 168596344}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -41.93, y: -32.58, z: 92.71}
+  m_LocalPosition: {x: -41.93, y: -20.69, z: 92.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3991,7 +3991,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cac90afcffe1974caaa6665631e6390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skymat: {fileID: 2100000, guid: 1e5ef9e1dd81b054e9cb27711dee3f84, type: 2}
 --- !u!1001 &168919808
 PrefabInstance:
   m_ObjectHideFlags: 0
