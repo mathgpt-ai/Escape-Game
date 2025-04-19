@@ -6,9 +6,6 @@ TagManager:
   tags:
   - Dragon
   - Door
-  - Blackhole
-  - LabRoom
-  - Sphere
   layers:
   - Default
   - TransparentFX
