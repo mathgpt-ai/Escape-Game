@@ -5,30 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Scene3Trigger : MonoBehaviour
 {
-    public string sceneName;
-    private bool isActive = false;
-    private bool isPlayerInside = false;
+    public string sceneName; // Set this in the Inspector
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            if (!isActive)
-            {
-                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-                isActive = true;
-                isPlayerInside = true;
-            }
+        if (other.CompareTag("Player")) // Ensure the player has the "Player" tag
+        {   
+            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player") && isActive)
-        {
-            SceneManager.UnloadSceneAsync(sceneName);
-            isActive = false;
-        }
-
-
     }
 }
