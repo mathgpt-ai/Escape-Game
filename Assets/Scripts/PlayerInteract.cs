@@ -10,6 +10,7 @@ interface IInteractable
 interface IPickable : IInteractable
 {
     void Interact(Transform holdPoint); // Méthode spécifique pour ramasser l'objet avec un point de prise
+    void Drop(Transform hodPoint);
 }
 
 public class PlayerInteract : MonoBehaviour
@@ -18,11 +19,18 @@ public class PlayerInteract : MonoBehaviour
     public float interactRange = 3f;
     private IInteractable lastInteractable = null;
     public Transform HoldPoint;
-
+    private IPickable heldItem = null;
     private void Update()
     {
         bool foundInteractable = false;
-
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            if (heldItem != null)
+            {
+                heldItem.Drop(HoldPoint);
+                heldItem = null;
+            }
+        }
         Ray ray = new Ray(Source.position, Source.forward);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
@@ -41,13 +49,16 @@ public class PlayerInteract : MonoBehaviour
                 {
                     if (interactObj is IPickable pickableObj)
                     {
-                        pickableObj.Interact(HoldPoint); // Passe le holdPoint pour les objets ramassables
+                        pickableObj.Interact(HoldPoint);
+                        heldItem = pickableObj;
                     }
                     else
                     {
                         interactObj.Interact(); // Pour les autres types d'objets
                     }
                 }
+                
+
 
                 if (lastInteractable != null && lastInteractable != interactObj)
                 {

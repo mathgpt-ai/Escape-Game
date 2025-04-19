@@ -17,13 +17,13 @@ public class Inventory : MonoBehaviour
     private Color slotColor; // Couleur des autres slots
 
     private int selected = 0; // Slot actuellement sélectionné
-
+    public int SelectedSlot => selected;
     // Touches pour changer d'objet dans l'inventaire
     private KeyCode[] Ikeys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
 
     private void Start()
     {
-        for(int i = 0; i < inventoryItems.Length; i++)
+        for (int i = 0; i < inventoryItems.Length; i++)
         {
             inventoryItems[i].enabled = false;
         }
@@ -61,18 +61,25 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        // Ajoute l'item dans le premier slot vide disponible
-        for (int i = 0; i < inventoryItems.Length; i++)
+
+
+        if (!inventoryItems[selected].enabled) // Vérifie si le slot est vide
         {
-            if (!inventoryItems[i].enabled) // Vérifie si le slot est vide
-            {
-                inventoryItems[i].sprite = newItem; // Assigne l’image au slot
-                inventoryItems[i].enabled = true;   // Active l’image pour l’afficher
-                return; // Arrête après avoir ajouté l'item
-            }
+            inventoryItems[selected].sprite = newItem; // Assigne l’image au slot
+            inventoryItems[selected].enabled = true;   // Active l’image pour l’afficher
+            return; // Arrête après avoir ajouté l'item
         }
+
 
         // Si aucun slot vide n'est trouvé, on peut afficher un message ou gérer la situation
         Debug.Log("L'inventaire est plein.");
+    }
+    public void RemoveItem()
+    {
+        if (inventoryItems[selected].enabled)
+        {
+            inventoryItems[selected].sprite = null;
+            inventoryItems[selected].enabled = false;
+        }
     }
 }
