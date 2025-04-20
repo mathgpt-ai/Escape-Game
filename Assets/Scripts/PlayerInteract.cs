@@ -5,32 +5,19 @@ using UnityEngine;
 interface IInteractable
 {
     void Interact();
-    Canvas GetCanvas(); // Ajout d'une m�thode pour r�cup�rer le Canvas
-}
-interface IPickable : IInteractable
-{
-    void Interact(Transform holdPoint); // M�thode sp�cifique pour ramasser l'objet avec un point de prise
-    void Drop(Transform hodPoint);
+    Canvas GetCanvas(); // Ajout d'une méthode pour récupérer le Canvas
 }
 
 public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
     public float interactRange = 3f;
-    private IInteractable lastInteractable = null;
-    public Transform HoldPoint;
-    private IPickable heldItem = null;
+    private IInteractable lastInteractable = null; // Pour éviter d'activer/désactiver en boucle
+    private Canvas lastCanvas = null; // Référence directe au dernier Canvas
+
     private void Update()
     {
-        bool foundInteractable = false;
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            if (heldItem != null)
-            {
-                heldItem.Drop(HoldPoint);
-                heldItem = null;
-            }
-        }
+        bool foundInteractable = false; // Vérifier si on a trouvé un interactable
         Ray ray = new Ray(Source.position, Source.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
@@ -39,7 +26,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 foundInteractable = true;
 
-                // R�cup�rer le Canvas de l'objet interactif
+                // Récupérer le Canvas de l'objet interactif
                 Canvas objCanvas = null;
                 try
                 {
@@ -58,11 +45,17 @@ public class PlayerInteract : MonoBehaviour
                     // Si le joueur appuie sur "E", on interagit
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        pickableObj.Interact(HoldPoint);
-                        heldItem = pickableObj;
+                        try
+                        {
+                            interactObj.Interact();
+                        }
+                        catch (System.Exception e)
+                        {
+                            Debug.LogWarning($"Error during interaction: {e.Message}");
+                        }
                     }
 
-                    // D�sactiver le dernier Canvas si diff�rent
+                    // Désactiver le dernier Canvas si différent
                     if (lastCanvas != null && lastCanvas != objCanvas)
                     {
                         try
@@ -72,12 +65,9 @@ public class PlayerInteract : MonoBehaviour
                         }
                         catch (System.Exception)
                         {
-                            // Le Canvas a d�j� �t� d�truit, ne rien faire
+                            // Le Canvas a déjà été détruit, ne rien faire
                         }
                     }
-                }
-                
-
 
                     lastInteractable = interactObj;
                     lastCanvas = objCanvas;
@@ -85,7 +75,7 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
-        // Si aucun interactable trouv�, d�sactiver l'ancien Canvas affich�
+        // Si aucun interactable trouvé, désactiver l'ancien Canvas affiché
         if (!foundInteractable && lastCanvas != null)
         {
             try
@@ -95,7 +85,7 @@ public class PlayerInteract : MonoBehaviour
             }
             catch (System.Exception)
             {
-                // Le Canvas a d�j� �t� d�truit, ne rien faire
+                // Le Canvas a déjà été détruit, ne rien faire
             }
 
             lastInteractable = null;
@@ -103,10 +93,10 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    // Gestion suppl�mentaire en cas de d�sactivation du joueur
+    // Gestion supplémentaire en cas de désactivation du joueur
     private void OnDisable()
     {
-        // Nettoyage des r�f�rences
+        // Nettoyage des références
         if (lastCanvas != null)
         {
             try
@@ -116,7 +106,7 @@ public class PlayerInteract : MonoBehaviour
             }
             catch (System.Exception)
             {
-                // Ignore les erreurs si le Canvas est d�j� d�truit
+                // Ignore les erreurs si le Canvas est déjà détruit
             }
         }
 

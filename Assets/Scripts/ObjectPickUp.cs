@@ -30,7 +30,7 @@ public class ObjectPickUp : MonoBehaviour, IInteractable
             isHolding = true;
             Instantiate(gameObject, Holdpoint);
 
-            heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
+           
             heldCopy.GetComponent<ObjectPickUp>().enabled = false;
             heldCopy.GetComponent<Collider>().enabled =false;
 
