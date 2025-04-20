@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sp: {fileID: 21300000, guid: 0b11922c0788b7444b0b9b40148412f1, type: 3}
+<<<<<<< HEAD
   itemToHoldPrefab: {fileID: 1916800063493921536}
 --- !u!54 &6696815415632265264
 Rigidbody:
@@ -183,6 +184,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+=======
+>>>>>>> nigamergelab
 --- !u!1 &2142663376948064818
 GameObject:
   m_ObjectHideFlags: 0

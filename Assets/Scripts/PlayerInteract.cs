@@ -5,11 +5,11 @@ using UnityEngine;
 interface IInteractable
 {
     void Interact();
-    Canvas GetCanvas(); // Ajout d'une méthode pour récupérer le Canvas
+    Canvas GetCanvas(); // Ajout d'une mï¿½thode pour rï¿½cupï¿½rer le Canvas
 }
 interface IPickable : IInteractable
 {
-    void Interact(Transform holdPoint); // Méthode spécifique pour ramasser l'objet avec un point de prise
+    void Interact(Transform holdPoint); // Mï¿½thode spï¿½cifique pour ramasser l'objet avec un point de prise
     void Drop(Transform hodPoint);
 }
 
@@ -32,51 +32,95 @@ public class PlayerInteract : MonoBehaviour
             }
         }
         Ray ray = new Ray(Source.position, Source.forward);
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-            GameObject targetObject = hitInfo.collider.gameObject;
-            if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
+            if (hitInfo.collider.gameObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
                 foundInteractable = true;
 
-                Canvas objCanvas = interactObj.GetCanvas();
-                if (objCanvas != null)
+                // Rï¿½cupï¿½rer le Canvas de l'objet interactif
+                Canvas objCanvas = null;
+                try
                 {
-                    objCanvas.gameObject.SetActive(true);
+                    objCanvas = interactObj.GetCanvas();
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"Error accessing Canvas: {e.Message}");
                 }
 
-                if (Input.GetKeyDown(KeyCode.E))
+                // Activer le Canvas si valide
+                if (objCanvas != null && objCanvas.gameObject != null)
                 {
-                    if (interactObj is IPickable pickableObj)
+                    objCanvas.gameObject.SetActive(true);
+
+                    // Si le joueur appuie sur "E", on interagit
+                    if (Input.GetKeyDown(KeyCode.E))
                     {
                         pickableObj.Interact(HoldPoint);
                         heldItem = pickableObj;
                     }
-                    else
+
+                    // Dï¿½sactiver le dernier Canvas si diffï¿½rent
+                    if (lastCanvas != null && lastCanvas != objCanvas)
                     {
-                        interactObj.Interact(); // Pour les autres types d'objets
+                        try
+                        {
+                            if (lastCanvas.gameObject != null)
+                                lastCanvas.gameObject.SetActive(false);
+                        }
+                        catch (System.Exception)
+                        {
+                            // Le Canvas a dï¿½jï¿½ ï¿½tï¿½ dï¿½truit, ne rien faire
+                        }
                     }
                 }
                 
 
 
-                if (lastInteractable != null && lastInteractable != interactObj)
-                {
-                    lastInteractable.GetCanvas()?.gameObject.SetActive(false);
+                    lastInteractable = interactObj;
+                    lastCanvas = objCanvas;
                 }
-
-                lastInteractable = interactObj;
             }
         }
 
-        if (!foundInteractable && lastInteractable != null)
+        // Si aucun interactable trouvï¿½, dï¿½sactiver l'ancien Canvas affichï¿½
+        if (!foundInteractable && lastCanvas != null)
         {
-            if (lastInteractable.GetCanvas() != null)
+            try
             {
-                lastInteractable.GetCanvas().gameObject.SetActive(false);
+                if (lastCanvas.gameObject != null)
+                    lastCanvas.gameObject.SetActive(false);
+            }
+            catch (System.Exception)
+            {
+                // Le Canvas a dï¿½jï¿½ ï¿½tï¿½ dï¿½truit, ne rien faire
             }
 
             lastInteractable = null;
+            lastCanvas = null;
         }
+    }
+
+    // Gestion supplï¿½mentaire en cas de dï¿½sactivation du joueur
+    private void OnDisable()
+    {
+        // Nettoyage des rï¿½fï¿½rences
+        if (lastCanvas != null)
+        {
+            try
+            {
+                if (lastCanvas.gameObject != null)
+                    lastCanvas.gameObject.SetActive(false);
+            }
+            catch (System.Exception)
+            {
+                // Ignore les erreurs si le Canvas est dï¿½jï¿½ dï¿½truit
+            }
+        }
+
+        lastInteractable = null;
+        lastCanvas = null;
     }
 }

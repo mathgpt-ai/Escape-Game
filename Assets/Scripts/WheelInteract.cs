@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WheelInteract : MonoBehaviour, IInteractable
 {
-    //<<<<<<< HEAD
+//<<<<<<< HEAD
     [SerializeField]
     private float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
     [SerializeField]
