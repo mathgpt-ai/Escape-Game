@@ -6,7 +6,7 @@ public class CanevasFacePlayer : MonoBehaviour
     private Transform anchor;  // Point d'ancrage du Canvas
 
     [SerializeField]
-    private float fixedDistance = 0.5f; // Distance fixe et personnalisable entre le Canvas et le joueur
+    private float fixedDistance = 0.5f; 
 
     private bool initialized = false;
 
@@ -25,7 +25,6 @@ public class CanevasFacePlayer : MonoBehaviour
         if (initialized)
             return;
 
-        // Trouver le joueur (assurez-vous qu'il a le tag "Player")
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
@@ -36,10 +35,9 @@ public class CanevasFacePlayer : MonoBehaviour
             Debug.LogWarning("Aucun joueur avec le tag 'Player' trouvé !");
         }
 
-        // Créer un point d'ancrage au centre du parent
         if (transform.parent != null)
         {
-            // Vérifie si anchor existe déjà
+
             if (anchor == null)
             {
                 GameObject anchorObj = new GameObject("AnchorPoint");

@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class ObjectPickUp : MonoBehaviour, IInteractable
+public class ObjectPickUp : MonoBehaviour, IPickable
 {
     [SerializeField] private Sprite sp;
-    [SerializeField] private Transform Holdpoint;
     [SerializeField] private GameObject itemToHoldPrefab;
 
     private GameObject heldCopy;
@@ -17,32 +16,35 @@ public class ObjectPickUp : MonoBehaviour, IInteractable
     public Canvas GetCanvas() => canvas;
     public void Interact()
     {
+        Debug.LogWarning("mauvais interact");
+    }
+
+    public void Interact(Transform holdPoint)
+    {
         if (inventory != null)
         {
-            inventory.AddItem(sp); // Ajoute l'item � l'inventaire si y'est trouv�
+            inventory.AddItem(sp); // Ajoute l'item à l'inventaire
 
             if (canvas != null)
             {
-                canvas.gameObject.SetActive(false); // Optionally hide UI
+                canvas.gameObject.SetActive(false);
             }
 
-            gameObject.GetComponent<BoxCollider>().enabled = false; 
             isHolding = true;
-            Instantiate(gameObject, Holdpoint);
 
-           
+            heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
             heldCopy.GetComponent<ObjectPickUp>().enabled = false;
-            heldCopy.GetComponent<Collider>().enabled =false;
+            heldCopy.GetComponent<Collider>().enabled = false;
 
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
 
-            Destroy(gameObject); // D�truit l'objet initial
+            Destroy(gameObject); // Détruit l'objet initial
         }
     }
     public void Drop(Transform holdPoint)
     {
-        if(inventory != null)
+        if (inventory != null)
         {
             inventory.RemoveItem();
             heldCopy.transform.parent = null;
@@ -61,32 +63,19 @@ public class ObjectPickUp : MonoBehaviour, IInteractable
             heldCopy.GetComponent<Collider>().enabled = true;
         }
     }
-
     void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
-        // D�marre une coroutine pour chercher l'inventaire apr�s 3 secondes
         StartCoroutine(FindInventoryAfterDelay());
     }
 
     IEnumerator FindInventoryAfterDelay()
     {
-        yield return new WaitForSeconds(3f); // Attend 3 secondes avant d�ex�cuter la suite
-
-        GameObject hotbar = GameObject.Find("Hotbar"); // Cherche l�objet "Hotbar" dans la sc�ne
+        yield return new WaitForSeconds(3f);
+        GameObject hotbar = GameObject.Find("Hotbar");
         if (hotbar != null)
         {
-            inventory = hotbar.GetComponent<Inventory>(); // R�cup�re le script Inventory
-        }
-
-        if (inventory == null)
-        {
-            Debug.LogError("Tabarnak! L'inventaire est pas trouv� dans Hotbar apr�s l'attente!");
-        }
-        else
-        {
-            Debug.Log("Bon! L'inventaire est trouv� apr�s 3 secondes.");
+            inventory = hotbar.GetComponent<Inventory>();
         }
     }
-    
 }
