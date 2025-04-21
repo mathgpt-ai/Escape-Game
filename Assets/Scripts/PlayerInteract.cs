@@ -32,8 +32,10 @@ public class PlayerInteract : MonoBehaviour
             }
         }
         Ray ray = new Ray(Source.position, Source.forward);
+        Debug.DrawRay(Source.position, Source.forward * interactRange, Color.red);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
+
             GameObject targetObject = hitInfo.collider.gameObject;
             if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
@@ -47,10 +49,12 @@ public class PlayerInteract : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    Debug.Log("E pressed");
                     if (interactObj is IPickable pickableObj)
                     {
                         pickableObj.Interact(HoldPoint);
                         heldItem = pickableObj;
+                        Debug.Log("Interacted with holdpoint");
                     }
                     else
                     {
