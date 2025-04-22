@@ -19,25 +19,24 @@ public class WheelInteract : MonoBehaviour, IInteractable
     }
     private void Update()
     {
-        if (isInteracting)
-        {
-            if (isInteracting)
-            {
-                if (Input.GetKey(KeyCode.R))
-                {
-                    float delta = rotationSpeed * Time.deltaTime;
-                    transform.Rotate(Vector3.up, delta);
-                    currentRotation += delta;
-                }
-                else if (Input.GetKey(KeyCode.L))
-                {
-                    float delta = -rotationSpeed * Time.deltaTime;
-                    transform.Rotate(Vector3.up, delta);
-                    currentRotation += delta;
-                }
+        if (!isInteracting) return;
 
-                currentRotation = Mathf.Repeat(currentRotation, 360f); // Pour rester entre 0 et 360
-            }
+        float delta = 0f;
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            delta = rotationSpeed * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.L))
+        {
+            delta = -rotationSpeed * Time.deltaTime;
+        }
+
+        if (delta != 0f)
+        {
+            transform.Rotate(Vector3.up, delta);
+            currentRotation += delta;
+            currentRotation = Mathf.Repeat(currentRotation, 360f);
         }
     }
 
@@ -53,8 +52,18 @@ public class WheelInteract : MonoBehaviour, IInteractable
         return canvas;
     }
 
+    public void SetStartValue(float percent)
+    {
+        percent = Mathf.Clamp(percent, 0f, 100f); // Sécurité
+        float targetAngle = percent / 100f * 360f;
+        currentRotation = targetAngle;
+        transform.localEulerAngles = new Vector3(0f, currentRotation, 0f);
+    }
+
     public float GetCurrentRotation()
     {
         return currentRotation;
     }
+
+    
 }
