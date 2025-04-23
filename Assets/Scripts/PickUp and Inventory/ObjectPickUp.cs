@@ -12,7 +12,7 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
     private Canvas canvas;
     private Inventory inventory;
-
+    public int moveSpeed = 100;
     public Canvas GetCanvas() => canvas;
     public void Interact()
     {
@@ -62,6 +62,16 @@ public class ObjectPickUp : MonoBehaviour, IPickable
             heldCopy.GetComponent<ObjectPickUp>().enabled = true;
             heldCopy.GetComponent<Collider>().enabled = true;
         }
+    }
+    public void Inspect(Transform FrontholdPoint)
+    {
+        heldCopy.transform.position = Vector3.MoveTowards(heldCopy.transform.position, FrontholdPoint.position, moveSpeed * Time.deltaTime);
+        heldCopy.transform.rotation = Quaternion.RotateTowards(heldCopy.transform.rotation, FrontholdPoint.rotation, moveSpeed * 100f * Time.deltaTime);
+
+    }
+    public GameObject GetHeldCopy()
+    {
+        return heldCopy;
     }
     void Start()
     {

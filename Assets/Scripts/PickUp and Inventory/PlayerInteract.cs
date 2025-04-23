@@ -10,6 +10,7 @@ interface IPickable : IInteractable
 {
     void Interact(Transform holdPoint); // Méthode spécifique pour ramasser l'objet avec un point de prise
     void Drop(Transform holdPoint);
+    void Inspect(Transform fromtHoldpoint);
 
 }
 
@@ -21,6 +22,9 @@ public class PlayerInteract : MonoBehaviour
     public Transform HoldPoint;
     private IPickable heldItem = null;
     public Transform frontHoldPoint;
+    private bool isInspecting = false;
+    private bool isHolding = false;
+    private bool wasPressed = false;
     private void Update()
     {
         bool foundInteractable = false;
@@ -30,15 +34,32 @@ public class PlayerInteract : MonoBehaviour
             {
                 heldItem.Drop(HoldPoint);
                 heldItem = null;
+                isHolding = false;
             }
         }
-        if (Input.GetMouseButtonDown(1) && heldItem != null)
+        if (heldItem != null && isHolding)
         {
-            if (heldItem is MonoBehaviour mono && mono.TryGetComponent<InspectObject>(out var inspect))
+            if (Input.GetMouseButtonDown(0))
             {
-                inspect.Inspect(frontHoldPoint);
+                isInspecting = true;
+                wasPressed = true;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                isInspecting = false;
+            }
+
+            if (isInspecting)
+            {
+                heldItem.Inspect(frontHoldPoint);
+            }
+            else if(wasPressed)
+            {
+                heldItem.Inspect(HoldPoint);
             }
         }
+
         Ray ray = new Ray(Source.position, Source.forward);
         Debug.DrawRay(Source.position, Source.forward * interactRange, Color.red);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
@@ -61,6 +82,7 @@ public class PlayerInteract : MonoBehaviour
                     {
                         pickableObj.Interact(HoldPoint);
                         heldItem = pickableObj;
+                        isHolding = true;
                     }
                     else
                     {
@@ -79,7 +101,7 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
-        
+
 
         if (!foundInteractable && lastInteractable != null)
         {
