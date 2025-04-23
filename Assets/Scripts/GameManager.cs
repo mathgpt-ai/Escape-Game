@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField]
-    private string[] nomsScenesEnigmes = {"ÉnigmeTuyaux", "Énigme3", "Énigme4", "ÉnigmeLab"};
+    private static string[] nomsScenesEnigmes = {"ÉnigmeTuyaux", "Énigme3", "Énigme4", "ÉnigmeLab"};
     [SerializeField] 
     private GameObject porteDeFin;
 
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void MarquerEnigmeComplete(int index)
+    public static void MarquerEnigmeComplete(int index)
     {
         if (index >= 0 && index < nomsScenesEnigmes.Length)
         {
@@ -62,7 +62,12 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
 
             Debug.Log($"Énigme {index + 1} complétée !");
-            VerifierProgression();
+
+            // Vérifie s’il existe une instance valide avant d'appeler VerifierProgression()
+            if (Instance != null)
+            {
+                Instance.VerifierProgression();
+            }
         }
     }
 

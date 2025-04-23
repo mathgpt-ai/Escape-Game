@@ -4,31 +4,35 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AtmosphereResetButton : MonoBehaviour
+public class AtmosphereResetButton : MonoBehaviour, IInteractable
 {
-    [SerializeField] private TextMeshProUGUI[] gazTexts; // les 3 écrans à côté des valves
-    [SerializeField] private Animator animator; // facultatif si tu veux une anim
-    [SerializeField] private int indexEnigme = 0; // Index de l'énigme dans GameManager
-    [SerializeField] private string scenePrincipale = "MapPrincipale"; // à changer selon ton nom de scène
+    [SerializeField] 
+    private TextMeshProUGUI[] gazTexts; // les 3 écrans à côté des valves
+    [SerializeField] 
+    private int indexEnigme = 0; // Index de l'énigme dans GameManager
+    [SerializeField] 
+    private int scenePrincipale;
+    [SerializeField]
+    private Canvas canvas;
 
     public void Interact()
     {
-        if (animator != null)
-            animator.SetTrigger("Pressed"); // déclenche une anim (facultatif mais cool)
+        transform.localPosition += new Vector3(0.1f, 0f, 0f); // Pousse le bouton vers l’intérieur (axe X)
 
-        if (ToutesLesValeursSontVertes())
+        if (ValeursSontVertes())
         {
-            Debug.Log("Énigme réussie ! Retour à la map principale...");
-            //GameManager.Instance.MarquerEnigmeComplete(indexEnigme);
-            SceneManager.LoadScene(scenePrincipale);
+            Debug.Log("Les valeurs sont bonnes !");
+            GameManager.MarquerEnigmeComplete(indexEnigme);
+            SceneManager.LoadScene(scenePrincipale, LoadSceneMode.Single);
+            Debug.Log("Énigme réussie !");
         }
         else
         {
-            Debug.Log("Valeurs incorrectes ! Corrige les gaz avant de réinitialiser.");
+            Debug.Log("Valeurs incorrectes !");
         }
     }
 
-    private bool ToutesLesValeursSontVertes()
+    private bool ValeursSontVertes()
     {
         foreach (TextMeshProUGUI text in gazTexts)
         {
@@ -36,5 +40,9 @@ public class AtmosphereResetButton : MonoBehaviour
                 return false;
         }
         return true;
+    }
+    public Canvas GetCanvas()
+    {
+        return canvas;
     }
 }
