@@ -41,7 +41,7 @@ public class GridManager : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                Vector3 position = startPosition + new Vector3(x * tileSize, 0, y * tileSize);
+                Vector3 position = startPosition + new Vector3(-x * tileSize, 0, -y * tileSize);
                 GameObject tile = Instantiate(tilePrefab, position, Quaternion.identity, transform);
                 tile.name = $"Tile ({x}, {y})";
 
