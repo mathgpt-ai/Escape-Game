@@ -12,31 +12,34 @@ public class WheelInteract : MonoBehaviour, IInteractable
     private Canvas canvas;
     private bool isInteracting = false; // Suivi de l'état d'interaction=======
     private float currentRotation;
+    private Quaternion startRotation;
 
     private void Start()
     {
         canvas.gameObject.SetActive(false);
+        startRotation = transform.localRotation;
     }
     private void Update()
     {
-        if (!isInteracting) return;
-
-        float delta = 0f;
-
-        if (Input.GetKey(KeyCode.R))
+        if (isInteracting)
         {
-            delta = rotationSpeed * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.L))
-        {
-            delta = -rotationSpeed * Time.deltaTime;
-        }
+            if (isInteracting)
+            {
+                if (Input.GetKey(KeyCode.R))
+                {
+                    float delta = rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
+                else if (Input.GetKey(KeyCode.L))
+                {
+                    float delta = -rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
 
-        if (delta != 0f)
-        {
-            transform.Rotate(Vector3.up, delta);
-            currentRotation += delta;
-            currentRotation = Mathf.Repeat(currentRotation, 360f);
+                currentRotation = Mathf.Repeat(currentRotation, 360f); // Pour rester entre 0 et 360
+            }
         }
     }
 
@@ -54,10 +57,9 @@ public class WheelInteract : MonoBehaviour, IInteractable
 
     public void SetStartValue(float percent)
     {
-        percent = Mathf.Clamp(percent, 0f, 100f); // Sécurité
-        float targetAngle = percent / 100f * 360f;
-        currentRotation = targetAngle;
-        transform.localEulerAngles = new Vector3(0f, currentRotation, 0f);
+        percent = Mathf.Clamp(percent, 0f, 100f); // Securité
+        float angle = percent / 100f * 360f;
+        currentRotation = angle;
     }
 
     public float GetCurrentRotation()
