@@ -7,18 +7,27 @@ public class ZeroGravityMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float lookSpeed = 2f;
     public bool isPositiveCharge = true;
-    public float freezeLookDistance = 1.5f; // Distance où la rotation sera bloquée
-    public LayerMask magnetLayer; // Assure-toi de mettre les aimants dans ce Layer
-
+    public float freezeLookDistance = 1.5f; 
+    public LayerMask magnetLayer;
+    public Transform spawnPoint;
     [HideInInspector] public bool freezeCameraRotation = false;
 
-    private bool rotationLocked = false; // 🔒 Pour bloquer la rotation
+    private bool rotationLocked = false;
     private Rigidbody rb;
     private float rotX = 0f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (spawnPoint != null)
+        {
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Aucun spawn point assigné au joueur.");
+        }
         rb.useGravity = false;
         rb.drag = 0.5f;
         Cursor.lockState = CursorLockMode.Locked;
@@ -37,6 +46,10 @@ public class ZeroGravityMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             ResetRotation();
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            RespawnPlayer();
         }
 
         if (!rotationLocked)
@@ -65,7 +78,28 @@ public class ZeroGravityMovement : MonoBehaviour
 
         }
     }
+    void RespawnPlayer()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        Debug.Log("Player respawned!");
+    }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Deadly"))
+        {
+            Debug.Log("dead trash bozo");
+            RespawnPlayer();
+        }
+        if (other.CompareTag("TrapTP"))
+        {
+            Debug.Log("DUMBASS");
+            RespawnPlayer();
+        }
+    }
     void ResetRotation()
     {
         Vector3 currentEuler = transform.rotation.eulerAngles;

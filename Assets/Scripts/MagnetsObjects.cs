@@ -31,7 +31,7 @@ public class MagnetsObjects : MonoBehaviour
 
         if (Physics.Raycast(transform.position, direction.normalized, out RaycastHit hit, distance, wallLayerMask))
         {
-            Debug.Log($"🚧 Aimant {gameObject.name} bloqué !");
+            Debug.Log($"Aimant {gameObject.name} bloque");
             return;
         }
 
