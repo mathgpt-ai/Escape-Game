@@ -14,7 +14,7 @@ public class magnets : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
+       
     }
 
     void FixedUpdate()

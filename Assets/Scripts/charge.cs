@@ -27,7 +27,7 @@ public class Charge : MonoBehaviour
     {
         Color glowColor = chargeAmount > 0 ? Color.red : Color.blue;
         objMaterial.EnableKeyword("_EMISSION");
-        objMaterial.SetColor("_EmissionColor", glowColor * 2f);
+        objMaterial.SetColor("_EmissionColor", glowColor * 0.5f);
     }
     //public float chargeObjet;
     //void Start()

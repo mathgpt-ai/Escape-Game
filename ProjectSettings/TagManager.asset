@@ -9,6 +9,8 @@ TagManager:
   - Blackhole
   - LabRoom
   - Sphere
+  - TrapTP
+  - Dead
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Magnet
-  - TrapTP
-  - Dead
+  - 
+  - 
   - 
   - 
   - 

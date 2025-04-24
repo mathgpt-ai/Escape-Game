@@ -89,11 +89,11 @@ public class ZeroGravityMovement : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Deadly"))
-        {
-            Debug.Log("dead trash bozo");
-            RespawnPlayer();
-        }
+        //if (other.CompareTag("Deadly"))
+        //{
+        //    Debug.Log("dead trash bozo");
+        //    RespawnPlayer();
+        //}
         if (other.CompareTag("TrapTP"))
         {
             Debug.Log("DUMBASS");
