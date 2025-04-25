@@ -12,10 +12,8 @@ public class TeleportToPuzzle : MonoBehaviour
             Rigidbody rb = other.GetComponent<Rigidbody>();
             rb.useGravity = false;
 
-            // Téléporte le joueur
             other.transform.position = teleportDestination.position;
 
-            // Gère les scripts
             zeroGrav zeroGrav = other.GetComponent<zeroGrav>();
             ZeroGravityMovement zeroGravMvt = other.GetComponent<ZeroGravityMovement>();
             FirstPersonController normalMove = other.GetComponent<FirstPersonController>();
@@ -23,21 +21,15 @@ public class TeleportToPuzzle : MonoBehaviour
             if (zeroGrav != null)
             {
                 zeroGrav.enabled = true;
-                Debug.Log("zeroGrav activé.");
             }
             if (zeroGravMvt != null)
             {
                 zeroGravMvt.enabled = true;
-                Debug.Log("ZeroGravityMovement activé.");
             }
-
             if (normalMove != null)
             {
                 normalMove.enabled = false;
-                Debug.Log("NormalMovement désactivé.");
             }
-
-            Debug.Log("Téléportation vers énigme réussie !");
         }
     }
 }

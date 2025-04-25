@@ -9,7 +9,7 @@ public class zeroGrav : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.useGravity = false; // Désactive la gravité
+            rb.useGravity = false;
         }
     }
 }
