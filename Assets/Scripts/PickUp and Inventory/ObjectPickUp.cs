@@ -4,8 +4,7 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 {
     [SerializeField] private Sprite sp;
     [SerializeField] private GameObject itemToHoldPrefab;
-    [SerializeField] private float holdDistance = 0.5f; // Reduced distance for closer hold
-    [SerializeField] private Vector3 holdOffset = new Vector3(0, 0, 0); // Additional offset for fine-tuning position
+    [SerializeField] private float holdDistance = 0.5f; // Controls only forward distance
 
     private GameObject heldCopy;
     private bool isHolding = false;
@@ -26,11 +25,18 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     {
         if (inventory != null)
         {
-            // Store the slot index
-            inventorySlotIndex = inventory.SelectedSlot;
-
             // Add item to inventory
             inventory.AddItem(sp);
+
+            // Find which slot contains our item
+            for (int i = 0; i < 4; i++)
+            {
+                if (inventory.HasItemInSlot(i) && inventory.GetCurrentItem() == sp)
+                {
+                    inventorySlotIndex = i;
+                    break;
+                }
+            }
 
             if (canvas != null)
             {
@@ -39,30 +45,33 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
             isHolding = true;
 
-            // Create the held copy at the hold point first
-            heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
+            // Create held copy at the hold point
+            heldCopy = Instantiate(gameObject, holdPoint);
 
-            // Position adjustment can be done after instantiation
-            // This ensures it's in front of the player (uses local position since parented to holdPoint)
-            heldCopy.transform.localPosition = new Vector3(0, 0, holdDistance) + holdOffset;
+            // Set position - ONLY modify Z (forward) axis based on holdDistance
+            // Keep X and Y at zero to maintain alignment with hold point
+            heldCopy.transform.localPosition = new Vector3(0, 0, holdDistance);
 
-            // Disable components on the held copy
-            ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
-            if (pickupComponent != null) pickupComponent.enabled = false;
-
+            // Disable components
             Collider collider = heldCopy.GetComponent<Collider>();
             if (collider != null) collider.enabled = false;
+
+            ObjectPickUp pickupScript = heldCopy.GetComponent<ObjectPickUp>();
+            if (pickupScript != null) pickupScript.enabled = false;
 
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
 
-            Destroy(gameObject); // Destroy the original object
+            // Set visibility based on currently selected slot
+            bool shouldBeVisible = (inventory.SelectedSlot == inventorySlotIndex);
+            heldCopy.SetActive(shouldBeVisible);
+
+            Destroy(gameObject);
         }
     }
 
     public void Drop(Transform holdPoint)
     {
-        // Only allow dropping if this item's slot is currently selected
         if (inventory != null &&
             inventory.SelectedSlot == inventorySlotIndex &&
             inventory.HasItemInCurrentSlot() &&
@@ -74,11 +83,11 @@ public class ObjectPickUp : MonoBehaviour, IPickable
             heldCopy.transform.parent = null;
 
             // Re-enable components
-            ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
-            if (pickupComponent != null) pickupComponent.enabled = true;
-
             Collider collider = heldCopy.GetComponent<Collider>();
             if (collider != null) collider.enabled = true;
+
+            ObjectPickUp pickupScript = heldCopy.GetComponent<ObjectPickUp>();
+            if (pickupScript != null) pickupScript.enabled = true;
 
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
             if (rb != null)
@@ -95,7 +104,6 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
     public void Inspect(Transform frontHoldPoint)
     {
-        // Only inspect if the correct slot is selected
         if (inventory != null &&
             inventory.SelectedSlot == inventorySlotIndex &&
             inventory.HasItemInCurrentSlot() &&
@@ -127,12 +135,11 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         StartCoroutine(FindInventoryAfterDelay());
     }
 
-    private void Update()
+    void Update()
     {
-        // Toggle visibility based on selected slot
+        // Toggle visibility based on selected inventory slot
         if (isHolding && heldCopy != null && inventory != null)
         {
-            // Show object only when its slot is selected
             bool shouldBeVisible = (inventory.SelectedSlot == inventorySlotIndex);
 
             if (heldCopy.activeSelf != shouldBeVisible)
