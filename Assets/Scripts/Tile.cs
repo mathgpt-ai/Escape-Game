@@ -13,7 +13,6 @@ public class Tile : MonoBehaviour
     private float t = 0.0f;
     private bool isDissolving = false;
     private GridManager gridManager; // Référence au GridManager
-    private float timer =0.0f;
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();

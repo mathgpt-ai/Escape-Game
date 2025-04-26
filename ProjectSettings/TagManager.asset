@@ -9,6 +9,7 @@ TagManager:
   - Blackhole
   - LabRoom
   - Sphere
+  - AlarmLight
   layers:
   - Default
   - TransparentFX

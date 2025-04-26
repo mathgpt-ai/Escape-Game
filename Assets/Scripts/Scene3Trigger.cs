@@ -7,7 +7,10 @@ public class Scene3Trigger : MonoBehaviour
 {
     public string sceneName;
     private bool isActive = false;
-    private bool isPlayerInside = false;
+    public bool IsActive
+    {
+        get { return isActive; }
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -17,7 +20,6 @@ public class Scene3Trigger : MonoBehaviour
             {
                 SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
                 isActive = true;
-                isPlayerInside = true;
             }
         }
     }

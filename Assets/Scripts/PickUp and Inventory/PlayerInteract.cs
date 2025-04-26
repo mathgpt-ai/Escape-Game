@@ -69,7 +69,6 @@ public class PlayerInteract : MonoBehaviour
             if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
                 foundInteractable = true;
-
                 Canvas objCanvas = interactObj.GetCanvas();
                 if (objCanvas != null)
                 {
