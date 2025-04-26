@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Alarm : MonoBehaviour
+public class Alarm : MonoBehaviour, IInteractable
 {
     public Material material;
     public bool alarm = true;
-    Color otherColor = new Color(1,1,1);
+    private Canvas canvas;
+
     private void Update()
     {
         if(alarm)
@@ -18,11 +19,22 @@ public class Alarm : MonoBehaviour
         }
         else
         {
-            Color whiteColor = Color.white * 1f; // 1f = emission intensity
-            material.SetColor("_EmissionColor", whiteColor);
+            Color whiteColor = Color.white * 1f;
+            material.SetColor("_EmissionColor", Color.white);
         }
     }
     
-    
+    public void Interact()
+    {
+        if(alarm)
+        {
+            alarm = false;
+        }
+    }
+
+    public Canvas GetCanvas()
+    {
+        return canvas;
+    }
 
 }
