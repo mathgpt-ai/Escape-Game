@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Scenes/\xC9nigmeLab.unity"
     guid: 06ad8712356fe9a4a911f8cbf9dd1944
+  - enabled: 1
+    path: "Assets/Scenes/\xC9nigme4.unity"
+    guid: f9b71378cc3b32b44b1815470c9e023e
   m_configObjects: {}
