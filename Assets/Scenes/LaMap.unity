@@ -2713,7 +2713,7 @@ GameObject:
   m_Component:
   - component: {fileID: 93312968}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: SpawnP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20435,8 +20435,8 @@ MonoBehaviour:
   freezeLookDistance: 1.5
   magnetLayer:
     serializedVersion: 2
-    m_Bits: 0
-  spawnPoint: {fileID: 0}
+    m_Bits: 64
+  spawnPoint: {fileID: 93312968}
   freezeCameraRotation: 0
 --- !u!1001 &1183643905
 PrefabInstance:

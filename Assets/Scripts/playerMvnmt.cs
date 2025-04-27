@@ -70,7 +70,6 @@ public class ZeroGravityMovement : MonoBehaviour
 
         if (rotationLocked)
         {
-            // Empêche les rotations accidentelles en maintenant le joueur droit
             rb.angularVelocity = Vector3.zero;
 
             Vector3 euler = transform.rotation.eulerAngles;
@@ -124,26 +123,14 @@ public class ZeroGravityMovement : MonoBehaviour
 
         if (!rotationLocked)
         {
-            // Le joueur peut tourner normalement
             transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y + mouseX, 0f);
         }
         else
         {
-            // Seulement la caméra tourne sur Y (on ne bouge pas le corps)
+            
             Camera.main.transform.parent.Rotate(Vector3.up * mouseX);
         }
     }
-
-    bool IsLookingAtMagnet()
-    {
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, freezeLookDistance, magnetLayer))
-        {
-            return true;
-        }
-        return false;
-    }
-
     void MovePlayer()
     {
         float moveX = Input.GetAxis("Horizontal");
@@ -158,8 +145,6 @@ public class ZeroGravityMovement : MonoBehaviour
     {
         Color newColor = isPositiveCharge ? Color.red : Color.blue;
         GetComponent<Renderer>().material.color = newColor;
-
-        Debug.Log($"🔄 Charge du joueur changée: {(isPositiveCharge ? "POSITIVE (Rouge)" : "NÉGATIVE (Bleu)")}");
 
         magnets[] allMagnets = FindObjectsOfType<magnets>();
         foreach (var magnet in allMagnets)
