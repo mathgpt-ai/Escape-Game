@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     [SerializeField]
-    private string[] nomsScenesEnigmes = {"ÉnigmeTuyaux", "Énigme3", "Énigme4", "ÉnigmeLab"};
-    [SerializeField] 
+    private static string[] nomsScenesEnigmes = { "ÉnigmeTuyaux", "Énigme3", "Énigme4", "ÉnigmeLab" };
+    [SerializeField]
     private GameObject porteDeFin;
 
     private void Awake()
@@ -25,7 +24,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-     private void Start()
+    private void Start()
     {
         VerifierProgression();
     }
@@ -50,11 +49,11 @@ public class GameManager : MonoBehaviour
             {
                 porteDeFin.SetActive(true);
             }
-                
+
         }
     }
 
-    public void MarquerEnigmeComplete(int index)
+    public static void MarquerEnigmeComplete(int index)
     {
         if (index >= 0 && index < nomsScenesEnigmes.Length)
         {
@@ -62,7 +61,12 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
 
             Debug.Log($"Énigme {index + 1} complétée !");
-            VerifierProgression();
+
+            // Vérifie s’il existe une instance valide avant d'appeler VerifierProgression()
+            if (Instance != null)
+            {
+                Instance.VerifierProgression();
+            }
         }
     }
 
