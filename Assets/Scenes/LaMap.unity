@@ -12113,7 +12113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheel: {fileID: 1702522632}
   valueText: {fileID: 799208434}
-  gazType: 0
+  gazType: 1
 --- !u!1001 &370790310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20815,7 +20815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheel: {fileID: 1645907722}
   valueText: {fileID: 513676948}
-  gazType: 0
+  gazType: 2
 --- !u!1001 &1003250216
 PrefabInstance:
   m_ObjectHideFlags: 0
