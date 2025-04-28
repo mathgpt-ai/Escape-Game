@@ -11,8 +11,6 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
     [SerializeField]
     private int indexEnigme = 0; // Index de l'énigme dans GameManager
     [SerializeField]
-    private int scenePrincipale;
-    [SerializeField]
     private Canvas canvas;
 
     public void Interact()
