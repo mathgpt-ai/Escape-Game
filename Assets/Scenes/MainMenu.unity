@@ -151,11 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10731ac19b751a44e9cd0b7fc2327826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nomsScenesEnigmes:
-  - "\xC9nigmeTuyaux"
-  - "\xC9nigme3"
-  - "\xC9nigme4"
-  - "\xC9nigmeLab"
   porteDeFin: {fileID: 0}
 --- !u!4 &122631468
 Transform:
@@ -1025,10 +1020,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5694ebb9fbf551648a9155174813909c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gameplay: 1
-  GUI: 2
-  Settings: 3
-  MainMenu: 0
+  Gameplay: 0
+  GUI: 1
+  Settings: 5
+  MainMenu: 4
 --- !u!1 &1024589831
 GameObject:
   m_ObjectHideFlags: 0
