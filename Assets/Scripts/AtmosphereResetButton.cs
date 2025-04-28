@@ -23,7 +23,6 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
         {
             Debug.Log("Les valeurs sont bonnes !");
             GameManager.MarquerEnigmeComplete(indexEnigme);
-            SceneManager.LoadScene(scenePrincipale, LoadSceneMode.Single);
             Debug.Log("Énigme réussie !");
         }
         else
