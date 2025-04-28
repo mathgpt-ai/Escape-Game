@@ -5,31 +5,39 @@ using UnityEngine;
 
 public class WheelInteract : MonoBehaviour, IInteractable
 {
-//<<<<<<< HEAD
     [SerializeField]
     private float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
     [SerializeField]
     private Canvas canvas;
     private bool isInteracting = false; // Suivi de l'état d'interaction=======
-
+    private float currentRotation;
+    private Quaternion startRotation;
 
     private void Start()
     {
-        canvas = GetComponentInChildren<Canvas>();
+        canvas.gameObject.SetActive(false);
+        startRotation = transform.localRotation;
     }
     private void Update()
     {
         if (isInteracting)
         {
-            // Tourner vers la droite avec R
-            if (Input.GetKey(KeyCode.R))
+            if (isInteracting)
             {
-                transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-            }
-            // Tourner vers la gauche avec L
-            else if (Input.GetKey(KeyCode.L))
-            {
-                transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+                if (Input.GetKey(KeyCode.R))
+                {
+                    float delta = rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
+                else if (Input.GetKey(KeyCode.L))
+                {
+                    float delta = -rotationSpeed * Time.deltaTime;
+                    transform.Rotate(Vector3.up, delta);
+                    currentRotation += delta;
+                }
+
+                currentRotation = Mathf.Repeat(currentRotation, 360f); // Pour rester entre 0 et 360
             }
         }
     }
@@ -45,4 +53,18 @@ public class WheelInteract : MonoBehaviour, IInteractable
     {
         return canvas;
     }
+
+    public void SetStartValue(float percent)
+    {
+        percent = Mathf.Clamp(percent, 0f, 100f); // Securité
+        float angle = percent / 100f * 360f;
+        currentRotation = angle;
+    }
+
+    public float GetCurrentRotation()
+    {
+        return currentRotation;
+    }
+
+
 }
