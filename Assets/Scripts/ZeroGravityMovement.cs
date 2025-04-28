@@ -146,7 +146,7 @@ public class ZeroGravityMovement : MonoBehaviour
         Color newColor = isPositiveCharge ? Color.red : Color.blue;
         GetComponent<Renderer>().material.color = newColor;
 
-        magnets[] allMagnets = FindObjectsOfType<magnets>();
+        Magnets[] allMagnets = FindObjectsOfType<Magnets>();
         foreach (var magnet in allMagnets)
         {
             magnet.UpdatePlayerCharge(isPositiveCharge);

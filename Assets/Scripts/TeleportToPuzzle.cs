@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMvmnt : MonoBehaviour
+public class TeleportToPuzzle : MonoBehaviour
 {
     public Transform teleportDestination;
 
@@ -33,5 +33,5 @@ public class PlayerMvmnt : MonoBehaviour
             }
         }
     }
-
 }
+
