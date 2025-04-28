@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Charge : MonoBehaviour
+public class Charges : MonoBehaviour
 {
     public float chargeAmount;
     private Renderer objRenderer;
@@ -29,5 +29,4 @@ public class Charge : MonoBehaviour
         objMaterial.EnableKeyword("_EMISSION");
         objMaterial.SetColor("_EmissionColor", glowColor * 0.5f);
     }
-
 }

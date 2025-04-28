@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class zeroGrav : MonoBehaviour
+public class zerograv : MonoBehaviour
 {
     void Start()
     {
