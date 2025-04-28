@@ -15,7 +15,7 @@ public class TeleportToPuzzle : MonoBehaviour
 
             other.transform.position = teleportDestination.position;
 
-            ZeroGrav zeroGrav = other.GetComponent<ZeroGrav>();
+            zeroGrav zeroGrav = other.GetComponent<zeroGrav>();
             ZeroGravityMovement zeroGravMvt = other.GetComponent<ZeroGravityMovement>();
             FirstPersonController normalMove = other.GetComponent<FirstPersonController>();
 
