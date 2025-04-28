@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool EstEnigmeComplete(int index)
+    public static bool EstEnigmeComplete(int index)
     {
         return PlayerPrefs.GetInt("Enigme_" + index, 0) == 1;
     }

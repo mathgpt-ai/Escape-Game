@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class AtmosphereResetButton : MonoBehaviour, IInteractable
 {
     [SerializeField]
-    private TextMeshProUGUI[] gazTexts; // les 3 écrans à côté des valves
+    private TextMeshProUGUI[] gazTexts; // les écrans à côté des valves
     [SerializeField]
     private int indexEnigme = 0; // Index de l'énigme dans GameManager
     [SerializeField]
@@ -21,6 +21,7 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
         {
             Debug.Log("Les valeurs sont bonnes !");
             GameManager.MarquerEnigmeComplete(indexEnigme);
+            FindObjectOfType<OxygenSystem>().HandlePuzzleTuyauxCompleted();
             Debug.Log("Énigme réussie !");
         }
         else
