@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPickUp : MonoBehaviour, IPickable
@@ -9,37 +8,35 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     [SerializeField] private AudioClip pickupSound;
     [SerializeField] private AudioClip dropSound;
 
+    // Custom hold point offset for this specific object
+    [SerializeField] private float holdPositionOffsetX = 0f;
+    [SerializeField] private float holdPositionOffsetY = 0f;
+    [SerializeField] private float holdPositionOffsetZ = 0f;
+    [SerializeField] private float holdRotationOffsetX = 0f;
+    [SerializeField] private float holdRotationOffsetY = 0f;
+    [SerializeField] private float holdRotationOffsetZ = 0f;
+
+    // New field to control if the object can be inspected
+    [SerializeField] private bool canBeInspected = true;
+    [Tooltip("If set to false, this object cannot be inspected by the player")]
+
+    public int moveSpeed = 100;
+
     private GameObject heldCopy;
     private bool isHolding = false;
     private Canvas canvas;
     private Inventory inventory;
-    private int inventorySlotIndex = -1; // To track which slot this item is in
-    private static Dictionary<int, GameObject> slotToHeldObject = new Dictionary<int, GameObject>();
+    private int inventorySlotIndex = -1;
+    private GameObject customHoldPointObj;
 
     public bool IsHolding => isHolding;
-    public int moveSpeed = 100;
     public Canvas GetCanvas() => canvas;
+    public bool CanBeInspected => canBeInspected;
 
     void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
         StartCoroutine(FindInventoryAfterDelay());
-    }
-
-    void Update()
-    {
-        // Check if this object is in inventory but not in the selected slot
-        if (heldCopy != null && inventory != null)
-        {
-            // Show/hide based on selected slot
-            bool shouldBeVisible = (inventorySlotIndex == inventory.SelectedSlot);
-
-            // Only update if visibility state has changed
-            if (heldCopy.activeSelf != shouldBeVisible)
-            {
-                heldCopy.SetActive(shouldBeVisible);
-            }
-        }
     }
 
     IEnumerator FindInventoryAfterDelay()
@@ -49,10 +46,6 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         if (hotbar != null)
         {
             inventory = hotbar.GetComponent<Inventory>();
-        }
-        else
-        {
-            Debug.LogWarning("Hotbar not found. Make sure there's a GameObject named 'Hotbar' with Inventory component.");
         }
     }
 
@@ -72,8 +65,20 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         // Add item to inventory and track which slot it was added to
         inventorySlotIndex = inventory.AddItem(sp);
 
-        if (inventorySlotIndex >= 0) // Check if adding to inventory was successful
+        if (inventorySlotIndex >= 0)
         {
+            // Create custom hold point
+            customHoldPointObj = new GameObject("CustomHoldPoint_" + gameObject.name);
+            customHoldPointObj.transform.parent = holdPoint;
+
+            // Apply the offsets to position
+            Vector3 offsetPosition = new Vector3(holdPositionOffsetX, holdPositionOffsetY, holdPositionOffsetZ);
+            customHoldPointObj.transform.localPosition = offsetPosition;
+
+            // Apply the offsets to rotation
+            Vector3 offsetRotation = new Vector3(holdRotationOffsetX, holdRotationOffsetY, holdRotationOffsetZ);
+            customHoldPointObj.transform.localRotation = Quaternion.Euler(offsetRotation);
+
             // Play pickup sound if available
             if (pickupSound != null)
             {
@@ -86,16 +91,14 @@ public class ObjectPickUp : MonoBehaviour, IPickable
                 canvas.gameObject.SetActive(false);
             }
 
-            // Create held copy
+            // Create held copy at the custom hold point
             isHolding = true;
-            heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
-
-            // Store reference to held object by slot
-            if (slotToHeldObject.ContainsKey(inventorySlotIndex))
-            {
-                Destroy(slotToHeldObject[inventorySlotIndex]);
-            }
-            slotToHeldObject[inventorySlotIndex] = heldCopy;
+            heldCopy = Instantiate(
+                gameObject,
+                customHoldPointObj.transform.position,
+                customHoldPointObj.transform.rotation,
+                customHoldPointObj.transform
+            );
 
             // Disable components on held copy
             ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
@@ -124,12 +127,6 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         {
             // Remove from inventory
             inventory.RemoveItem();
-
-            // Remove from our tracking dictionary
-            if (slotToHeldObject.ContainsKey(inventorySlotIndex))
-            {
-                slotToHeldObject.Remove(inventorySlotIndex);
-            }
 
             // Ensure object is active before dropping
             heldCopy.SetActive(true);
@@ -161,7 +158,13 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
             isHolding = false;
             inventorySlotIndex = -1;
-            heldCopy = null;
+
+            // Destroy the custom hold point
+            if (customHoldPointObj != null)
+            {
+                Destroy(customHoldPointObj);
+                customHoldPointObj = null;
+            }
         }
         else
         {
@@ -169,20 +172,23 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         }
     }
 
-    public void Inspect(Transform frontHoldPoint)
+    public void Inspect(Transform inspectPoint)
     {
-        // Only allow inspection if this item is in the currently selected slot
-        if (inventory != null && inventorySlotIndex == inventory.SelectedSlot && heldCopy != null)
+        // Only allow inspection if:
+        // 1. Object is in the selected inventory slot
+        // 2. The object exists
+        // 3. The object can be inspected (NEW CHECK)
+        if (inventory != null && inventorySlotIndex == inventory.SelectedSlot && heldCopy != null && canBeInspected)
         {
             heldCopy.transform.position = Vector3.MoveTowards(
                 heldCopy.transform.position,
-                frontHoldPoint.position,
+                inspectPoint.position,
                 moveSpeed * Time.deltaTime
             );
 
             heldCopy.transform.rotation = Quaternion.RotateTowards(
                 heldCopy.transform.rotation,
-                frontHoldPoint.rotation,
+                inspectPoint.rotation,
                 moveSpeed * 100f * Time.deltaTime
             );
         }
@@ -196,15 +202,5 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     public int GetInventorySlotIndex()
     {
         return inventorySlotIndex;
-    }
-
-    // Static method to get the currently held object
-    public static GameObject GetCurrentlyHeldObject(int slotIndex)
-    {
-        if (slotToHeldObject.ContainsKey(slotIndex))
-        {
-            return slotToHeldObject[slotIndex];
-        }
-        return null;
     }
 }

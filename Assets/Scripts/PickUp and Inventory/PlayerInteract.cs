@@ -14,6 +14,7 @@ interface IPickable : IInteractable
 
 }
 
+
 public class PlayerInteract : MonoBehaviour
 {
     public Transform Source;
@@ -25,9 +26,12 @@ public class PlayerInteract : MonoBehaviour
     private bool isInspecting = false;
     private bool isHolding = false;
     private bool wasPressed = false;
+
     private void Update()
     {
         bool foundInteractable = false;
+
+        // Handle dropping the held item
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (heldItem != null)
@@ -35,11 +39,21 @@ public class PlayerInteract : MonoBehaviour
                 heldItem.Drop(HoldPoint);
                 heldItem = null;
                 isHolding = false;
+                wasPressed = false;
             }
         }
+
+        // Handle inspecting the held item
         if (heldItem != null && isHolding)
         {
-            if (Input.GetMouseButtonDown(0))
+            // Check if this object can be inspected
+            bool canInspect = true;
+            if (heldItem is ObjectPickUp pickupObj)
+            {
+                canInspect = pickupObj.CanBeInspected;
+            }
+
+            if (canInspect && Input.GetMouseButtonDown(0))
             {
                 isInspecting = true;
                 wasPressed = true;
@@ -50,21 +64,23 @@ public class PlayerInteract : MonoBehaviour
                 isInspecting = false;
             }
 
-            if (isInspecting)
+            if (isInspecting && canInspect)
             {
                 heldItem.Inspect(frontHoldPoint);
             }
-            else if(wasPressed)
+            else if (wasPressed)
             {
+                // When returning from inspection, go back to the normal hold point
                 heldItem.Inspect(HoldPoint);
             }
         }
 
+        // Raycast to find interactable objects
         Ray ray = new Ray(Source.position, Source.forward);
         Debug.DrawRay(Source.position, Source.forward * interactRange, Color.red);
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-
             GameObject targetObject = hitInfo.collider.gameObject;
             if (targetObject.GetComponent<MonoBehaviour>() is IInteractable interactObj)
             {
@@ -85,11 +101,9 @@ public class PlayerInteract : MonoBehaviour
                     }
                     else
                     {
-                        interactObj.Interact(); // Pour les autres types d'objets
+                        interactObj.Interact(); // For other types of objects
                     }
                 }
-
-
 
                 if (lastInteractable != null && lastInteractable != interactObj)
                 {
@@ -100,17 +114,13 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
-
-
         if (!foundInteractable && lastInteractable != null)
         {
             if (lastInteractable.GetCanvas() != null)
             {
                 lastInteractable.GetCanvas().gameObject.SetActive(false);
             }
-
             lastInteractable = null;
         }
     }
 }
-
