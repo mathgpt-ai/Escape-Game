@@ -5,66 +5,83 @@ using UnityEngine;
 
 public class WheelInteract : MonoBehaviour, IInteractable
 {
-    [SerializeField]
-    private float rotationSpeed = 90f; // Vitesse de rotation en degrés par seconde
-    [SerializeField]
-    private Canvas canvas;
-    private bool isInteracting = false; // Suivi de l'état d'interaction=======
+    [SerializeField] private Transform cameraPivot;
+    [SerializeField] private Transform playerCamera;
+    [SerializeField] private MonoBehaviour fpsControllerScript;
+    [SerializeField] private float transitionSpeed = 5f;
+    [SerializeField] private Canvas canvas;
+
+    private bool isInteracting = false;
     private float currentRotation;
     private Quaternion startRotation;
+    private float Timer = 0.0f;
 
     private void Start()
     {
         canvas.gameObject.SetActive(false);
         startRotation = transform.localRotation;
     }
+
     private void Update()
     {
         if (isInteracting)
         {
-            if (isInteracting)
-            {
-                if (Input.GetKey(KeyCode.R))
-                {
-                    float delta = rotationSpeed * Time.deltaTime;
-                    transform.Rotate(Vector3.up, delta);
-                    currentRotation += delta;
-                }
-                else if (Input.GetKey(KeyCode.L))
-                {
-                    float delta = -rotationSpeed * Time.deltaTime;
-                    transform.Rotate(Vector3.up, delta);
-                    currentRotation += delta;
-                }
+            Timer += Time.deltaTime;
+            // ici on veroille la cam pour sur la valve avec une petite transition
+            playerCamera.position = Vector3.Lerp(playerCamera.position, cameraPivot.position, Time.deltaTime * transitionSpeed);
+            playerCamera.rotation = Quaternion.Lerp(playerCamera.rotation, cameraPivot.rotation, Time.deltaTime * transitionSpeed);
 
-                currentRotation = Mathf.Repeat(currentRotation, 360f); // Pour rester entre 0 et 360
+            if (Input.GetKey(KeyCode.R))
+            {
+                float delta = 45f * Time.deltaTime;
+                transform.Rotate(Vector3.up, delta);
+                currentRotation += delta;
+            }
+            else if (Input.GetKey(KeyCode.L))
+            {
+                float delta = -45f * Time.deltaTime;
+                transform.Rotate(Vector3.up, delta);
+                currentRotation += delta;
+            }
+
+            currentRotation = Mathf.Repeat(currentRotation, 360f);
+
+            if (Input.GetKeyDown(KeyCode.E) && Timer > 1.0f)
+            {
+                EndInteraction();
+                Timer = 0.0f;
             }
         }
     }
 
     public void Interact()
     {
-        // Alterner l'état d'interaction avec "E"
-        isInteracting = !isInteracting;
-        Debug.Log("Interaction avec la valve : " + (isInteracting ? "Activée" : "Désactivée"));
+        isInteracting = true;
+        canvas.gameObject.SetActive(true);
+        if (fpsControllerScript != null)
+        {
+            fpsControllerScript.enabled = false;
+        }
     }
 
-    public Canvas GetCanvas()
+    private void EndInteraction()
     {
-        return canvas;
+        isInteracting = false;
+        canvas.gameObject.SetActive(false);
+        if (fpsControllerScript != null)
+        {
+            fpsControllerScript.enabled = true;
+        }
     }
+
+    public Canvas GetCanvas() => canvas;
 
     public void SetStartValue(float percent)
     {
-        percent = Mathf.Clamp(percent, 0f, 100f); // Securité
+        percent = Mathf.Clamp(percent, 0f, 100f);
         float angle = percent / 100f * 360f;
         currentRotation = angle;
     }
 
-    public float GetCurrentRotation()
-    {
-        return currentRotation;
-    }
-
-
+    public float GetCurrentRotation() => currentRotation;
 }

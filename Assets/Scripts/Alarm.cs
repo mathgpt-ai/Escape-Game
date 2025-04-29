@@ -4,33 +4,70 @@ using UnityEngine;
 
 public class Alarm : MonoBehaviour, IInteractable
 {
+    [SerializeField] private AudioClip countdown;
+    [SerializeField] private AudioClip poweringUp;
+    [SerializeField] private string lightsTag = "AlarmLight";
+    [SerializeField] private Material material;
+
     public Scene3Trigger scene3;
-    public string lightsTag = "AlarmLight";
-    public Material material;
-    public bool alarm = true;
-    private Canvas canvas;
+
+    Canvas canvas;
+
     private AudioSource audioSource;
+    private float timer = 0f;
+    private bool alarm = true;
+
+    private bool hasPlayedCountdown = false;
+    private bool hasPlayedPoweringUp = false;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
+
     private void Update()
     {
         if (alarm)
-        {
-            float intensity = Mathf.Sin(Time.time * 4f) * 0.5f + 0.5f;
-            Color baseColor = Color.red * intensity;
-            material.SetColor("_EmissionColor", baseColor);
-            if (audioSource != null && !audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
-        }
+            HandleAlarmEffects();
         else
+            HandleAlarmOffEffects();
+    }
+
+    private void HandleAlarmEffects()
+    {
+        float intensity = Mathf.Sin(Time.time * 4f) * 0.5f + 0.5f;
+        Color baseColor = Color.red * intensity;
+        material.SetColor("_EmissionColor", baseColor);
+
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+
+        // Réinitialisation des états si l'alarme se rallume
+        hasPlayedCountdown = false;
+        hasPlayedPoweringUp = false;
+        timer = 0f;
+    }
+
+    private void HandleAlarmOffEffects()
+    {
+        if (!hasPlayedCountdown)
         {
             audioSource.Stop();
-            material.SetColor("_EmissionColor", Color.white);
+            audioSource.PlayOneShot(countdown);
+            hasPlayedCountdown = true;
         }
+
+        timer += Time.deltaTime;
+
+        if (timer > 10.2f && !hasPlayedPoweringUp)
+        {
+            audioSource.PlayOneShot(poweringUp);
+            hasPlayedPoweringUp = true;
+        }
+
+        material.SetColor("_EmissionColor", Color.white);
     }
 
     public void Interact()
@@ -38,15 +75,16 @@ public class Alarm : MonoBehaviour, IInteractable
         if (alarm)
         {
             alarm = false;
+            timer = 0f;
 
             if (scene3 != null && scene3.IsActive)
             {
-                // pour ytrouver tt les lumières/ neon
                 GameObject[] lights = GameObject.FindGameObjectsWithTag(lightsTag);
                 Debug.Log(lights.Length);
+
                 foreach (GameObject light in lights)
                 {
-                    // désactive le script
+                    // Désactiver script LEDNode
                     LEDNode ledNode = light.GetComponent<LEDNode>();
                     if (ledNode != null)
                     {
@@ -54,14 +92,14 @@ public class Alarm : MonoBehaviour, IInteractable
                         ledNode.enabled = false;
                     }
 
-                    // change la couleur de la lumière
+                    // Changer la couleur de la lumière
                     Light lightComponent = light.GetComponent<Light>();
                     if (lightComponent != null)
                     {
                         lightComponent.color = Color.white;
                     }
 
-                    // **NEW** : change l'émission du matériel
+                    // Changer l'émission du matériel
                     Renderer renderer = light.GetComponent<Renderer>();
                     if (renderer != null)
                     {
