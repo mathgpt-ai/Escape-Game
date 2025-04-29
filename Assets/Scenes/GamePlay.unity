@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: c2f768c63eb946a4c94c8d24d0231a30, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: e79deb2e6d4a5b142a0efa22234d22f5, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1587,8 +1587,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sp: {fileID: 21300000, guid: ebfe086d57bcfd34b943230b20e05bf3, type: 3}
-  Holdpoint: {fileID: 1542346357}
   itemToHoldPrefab: {fileID: 0}
+  moveSpeed: 100
 --- !u!1 &1900843775
 GameObject:
   m_ObjectHideFlags: 0
