@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPickUp : MonoBehaviour, IPickable
@@ -13,6 +14,7 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     private Canvas canvas;
     private Inventory inventory;
     private int inventorySlotIndex = -1; // To track which slot this item is in
+    private static Dictionary<int, GameObject> slotToHeldObject = new Dictionary<int, GameObject>();
 
     public bool IsHolding => isHolding;
     public int moveSpeed = 100;
@@ -24,9 +26,25 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         StartCoroutine(FindInventoryAfterDelay());
     }
 
+    void Update()
+    {
+        // Check if this object is in inventory but not in the selected slot
+        if (heldCopy != null && inventory != null)
+        {
+            // Show/hide based on selected slot
+            bool shouldBeVisible = (inventorySlotIndex == inventory.SelectedSlot);
+
+            // Only update if visibility state has changed
+            if (heldCopy.activeSelf != shouldBeVisible)
+            {
+                heldCopy.SetActive(shouldBeVisible);
+            }
+        }
+    }
+
     IEnumerator FindInventoryAfterDelay()
     {
-        yield return new WaitForSeconds(1f); // Reduced delay time for better responsiveness
+        yield return new WaitForSeconds(1f);
         GameObject hotbar = GameObject.Find("Hotbar");
         if (hotbar != null)
         {
@@ -72,6 +90,13 @@ public class ObjectPickUp : MonoBehaviour, IPickable
             isHolding = true;
             heldCopy = Instantiate(gameObject, holdPoint.position, holdPoint.rotation, holdPoint);
 
+            // Store reference to held object by slot
+            if (slotToHeldObject.ContainsKey(inventorySlotIndex))
+            {
+                Destroy(slotToHeldObject[inventorySlotIndex]);
+            }
+            slotToHeldObject[inventorySlotIndex] = heldCopy;
+
             // Disable components on held copy
             ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
             if (pickupComponent != null) pickupComponent.enabled = false;
@@ -81,6 +106,9 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
+
+            // Only show if this is the currently selected slot
+            heldCopy.SetActive(inventorySlotIndex == inventory.SelectedSlot);
 
             // Destroy original object
             Destroy(gameObject);
@@ -96,6 +124,15 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         {
             // Remove from inventory
             inventory.RemoveItem();
+
+            // Remove from our tracking dictionary
+            if (slotToHeldObject.ContainsKey(inventorySlotIndex))
+            {
+                slotToHeldObject.Remove(inventorySlotIndex);
+            }
+
+            // Ensure object is active before dropping
+            heldCopy.SetActive(true);
 
             // Detach from parent
             heldCopy.transform.parent = null;
@@ -124,6 +161,7 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
             isHolding = false;
             inventorySlotIndex = -1;
+            heldCopy = null;
         }
         else
         {
@@ -158,5 +196,15 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     public int GetInventorySlotIndex()
     {
         return inventorySlotIndex;
+    }
+
+    // Static method to get the currently held object
+    public static GameObject GetCurrentlyHeldObject(int slotIndex)
+    {
+        if (slotToHeldObject.ContainsKey(slotIndex))
+        {
+            return slotToHeldObject[slotIndex];
+        }
+        return null;
     }
 }
