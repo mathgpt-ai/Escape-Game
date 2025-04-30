@@ -31,7 +31,7 @@ public class MagnetsObjects : MonoBehaviour
 
         if (Physics.Raycast(transform.position, direction.normalized, out RaycastHit hit, distance, wallLayerMask))
         {
-            Debug.Log($"Aimant {gameObject.name} bloque");
+            
             return;
         }
 
@@ -42,7 +42,7 @@ public class MagnetsObjects : MonoBehaviour
 
         playerRb.AddForce(force, ForceMode.Acceleration);
 
-        Debug.Log($" {gameObject.name} applique {force.magnitude}N au joueur");
+       
     }
     public void SetMaterial(Material mat)
     {
