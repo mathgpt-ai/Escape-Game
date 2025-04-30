@@ -12,36 +12,35 @@ public class ZeroGravityMovement : MonoBehaviour
     public LayerMask magnetLayer;
     public Transform spawnPoint;
     [HideInInspector] public bool freezeCameraRotation = false;
+    public bool IsTp=false;
 
     private bool rotationLocked = false;
     private Rigidbody rb;
     private float rotX = 0f;
-<<<<<<< HEAD
-    [SerializeField] bool Tristanyenullaclash = false;
 
     void Start()
     {
-        if (Tristanyenullaclash)
-=======
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        if (spawnPoint != null)
->>>>>>> 07db42093f1417f22db7dfd4dffcec0a2626ef28
+        if (IsTp)
         {
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-        }
-        else
-        {
-            Debug.LogWarning(" Aucun spawn point assigné au joueur.");
-        }
-        rb.useGravity = false;
-        rb.drag = 0.5f;
-        Cursor.lockState = CursorLockMode.Locked;
 
-        UpdateChargeEffect();
+
+            rb = GetComponent<Rigidbody>();
+            if (spawnPoint != null)
+            {
+
+                transform.position = spawnPoint.position;
+                transform.rotation = spawnPoint.rotation;
+            }
+            else
+            {
+                Debug.LogWarning(" Aucun spawn point assigné au joueur.");
+            }
+            rb.useGravity = false;
+            rb.drag = 0.5f;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            UpdateChargeEffect();
+        }
     }
 
     void Update()
