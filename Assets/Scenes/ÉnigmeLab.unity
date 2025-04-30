@@ -1879,6 +1879,8 @@ MonoBehaviour:
   criticalColor: {r: 1, g: 0, b: 0, a: 1}
   warningThreshold: 45
   criticalThreshold: 25
+  debugMode: 1
+  postRespawnImmunity: 3
 --- !u!1 &610947719
 GameObject:
   m_ObjectHideFlags: 0

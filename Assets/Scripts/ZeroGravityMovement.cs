@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class ZeroGravityMovement : MonoBehaviour
     public LayerMask magnetLayer;
     public Transform spawnPoint;
     [HideInInspector] public bool freezeCameraRotation = false;
+    public bool IsTp=false;
 
     private bool rotationLocked = false;
     private Rigidbody rb;
@@ -18,21 +20,27 @@ public class ZeroGravityMovement : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        if (spawnPoint != null)
+        if (IsTp)
         {
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-        }
-        else
-        {
-            Debug.LogWarning(" Aucun spawn point assigné au joueur.");
-        }
-        rb.useGravity = false;
-        rb.drag = 0.5f;
-        Cursor.lockState = CursorLockMode.Locked;
 
-        UpdateChargeEffect();
+
+            rb = GetComponent<Rigidbody>();
+            if (spawnPoint != null)
+            {
+
+                transform.position = spawnPoint.position;
+                transform.rotation = spawnPoint.rotation;
+            }
+            else
+            {
+                Debug.LogWarning(" Aucun spawn point assigné au joueur.");
+            }
+            rb.useGravity = false;
+            rb.drag = 0.5f;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            UpdateChargeEffect();
+        }
     }
 
     void Update()

@@ -10,7 +10,7 @@ public class TeleportToPuzzle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            
+            Debug.Log("NIGGERNIGGASTRISTAn");
             Rigidbody rb = other.GetComponent<Rigidbody>();
             rb.useGravity = false;
 
@@ -19,6 +19,7 @@ public class TeleportToPuzzle : MonoBehaviour
             zerograv zeroGrav = other.GetComponent<zerograv>();
             ZeroGravityMovement zeroGravMvt = other.GetComponent<ZeroGravityMovement>();
             FirstPersonController normalMove = other.GetComponent<FirstPersonController>();
+            
 
             if (zeroGrav != null)
             {
@@ -26,6 +27,7 @@ public class TeleportToPuzzle : MonoBehaviour
             }
             if (zeroGravMvt != null)
             {
+                zeroGravMvt.IsTp = true;
                 zeroGravMvt.enabled = true;
             }
             if (normalMove != null)
