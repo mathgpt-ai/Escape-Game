@@ -1153,10 +1153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5694ebb9fbf551648a9155174813909c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gameplay: 1
-  GUI: 2
-  Settings: 3
-  MainMenu: 0
+  Gameplay: 0
+  GUI: 1
+  Settings: 5
+  MainMenu: 4
 --- !u!114 &973359469
 MonoBehaviour:
   m_ObjectHideFlags: 0
