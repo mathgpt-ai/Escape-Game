@@ -16,6 +16,7 @@ public class WheelInteract : MonoBehaviour, IInteractable
     private float currentRotation;
     private Quaternion startRotation;
     private float Timer = 0.0f;
+    Vector3 returnPosition;
 
     private void Start()
     {
@@ -57,6 +58,7 @@ public class WheelInteract : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        returnPosition = playerCamera.position;
         isInteracting = true;
         canvas.gameObject.SetActive(true);
         if (fpsControllerScript != null)
@@ -68,6 +70,7 @@ public class WheelInteract : MonoBehaviour, IInteractable
     private void EndInteraction()
     {
         isInteracting = false;
+        playerCamera.position = returnPosition;
         canvas.gameObject.SetActive(false);
         if (fpsControllerScript != null)
         {
