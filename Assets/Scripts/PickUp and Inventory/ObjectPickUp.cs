@@ -1,14 +1,15 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPickUp : MonoBehaviour, IPickable
 {
+    [Header("Visual Settings")]
     [SerializeField] private Sprite sp;
+    [Tooltip("Optional alternate prefab to spawn when object is held (if null, a copy of this object is used)")]
     [SerializeField] private GameObject itemToHoldPrefab;
-    [SerializeField] private AudioClip pickupSound;
-    [SerializeField] private AudioClip dropSound;
 
-    // Custom hold point offset for this specific object
+    [Header("Hold Position Settings")]
     [SerializeField] private float holdPositionOffsetX = 0f;
     [SerializeField] private float holdPositionOffsetY = 0f;
     [SerializeField] private float holdPositionOffsetZ = 0f;
@@ -16,11 +17,23 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     [SerializeField] private float holdRotationOffsetY = 0f;
     [SerializeField] private float holdRotationOffsetZ = 0f;
 
-    // New field to control if the object can be inspected
-    [SerializeField] private bool canBeInspected = true;
-    [Tooltip("If set to false, this object cannot be inspected by the player")]
+    [Header("Scale Settings")]
+    [Tooltip("Scale multiplier for the object when held (1 = original size)")]
+    [SerializeField] private float heldScaleX = 1.0f;
+    [SerializeField] private float heldScaleY = 1.0f;
+    [SerializeField] private float heldScaleZ = 1.0f;
 
-    public int moveSpeed = 100;
+    [Header("Behavior Settings")]
+    [Tooltip("If false, this object cannot be inspected (brought closer to view)")]
+    [SerializeField] private bool canBeInspected = true;
+    [SerializeField] private int moveSpeed = 100;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private AudioClip dropSound;
+
+    // Dictionary to store original scales
+    private static Dictionary<string, Vector3> prefabOriginalScales = new Dictionary<string, Vector3>();
 
     private GameObject heldCopy;
     private bool isHolding = false;
@@ -28,15 +41,51 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     private Inventory inventory;
     private int inventorySlotIndex = -1;
     private GameObject customHoldPointObj;
+    private string objectId;
+
+    // Keep track of all held items for visibility management
+    private static Dictionary<int, GameObject> slotToHeldObject = new Dictionary<int, GameObject>();
 
     public bool IsHolding => isHolding;
     public Canvas GetCanvas() => canvas;
     public bool CanBeInspected => canBeInspected;
 
+    void Awake()
+    {
+        // Create a unique identifier for this prefab type
+        objectId = gameObject.name.Replace("(Clone)", "");
+
+        // Only store the original scale once per prefab type
+        if (!prefabOriginalScales.ContainsKey(objectId))
+        {
+            prefabOriginalScales[objectId] = transform.localScale;
+        }
+    }
+
     void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
         StartCoroutine(FindInventoryAfterDelay());
+    }
+
+    void Update()
+    {
+        // Check if we need to update visibility based on selected slot
+        UpdateVisibility();
+    }
+
+    private void UpdateVisibility()
+    {
+        if (inventory != null && heldCopy != null && inventorySlotIndex >= 0)
+        {
+            bool shouldBeVisible = (inventorySlotIndex == inventory.SelectedSlot);
+
+            // Only update if visibility state has changed
+            if (heldCopy.activeSelf != shouldBeVisible)
+            {
+                heldCopy.SetActive(shouldBeVisible);
+            }
+        }
     }
 
     IEnumerator FindInventoryAfterDelay()
@@ -46,6 +95,11 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         if (hotbar != null)
         {
             inventory = hotbar.GetComponent<Inventory>();
+            if (inventory != null)
+            {
+                // Once we find the inventory, immediately update visibility
+                UpdateVisibility();
+            }
         }
     }
 
@@ -91,27 +145,63 @@ public class ObjectPickUp : MonoBehaviour, IPickable
                 canvas.gameObject.SetActive(false);
             }
 
-            // Create held copy at the custom hold point
+            // Create held copy
             isHolding = true;
-            heldCopy = Instantiate(
-                gameObject,
-                customHoldPointObj.transform.position,
-                customHoldPointObj.transform.rotation,
-                customHoldPointObj.transform
+
+            if (itemToHoldPrefab != null)
+            {
+                heldCopy = Instantiate(
+                    itemToHoldPrefab,
+                    customHoldPointObj.transform.position,
+                    customHoldPointObj.transform.rotation,
+                    customHoldPointObj.transform
+                );
+            }
+            else
+            {
+                heldCopy = Instantiate(
+                    gameObject,
+                    customHoldPointObj.transform.position,
+                    customHoldPointObj.transform.rotation,
+                    customHoldPointObj.transform
+                );
+
+                ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
+                if (pickupComponent != null)
+                {
+                    pickupComponent.enabled = false;
+                }
+            }
+
+            // Clean up any previous object in this slot
+            if (slotToHeldObject.ContainsKey(inventorySlotIndex) && slotToHeldObject[inventorySlotIndex] != null)
+            {
+                Destroy(slotToHeldObject[inventorySlotIndex]);
+            }
+
+            // Register this object in our slot tracking dictionary
+            slotToHeldObject[inventorySlotIndex] = heldCopy;
+
+            // Get the original scale from our dictionary and apply the scale multipliers
+            Vector3 trueOriginalScale = prefabOriginalScales[objectId];
+            Vector3 newScale = new Vector3(
+                trueOriginalScale.x * heldScaleX,
+                trueOriginalScale.y * heldScaleY,
+                trueOriginalScale.z * heldScaleZ
             );
 
-            // Disable components on held copy
-            ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
-            if (pickupComponent != null) pickupComponent.enabled = false;
+            heldCopy.transform.localScale = newScale;
 
+            // Disable components on held copy
             Collider col = heldCopy.GetComponent<Collider>();
             if (col != null) col.enabled = false;
 
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
 
-            // Only show if this is the currently selected slot
-            heldCopy.SetActive(inventorySlotIndex == inventory.SelectedSlot);
+            // Set initial visibility based on selected slot
+            bool shouldBeVisible = (inventorySlotIndex == inventory.SelectedSlot);
+            heldCopy.SetActive(shouldBeVisible);
 
             // Destroy original object
             Destroy(gameObject);
@@ -128,11 +218,33 @@ public class ObjectPickUp : MonoBehaviour, IPickable
             // Remove from inventory
             inventory.RemoveItem();
 
+            // Remove from our tracking dictionary
+            if (slotToHeldObject.ContainsKey(inventorySlotIndex))
+            {
+                slotToHeldObject.Remove(inventorySlotIndex);
+            }
+
             // Ensure object is active before dropping
             heldCopy.SetActive(true);
 
             // Detach from parent
             heldCopy.transform.parent = null;
+
+            // Get the true original scale from our dictionary
+            Vector3 trueOriginalScale = prefabOriginalScales[objectId];
+
+            // Reset to the true original scale
+            heldCopy.transform.localScale = trueOriginalScale;
+
+            // Re-enable components
+            ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
+            if (pickupComponent != null)
+            {
+                pickupComponent.enabled = true;
+            }
+
+            Collider col = heldCopy.GetComponent<Collider>();
+            if (col != null) col.enabled = true;
 
             // Enable physics
             Rigidbody rb = heldCopy.GetComponent<Rigidbody>();
@@ -142,13 +254,6 @@ public class ObjectPickUp : MonoBehaviour, IPickable
                 rb.useGravity = true;
                 rb.AddForce(holdPoint.forward * 2f, ForceMode.Impulse);
             }
-
-            // Re-enable components
-            ObjectPickUp pickupComponent = heldCopy.GetComponent<ObjectPickUp>();
-            if (pickupComponent != null) pickupComponent.enabled = true;
-
-            Collider col = heldCopy.GetComponent<Collider>();
-            if (col != null) col.enabled = true;
 
             // Play drop sound
             if (dropSound != null)
@@ -177,7 +282,7 @@ public class ObjectPickUp : MonoBehaviour, IPickable
         // Only allow inspection if:
         // 1. Object is in the selected inventory slot
         // 2. The object exists
-        // 3. The object can be inspected (NEW CHECK)
+        // 3. The object can be inspected
         if (inventory != null && inventorySlotIndex == inventory.SelectedSlot && heldCopy != null && canBeInspected)
         {
             heldCopy.transform.position = Vector3.MoveTowards(
@@ -202,5 +307,23 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     public int GetInventorySlotIndex()
     {
         return inventorySlotIndex;
+    }
+
+    // This method can be called externally to force visibility update
+    public void ForceVisibilityUpdate()
+    {
+        UpdateVisibility();
+    }
+
+    // Static method to update visibility of all held objects
+    public static void UpdateAllObjectVisibility(int selectedSlot)
+    {
+        foreach (var entry in slotToHeldObject)
+        {
+            if (entry.Value != null)
+            {
+                entry.Value.SetActive(entry.Key == selectedSlot);
+            }
+        }
     }
 }

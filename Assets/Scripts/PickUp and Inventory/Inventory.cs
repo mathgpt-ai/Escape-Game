@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private AudioClip itemSwitchSound; // Son lors du changement de slot
 
     private int selected = 0; // Slot actuellement sélectionné
-    private Sprite[] itemSprites; // Pour stocker les sprites des objets
+    private int previousSelected = 0; // Keep track of the previous selection
 
     public int SelectedSlot => selected;
 
@@ -21,9 +21,6 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
-        // Initialiser le tableau de sprites 
-        itemSprites = new Sprite[inventoryItems.Length];
-
         // Désactiver tous les slots d'items
         for (int i = 0; i < inventoryItems.Length; i++)
         {
@@ -38,13 +35,17 @@ public class Inventory : MonoBehaviour
         {
             if (Input.GetKeyDown(Ikeys[i])) // Change seulement à l'appui, évite le spam
             {
-                // Jouer le son de changement si disponible
-                if (itemSwitchSound != null && i != selected)
+                previousSelected = selected;
+                selected = i;
+
+                // Only play sound if we actually changed slots
+                if (previousSelected != selected && itemSwitchSound != null)
                 {
                     AudioSource.PlayClipAtPoint(itemSwitchSound, Camera.main.transform.position);
                 }
 
-                selected = i;
+                // Update visibility of all held objects
+                ObjectPickUp.UpdateAllObjectVisibility(selected);
             }
         }
 
@@ -71,7 +72,6 @@ public class Inventory : MonoBehaviour
         // Tente d'abord d'ajouter au slot sélectionné
         if (!inventoryItems[selected].enabled)
         {
-            itemSprites[selected] = newItem;
             inventoryItems[selected].sprite = newItem;
             inventoryItems[selected].enabled = true;
             return selected;
@@ -82,7 +82,6 @@ public class Inventory : MonoBehaviour
         {
             if (!inventoryItems[i].enabled)
             {
-                itemSprites[i] = newItem;
                 inventoryItems[i].sprite = newItem;
                 inventoryItems[i].enabled = true;
                 return i;
@@ -98,23 +97,8 @@ public class Inventory : MonoBehaviour
     {
         if (inventoryItems[selected].enabled)
         {
-            itemSprites[selected] = null;
             inventoryItems[selected].sprite = null;
             inventoryItems[selected].enabled = false;
         }
-    }
-
-    public Sprite GetSelectedItemSprite()
-    {
-        return itemSprites[selected];
-    }
-
-    public bool IsSlotOccupied(int slotIndex)
-    {
-        if (slotIndex >= 0 && slotIndex < inventoryItems.Length)
-        {
-            return inventoryItems[slotIndex].enabled;
-        }
-        return false;
     }
 }

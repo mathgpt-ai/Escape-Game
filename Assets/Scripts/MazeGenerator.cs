@@ -51,24 +51,27 @@ public class MazeGenerator : MonoBehaviour
         usedCells.Clear();
         usedWalls.Clear();
 
-        // Destroy all tracked generated objects
+        // Clean up only objects with MazeCell or Dragon tag from tracked objects
         foreach (GameObject obj in generatedObjects)
         {
-            if (obj != null)
+            if (obj != null && (obj.CompareTag("MazeCell") || obj.CompareTag("Dragon")))
             {
                 Destroy(obj);
             }
         }
-        generatedObjects.Clear();
 
-        // Clean up grid cells
+        // Filter out the destroyed objects from our list
+        generatedObjects = generatedObjects.Where(obj => obj != null &&
+            !(obj.CompareTag("MazeCell") || obj.CompareTag("Dragon"))).ToList();
+
+        // Clean up grid cells if they have MazeCell tag
         if (_mazeGrid != null)
         {
             for (int x = 0; x < _mazeWidth; x++)
             {
                 for (int z = 0; z < _mazeDepth; z++)
                 {
-                    if (_mazeGrid[x, z] != null)
+                    if (_mazeGrid[x, z] != null && _mazeGrid[x, z].CompareTag("MazeCell"))
                     {
                         Destroy(_mazeGrid[x, z].gameObject);
                     }
@@ -76,7 +79,7 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        // Find and destroy all dragons if they weren't tracked
+        // Find and destroy all dragons with Dragon tag
         GameObject[] dragons = GameObject.FindGameObjectsWithTag("Dragon");
         foreach (GameObject dragon in dragons)
         {
@@ -86,13 +89,13 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        // Find and destroy all doors if they weren't tracked
-        GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
-        foreach (GameObject d in doors)
+        // Find and destroy all maze cells with MazeCell tag that might have been missed
+        GameObject[] mazeCells = GameObject.FindGameObjectsWithTag("MazeCell");
+        foreach (GameObject cell in mazeCells)
         {
-            if (d != null)
+            if (cell != null)
             {
-                Destroy(d);
+                Destroy(cell);
             }
         }
     }
@@ -120,6 +123,9 @@ public class MazeGenerator : MonoBehaviour
                     Quaternion.identity,
                     transform
                 );
+
+                // Ensure the cell has the MazeCell tag
+                newCell.gameObject.tag = "MazeCell";
 
                 _mazeGrid[x, z] = newCell;
                 generatedObjects.Add(newCell.gameObject);
@@ -242,7 +248,6 @@ public class MazeGenerator : MonoBehaviour
 
         // Instantiate door at exit
         GameObject exitDoor = Instantiate(door, end, Quaternion.identity);
-        exitDoor.tag = "Door"; // Tag for easy finding later
         generatedObjects.Add(exitDoor);
     }
 
@@ -278,6 +283,7 @@ public class MazeGenerator : MonoBehaviour
             GameObject dragonInstance = InstantiateDragon(randomCell, dragonPrefabs[i]);
             if (dragonInstance != null)
             {
+                dragonInstance.tag = "Dragon";
                 generatedObjects.Add(dragonInstance);
             }
         }
@@ -333,12 +339,6 @@ public class MazeGenerator : MonoBehaviour
             case "Right":
                 dragonInstance = Instantiate(dragonPrefab, cell.transform.position + new Vector3(1.5f, 1, 0), Quaternion.Euler(90, -90, 0));
                 break;
-        }
-
-        // Tag the dragon for easy finding later
-        if (dragonInstance != null)
-        {
-            dragonInstance.tag = "Dragon";
         }
 
         return dragonInstance;

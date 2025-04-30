@@ -10,6 +10,7 @@ public class TeleportToPuzzle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            
             Rigidbody rb = other.GetComponent<Rigidbody>();
             rb.useGravity = false;
 

@@ -11,6 +11,7 @@ TagManager:
   - Sphere
   - AlarmLight
   - TrapTP
+  - MazeCell
   layers:
   - Default
   - TransparentFX

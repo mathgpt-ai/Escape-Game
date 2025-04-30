@@ -459,9 +459,9 @@ Transform:
   m_GameObject: {fileID: 311288516}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3360146, y: -0.32994246, z: -0.622169, w: -0.62541026}
-  m_LocalPosition: {x: -22.51, y: -0.34, z: -143.89}
-  m_LocalScale: {x: 0.79999995, y: 0.79999995, z: 0.79999995}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -22.51, y: -1.053, z: -143.89}
+  m_LocalScale: {x: 0.40725595, y: 0.40725595, z: 0.40725595}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -477,10 +477,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf84fcb0abec5c448baf90ed9747148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene3: {fileID: 0}
+  countdown: {fileID: 0}
+  poweringUp: {fileID: 0}
   lightsTag: AlarmLight
   material: {fileID: 2100000, guid: f481cf43c7f7bca4295f4a47006da8d6, type: 2}
-  alarm: 1
+  scene3: {fileID: 0}
 --- !u!1001 &329726263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1608,8 +1609,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.50242776, y: -0.49756062, z: -0.49756047, w: -0.5024276}
   m_LocalPosition: {x: -22.50062, y: -2.1369772, z: -144.17303}
-  m_LocalScale: {x: 0.79999995, y: 0.79999995, z: 0.79999995}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.39992797, y: 0.39992797, z: 0.39992797}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3082,7 +3083,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
