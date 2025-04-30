@@ -16,11 +16,11 @@ public class ZeroGravityMovement : MonoBehaviour
     private bool rotationLocked = false;
     private Rigidbody rb;
     private float rotX = 0f;
-    [SerializeField] bool niggerballs = false;
+    [SerializeField] bool Tristanyenullaclash = false;
 
     void Start()
     {
-        if (niggerballs)
+        if (Tristanyenullaclash)
         {
 
 
