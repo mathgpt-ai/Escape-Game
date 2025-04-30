@@ -1868,8 +1868,6 @@ MonoBehaviour:
   timerText: {fileID: 300792829}
   spawnPoint: {fileID: 1698544009}
   respawnDelay: 2
-  mainSceneName: "\xC9nigmeLab"
-  spawnPointTag: Respawn
   timerStartSound: {fileID: 8300000, guid: 84a3bd02962d96e40b89ea9fba39ce9d, type: 3}
   timerEndSound: {fileID: 8300000, guid: 9359bfc590ca51b43a9d4f1db1b35766, type: 3}
   timerWarningSound: {fileID: 8300000, guid: bf15f542c748db44aa02a8008a16bedf, type: 3}
@@ -1881,7 +1879,6 @@ MonoBehaviour:
   criticalColor: {r: 1, g: 0, b: 0, a: 1}
   warningThreshold: 45
   criticalThreshold: 25
-  showDebugLogs: 1
 --- !u!1 &610947719
 GameObject:
   m_ObjectHideFlags: 0

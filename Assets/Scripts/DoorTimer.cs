@@ -30,11 +30,16 @@ public class DoorTimer : MonoBehaviour
     [SerializeField] private float warningThreshold = 60f; // 1 minute warning
     [SerializeField] private float criticalThreshold = 30f; // 30 seconds critical
 
+    [Header("Debug Settings")]
+    [SerializeField] private bool debugMode = true; // Toggle for debug logs
+
     private bool timerActive = false;
     private float currentTime;
     private bool hasTimerStarted = false;
     private float nextTickTime = 0f; // For tracking when to play the next tick
     private GameObject player;
+    private Vector3 cachedSpawnPosition; // Store a cached copy of the spawn position
+    private bool respawning = false; // Flag to indicate respawn is in progress
 
     void Start()
     {
@@ -62,6 +67,12 @@ public class DoorTimer : MonoBehaviour
                 spawnPoint = possibleSpawnPoint.transform;
                 Debug.Log("Found spawn point in scene: " + spawnPoint.name);
             }
+        }
+        else
+        {
+            // Cache the spawn position - IMPORTANT
+            cachedSpawnPosition = spawnPoint.position;
+            Debug.Log("Cached spawn position: " + cachedSpawnPosition);
         }
     }
 
@@ -120,6 +131,9 @@ public class DoorTimer : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        // Don't do anything if we're already respawning
+        if (respawning) return;
+
         // Find the LockedDoor component to check if it's unlocked
         LockedDoor lockedDoor = GetComponent<LockedDoor>();
 
@@ -172,43 +186,68 @@ public class DoorTimer : MonoBehaviour
             PlaySound(timerEndSound);
         }
 
-        // Start respawn process
-        StartCoroutine(RespawnPlayerAndResetMaze());
-
         Debug.Log("Timer Ended! Respawning player...");
+
+        // Start respawn process
+        RespawnDirectly();
     }
 
-    IEnumerator RespawnPlayerAndResetMaze()
+    // This is a direct teleportation approach instead of using a coroutine
+    private void RespawnDirectly()
     {
-        // Disable player movement (optional - if you have a player controller component)
+        Debug.Log("Direct respawn initiated");
+        respawning = true;
+
+        // Disable player movement
         DisablePlayerMovement();
 
-        // Optional: fade screen, show message, etc.
-
-        // Wait for delay
-        yield return new WaitForSeconds(respawnDelay);
-
-        // Respawn player at spawn point
-        if (player != null && spawnPoint != null)
+        // Make sure player reference is valid
+        if (player == null)
         {
-            player.transform.position = spawnPoint.position;
-            player.transform.rotation = spawnPoint.rotation;
+            player = GameObject.FindGameObjectWithTag("Player");
         }
 
-        // Find and regenerate the maze
-        RegenerateMaze();
+        // CRITICAL CHANGE: Use the cached spawn position directly
+        if (player != null)
+        {
+            Debug.Log("Teleporting player from " + player.transform.position + " to " + cachedSpawnPosition);
 
-        // Hide timer text
+            // Disable character controller if any
+            CharacterController controller = player.GetComponent<CharacterController>();
+            if (controller != null)
+            {
+                controller.enabled = false;
+            }
+
+            // Direct teleport
+            player.transform.position = cachedSpawnPosition;
+
+            // Re-enable controller
+            if (controller != null)
+            {
+                controller.enabled = true;
+            }
+
+            Debug.Log("Final player position: " + player.transform.position);
+            Debug.Log("Distance from intended position: " + Vector3.Distance(player.transform.position, cachedSpawnPosition) + " units");
+        }
+
+        // Reset the timer UI
         if (timerText != null)
         {
             timerText.gameObject.SetActive(false);
         }
 
-        // Reset timer
-        ResetTimer();
-
         // Re-enable player movement
         EnablePlayerMovement();
+
+        // Now regenerate the maze AFTER player is safely teleported
+        RegenerateMaze();
+
+        // Reset the timer
+        ResetTimer();
+
+        respawning = false;
     }
 
     // Find and regenerate the maze
@@ -220,8 +259,9 @@ public class DoorTimer : MonoBehaviour
         if (mazeGenerator != null)
         {
             // Call the RegenerateMaze method on the MazeGenerator
+            Debug.Log("Regenerating maze...");
             mazeGenerator.RegenerateMaze();
-            Debug.Log("Maze regeneration triggered!");
+            Debug.Log("Maze regeneration complete");
         }
         else
         {
@@ -352,6 +392,8 @@ public class DoorTimer : MonoBehaviour
             timerText.alpha = 1f;
         }
 
+        Debug.Log("Timer component destroyed");
+
         // Destroy the timer component itself
         Destroy(this);
     }
@@ -381,6 +423,8 @@ public class DoorTimer : MonoBehaviour
     // Helper method to play sounds with volume adjustment
     private void PlaySound(AudioClip clip)
     {
+        if (clip == null) return;
+
         float volume = AudioManager.Instance != null ?
             AudioManager.GetAdjustedVolume(audioVolume) : audioVolume;
         AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, volume);
