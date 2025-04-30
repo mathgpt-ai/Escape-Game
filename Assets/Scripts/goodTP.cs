@@ -11,7 +11,6 @@ public class TeleportToMainMap : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            print("NIGGERNIGEER");
             Rigidbody rb = other.GetComponent<Rigidbody>();
             rb.useGravity = true;
 
