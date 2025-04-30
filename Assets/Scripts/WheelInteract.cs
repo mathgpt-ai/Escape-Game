@@ -9,6 +9,7 @@ public class WheelInteract : MonoBehaviour, IInteractable
     [SerializeField] private Transform playerCamera;
     [SerializeField] private MonoBehaviour fpsControllerScript;
     [SerializeField] private float transitionSpeed = 5f;
+    [SerializeField] private float rotationspeed = 30f;
     [SerializeField] private Canvas canvas;
 
     private bool isInteracting = false;
@@ -33,13 +34,13 @@ public class WheelInteract : MonoBehaviour, IInteractable
 
             if (Input.GetKey(KeyCode.R))
             {
-                float delta = 45f * Time.deltaTime;
+                float delta = rotationspeed * Time.deltaTime;
                 transform.Rotate(Vector3.up, delta);
                 currentRotation += delta;
             }
             else if (Input.GetKey(KeyCode.L))
             {
-                float delta = -45f * Time.deltaTime;
+                float delta = -rotationspeed * Time.deltaTime;
                 transform.Rotate(Vector3.up, delta);
                 currentRotation += delta;
             }

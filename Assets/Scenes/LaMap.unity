@@ -32359,6 +32359,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
   transitionSpeed: 5
+  rotationspeed: 30
   canvas: {fileID: 468060349}
 --- !u!135 &1564721473
 SphereCollider:
@@ -33727,6 +33728,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
   transitionSpeed: 5
+  rotationspeed: 3
   canvas: {fileID: 1188746217}
 --- !u!135 &1645907723
 SphereCollider:
@@ -34683,6 +34685,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
   transitionSpeed: 5
+  rotationspeed: 30
   canvas: {fileID: 1577007676}
 --- !u!135 &1702522633
 SphereCollider:
