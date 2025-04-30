@@ -23254,6 +23254,7 @@ MonoBehaviour:
     m_Bits: 64
   spawnPoint: {fileID: 303797527}
   freezeCameraRotation: 0
+  niggerballs: 0
 --- !u!114 &1172542234
 MonoBehaviour:
   m_ObjectHideFlags: 0

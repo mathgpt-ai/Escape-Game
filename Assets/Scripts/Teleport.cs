@@ -8,7 +8,7 @@ public class Teleport : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        print("nigger");
+        
         collision.gameObject.transform.position=GameObject.Find("SpawnPoint").transform.position;
         
     }
