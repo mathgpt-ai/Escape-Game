@@ -10,7 +10,7 @@ public class TeleportToPuzzle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("NIGGERNIGGASTRISTAn");
+            Debug.Log("tristanteleportEasteregg");
             Rigidbody rb = other.GetComponent<Rigidbody>();
             rb.useGravity = false;
 
