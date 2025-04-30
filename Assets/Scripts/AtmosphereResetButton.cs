@@ -15,8 +15,6 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        transform.localPosition += new Vector3(0.1f, 0f, 0f); // Pousse le bouton vers l’intérieur (axe X)
-
         if (ValeursSontVertes())
         {
             Debug.Log("Les valeurs sont bonnes !");

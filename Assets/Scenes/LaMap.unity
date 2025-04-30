@@ -38059,7 +38059,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3394f0a1b575e541b10f1f5b2ad6be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gazTexts: []
+  gazTexts:
+  - {fileID: 502862193}
+  - {fileID: 513676948}
+  - {fileID: 799208434}
   indexEnigme: 0
   canvas: {fileID: 129182447}
 --- !u!1001 &1993413194
