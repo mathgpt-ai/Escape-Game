@@ -18,6 +18,7 @@ using UnityEngine.SceneManagement;
 public class FirstPersonController : MonoBehaviour
 {
     private Rigidbody rb;
+    
 
     #region Camera Movement Variables
 
@@ -62,6 +63,7 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isWalking = false;
+    
 
     #region Sprint
 
@@ -131,6 +133,14 @@ public class FirstPersonController : MonoBehaviour
     private float timer = 0;
 
     #endregion
+
+
+    [Header("Pause Settings")]
+    public bool enablePause = true;
+    public KeyCode pauseKey = KeyCode.P;
+    public string settingsSceneName = "Settings";
+    private bool isPaused = false;
+    private float timeScaleBeforePause;
 
     private void Awake()
     {
@@ -365,6 +375,10 @@ public class FirstPersonController : MonoBehaviour
         {
             HeadBob();
         }
+        if (enablePause && Input.GetKeyDown(pauseKey))
+        {
+            TogglePause();
+        }
     }
 
     void FixedUpdate()
@@ -444,6 +458,52 @@ public class FirstPersonController : MonoBehaviour
         #endregion
     }
 
+    private void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        if (isPaused)
+        {
+            // Save current time scale
+            timeScaleBeforePause = Time.timeScale;
+
+            // Pause the game
+            Time.timeScale = 0f;
+
+            // Lock/unlock cursor during pause
+            if (lockCursor)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+
+            // Load the Settings scene additively
+            SceneManager.LoadScene(settingsSceneName, LoadSceneMode.Additive);
+
+            // Disable player input
+            playerCanMove = false;
+            cameraCanMove = false;
+        }
+        else
+        {
+            // Restore time scale
+            Time.timeScale = timeScaleBeforePause;
+
+            // Re-lock cursor if needed
+            if (lockCursor)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
+            // Unload the Settings scene
+            SceneManager.UnloadSceneAsync(settingsSceneName);
+
+            // Re-enable player input
+            playerCanMove = true;
+            cameraCanMove = true;
+        }
+    }
     // Sets isGrounded based on a raycast sent straigth down from the player object
     private void CheckGround()
     {
