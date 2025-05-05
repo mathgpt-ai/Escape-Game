@@ -19,7 +19,7 @@ public class OxygenSystem : MonoBehaviour
 
     //scene de fin
     [SerializeField]
-    private int sceneFinale = 0;
+    private int sceneMort = 0;
 
     private bool isOxygenEmpty = false;
 
@@ -58,7 +58,7 @@ public class OxygenSystem : MonoBehaviour
 
             if (currentHP <= 0)
             {
-                SceneManager.LoadScene(sceneFinale);
+                SceneManager.LoadScene(sceneMort);
             }
         }
     }

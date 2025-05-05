@@ -5,27 +5,17 @@ using UnityEngine.UI;
 
 public class OxygenBar : MonoBehaviour
 {
-    [SerializeField]
-    private Slider slider;
+    public static OxygenBar Instance { get; private set; }
 
-    public void SetOxygen(float o2)
+    [SerializeField] private Slider slider;
+
+    private void Awake()
     {
-        slider.value = o2;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    public void SetMaxOxygen(float o2)
-    {
-        slider.maxValue = o2;
-        slider.value = o2;
-    }
-
-    public float GetCurrentOxygen()
-    {
-        return slider.value;
-    }
-
-    public float GetMaxOxygen()
-    {
-        return slider.maxValue;
-    }
+    public void SetOxygen(float o2) => slider.value = o2;
+    public float GetCurrentOxygen() => slider.value;
+    public float GetMaxOxygen() => slider.maxValue;
 }

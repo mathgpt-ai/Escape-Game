@@ -5,27 +5,17 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField]
-    private Slider slider;
+    public static HealthBar Instance { get; private set; }
 
-    public void SetHealth(float health)
+    [SerializeField] private Slider slider;
+
+    private void Awake()
     {
-        slider.value = health;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    public void SetMaxHealth(float health)
-    {
-        slider.maxValue = health;
-        slider.value = health;
-    }
-
-    public float GetCurrentHealth()
-    {
-        return slider.value;
-    }
-
-    public float GetMaxHealth()
-    {
-        return slider.maxValue;
-    }
+    public void SetHealth(float h) => slider.value = h;
+    public float GetCurrentHealth() => slider.value;
+    public float GetMaxHealth() => slider.maxValue;
 }
