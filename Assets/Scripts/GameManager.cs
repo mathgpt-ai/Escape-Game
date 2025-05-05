@@ -60,12 +60,17 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Enigme_" + index, 1);
             PlayerPrefs.Save();
 
-            Debug.Log($"Énigme {index + 1} complétée !");
+            Debug.Log($"Énigme {index} complétée !");
 
             // Vérifie s’il existe une instance valide avant d'appeler VerifierProgression()
             if (Instance != null)
             {
                 Instance.VerifierProgression();
+            }
+
+            if (ChecklistManager.Instance != null)
+            {
+                ChecklistManager.Instance.MarquerEnigmeDone(index);
             }
         }
     }
