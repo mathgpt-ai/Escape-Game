@@ -1,73 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OxygenSystem : MonoBehaviour
 {
-    private OxygenBar oxygenBar;
-    private HealthBar healthBar;
-    private GameObject oxygenBarUI;
+    //sliders
+    [SerializeField] private OxygenBar oxygenBar;
+    [SerializeField] private HealthBar healthBar;
 
-    [SerializeField] private float oxygenDecreaseRate = 0.05f; // oxygène perdu par seconde
-    [SerializeField] private float healthDecreaseRate = 1f;    // santé perdue par seconde après oxy vide
-    [SerializeField] private int indexEnigmeTuyaux = 0; // l'index de l'énigme Tuyaux dans GameManager.nomScenesEnigmes
+    //vitesse de damage
+    [SerializeField] private float oxygenDepletionRate = 1f; // Par seconde
+    [SerializeField] private float healthDepletionRate = 2f; // Par seconde
 
-    private bool oxygenDepleted = false;
-    private bool puzzleCompleted = false;
+    //scene de fin
+    [SerializeField] private string sceneFinale = "SceneGameOver";
+
+    private bool isOxygenEmpty = false;
 
     private void Start()
     {
-        // Trouver automatiquement les références dans toutes les scènes
-        oxygenBar = FindObjectOfType<OxygenBar>();
-        healthBar = FindObjectOfType<HealthBar>();
-
-        if (oxygenBar != null)
+        //initialise avec les valeurs max si nécessaire(sécurité)
+        if (oxygenBar.GetCurrentOxygen() <= 0)
         {
-            oxygenBar.SetMaxOxygen(1f);
-            oxygenBarUI = oxygenBar.transform.parent.gameObject; // récupérer le parent (Panel) pour cacher après
+            oxygenBar.SetOxygen(oxygenBar.GetMaxOxygen());
         }
 
-        if (healthBar != null)
+        if (healthBar.GetCurrentHealth() <= 0)
         {
-            healthBar.SetMaxHealth(1f); // Assume que la vie commence à 1 aussi (peut ajuster ici si différent)
+            healthBar.SetHealth(healthBar.GetMaxHealth());
         }
     }
 
     private void Update()
     {
-        if (puzzleCompleted || oxygenBar == null || healthBar == null)
-            return;
-
-        // Descendre oxygène en continu
-        oxygenBar.SetOxygen(Mathf.Max(0f, oxygenBar.GetCurrentOxygen() - oxygenDecreaseRate * Time.deltaTime));
-
-        if (oxygenBar.GetCurrentOxygen() <= 0f)
+        if (!isOxygenEmpty)
         {
-            oxygenDepleted = true;
-        }
+            float currentO2 = oxygenBar.GetCurrentOxygen();
+            currentO2 -= oxygenDepletionRate * Time.deltaTime;
+            oxygenBar.SetOxygen(Mathf.Max(0, currentO2));
 
-        // Si plus d'oxygène = descendre la santé
-        if (oxygenDepleted)
-        {
-            healthBar.SetHealth(Mathf.Max(0f, healthBar.GetCurrentHealth() - healthDecreaseRate * Time.deltaTime));
-        }
-
-        if (GameManager.EstEnigmeComplete(indexEnigmeTuyaux))
-        {
-            HandlePuzzleTuyauxCompleted();
-        }
-    }
-
-    public void HandlePuzzleTuyauxCompleted()
-    {
-        puzzleCompleted = true;
-
-        if (oxygenBar != null)
-        {
-            oxygenBar.SetOxygen(1f); // Remettre oxygène à 1
-            if (oxygenBarUI != null)
+            if (currentO2 <= 0)
             {
-                oxygenBarUI.SetActive(false); // Cacher l'UI
+                isOxygenEmpty = true;
+            }
+        }
+        else
+        {
+            float currentHP = healthBar.GetCurrentHealth();
+            currentHP -= healthDepletionRate * Time.deltaTime;
+            healthBar.SetHealth(Mathf.Max(0, currentHP));
+
+            if (currentHP <= 0)
+            {
+                SceneManager.LoadScene(sceneFinale);
             }
         }
     }

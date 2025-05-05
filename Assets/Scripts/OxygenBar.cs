@@ -23,4 +23,9 @@ public class OxygenBar : MonoBehaviour
     {
         return slider.value;
     }
+
+    public float GetMaxOxygen()
+    {
+        return slider.maxValue;
+    }
 }
