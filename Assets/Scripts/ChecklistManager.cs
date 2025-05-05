@@ -9,7 +9,9 @@ public class ChecklistManager : MonoBehaviour
     public static ChecklistManager Instance;
 
     [SerializeField]
-    private TextMeshProUGUI[] enigmeTexts;
+    private TextMeshProUGUI[] taskTexts;
+    [SerializeField]
+    private TextMeshProUGUI texteFinalInstruction;
 
     private int currentTaskIndex = 0;
 
@@ -31,28 +33,28 @@ public class ChecklistManager : MonoBehaviour
 
     private int TrouverTacheActuelle()
     {
-        for (int i = 0; i < enigmeTexts.Length; i++)
-        {
-            if (PlayerPrefs.GetInt("Enigme_", 0) == 0)
+        for (int i = 0; i < taskTexts.Length; i++)
+        { 
+            if (PlayerPrefs.GetInt("Enigme_"+i, 0) == 0)
             {
                 return i;
             }
         }
         // Tout est terminé
-        return enigmeTexts.Length;
+        return taskTexts.Length;
     }
 
     private void MettreAJourChecklist()
     {
-        for (int i = 0; i < enigmeTexts.Length; i++)
+        for (int i = 0; i < taskTexts.Length; i++)
         {
-            enigmeTexts[i].gameObject.SetActive(i == currentTaskIndex);
+            taskTexts[i].gameObject.SetActive(i == currentTaskIndex);
         }
     }
 
     public void MarquerEnigmeDone(int i)
     {
-        if (i == currentTaskIndex && i < enigmeTexts.Length)
+        if (i == currentTaskIndex && i < taskTexts.Length)
         {
             StartCoroutine(TransitionVersProchaineTache(i));
         }
@@ -60,7 +62,7 @@ public class ChecklistManager : MonoBehaviour
 
     private IEnumerator TransitionVersProchaineTache(int i)
     {
-        TextMeshProUGUI texte = enigmeTexts[i];
+        TextMeshProUGUI texte = taskTexts[i];
         CanvasGroup group = texte.GetComponent<CanvasGroup>();
 
         if (group == null)
@@ -84,9 +86,9 @@ public class ChecklistManager : MonoBehaviour
         // Passer à la prochaine tâche
         currentTaskIndex++;
 
-        if (currentTaskIndex < enigmeTexts.Length)
+        if (currentTaskIndex < taskTexts.Length)
         {
-            TextMeshProUGUI prochainTexte = enigmeTexts[currentTaskIndex];
+            TextMeshProUGUI prochainTexte = taskTexts[currentTaskIndex];
             CanvasGroup prochainGroup = prochainTexte.GetComponent<CanvasGroup>();
 
             if (prochainGroup == null)
@@ -107,11 +109,36 @@ public class ChecklistManager : MonoBehaviour
             }
             prochainGroup.alpha = 1;
         }
+        else
+        {
+            //Toutes les tâches sont faites — afficher le texte final
+            if (texteFinalInstruction != null)
+            {
+                CanvasGroup finalGroup = texteFinalInstruction.GetComponent<CanvasGroup>();
+                if (finalGroup == null)
+                {
+                    finalGroup = texteFinalInstruction.gameObject.AddComponent<CanvasGroup>();
+                }
+
+                finalGroup.alpha = 0;
+                texteFinalInstruction.gameObject.SetActive(true);
+
+                time = 0;
+                while (time < duration)
+                {
+                    time += Time.deltaTime;
+                    finalGroup.alpha = Mathf.Lerp(0, 1, time / duration);
+                    yield return null;
+                }
+
+                finalGroup.alpha = 1;
+            }
+        }
     }
 
     public void ResetChecklist()
     {
-        for (int i = 0; i < enigmeTexts.Length; i++)
+        for (int i = 0; i < taskTexts.Length; i++)
         {
             PlayerPrefs.DeleteKey("Enigme_" + i);
         }
