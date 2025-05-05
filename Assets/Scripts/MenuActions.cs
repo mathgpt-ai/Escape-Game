@@ -17,7 +17,6 @@ public class MenuActions : MonoBehaviour
     public void StartButton()
     {
         SceneManager.LoadScene(Gameplay, LoadSceneMode.Single);
-        SceneManager.LoadScene(GUI, LoadSceneMode.Additive);
     }
 
     public void SettingsButton()

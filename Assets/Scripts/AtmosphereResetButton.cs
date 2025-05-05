@@ -26,7 +26,12 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
             if (HealthBar.Instance != null)
                 HealthBar.Instance.SetHealth(HealthBar.Instance.GetMaxHealth());
 
-            Debug.Log("Énigme réussie !");
+            //Désactive complètement le système d’oxygène
+            GameObject oxygenSystemObj = GameObject.Find("OxygenSystem"); // ou ton vrai nom d'objet
+            if (oxygenSystemObj != null)
+                oxygenSystemObj.SetActive(false);
+
+            Debug.Log("Le systeme d'atmosphere est réparé !");
         }
         else
         {

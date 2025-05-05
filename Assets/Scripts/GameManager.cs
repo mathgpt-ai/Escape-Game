@@ -53,14 +53,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void MarquerEnigmeComplete(int index)
+    public static void MarquerEnigmeComplete(int i)
     {
-        if (index >= 0 && index < nomsScenesEnigmes.Length)
+        if (i >= 0 && i < nomsScenesEnigmes.Length)
         {
-            PlayerPrefs.SetInt("Enigme_" + index, 1);
+            PlayerPrefs.SetInt("Enigme_" + i, 1);
             PlayerPrefs.Save();
 
-            Debug.Log($"Énigme {index} complétée !");
+            Debug.Log($"Énigme {i} complétée !");
 
             // Vérifie s’il existe une instance valide avant d'appeler VerifierProgression()
             if (Instance != null)
@@ -70,14 +70,14 @@ public class GameManager : MonoBehaviour
 
             if (ChecklistManager.Instance != null)
             {
-                ChecklistManager.Instance.MarquerEnigmeDone(index);
+                ChecklistManager.Instance.MarquerEnigmeDone(i);
             }
         }
     }
 
-    public static bool EstEnigmeComplete(int index)
+    public static bool EstEnigmeComplete(int i)
     {
-        return PlayerPrefs.GetInt("Enigme_" + index, 0) == 1;
+        return PlayerPrefs.GetInt("Enigme_" + i, 0) == 1;
     }
 
     public void ResetProgression()
