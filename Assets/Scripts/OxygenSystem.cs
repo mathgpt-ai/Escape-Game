@@ -6,15 +6,20 @@ using UnityEngine.SceneManagement;
 public class OxygenSystem : MonoBehaviour
 {
     //sliders
-    [SerializeField] private OxygenBar oxygenBar;
-    [SerializeField] private HealthBar healthBar;
+    [SerializeField] 
+    private OxygenBar oxygenBar;
+    [SerializeField] 
+    private HealthBar healthBar;
 
     //vitesse de damage
-    [SerializeField] private float oxygenDepletionRate = 1f; // Par seconde
-    [SerializeField] private float healthDepletionRate = 2f; // Par seconde
+    [SerializeField] 
+    private float oxygenDepletionRate = 1f; // Par seconde
+    [SerializeField] 
+    private float healthDepletionRate = 2f; // Par seconde
 
     //scene de fin
-    [SerializeField] private string sceneFinale = "SceneGameOver";
+    [SerializeField]
+    private int sceneFinale = 0;
 
     private bool isOxygenEmpty = false;
 
