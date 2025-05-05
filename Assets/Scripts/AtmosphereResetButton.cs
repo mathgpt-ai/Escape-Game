@@ -19,7 +19,7 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
         {
             Debug.Log("Les valeurs sont bonnes !");
             GameManager.MarquerEnigmeComplete(indexEnigme);
-            FindObjectOfType<OxygenSystem>().HandlePuzzleTuyauxCompleted();
+            
             Debug.Log("Énigme réussie !");
         }
         else
