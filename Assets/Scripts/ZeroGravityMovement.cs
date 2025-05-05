@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ZeroGravityMovement : MonoBehaviour
 {
+    [SerializeField] private Light positiveLight;
+    [SerializeField] private Light negativeLight;
     public float moveSpeed = 5f;
     public float lookSpeed = 2f;
     public bool isPositiveCharge = true;
@@ -151,9 +153,18 @@ public class ZeroGravityMovement : MonoBehaviour
 
     void UpdateChargeEffect()
     {
+        // Changement de couleur du joueur
         Color newColor = isPositiveCharge ? Color.red : Color.blue;
         GetComponent<Renderer>().material.color = newColor;
 
+        // Activation des bonnes lumières
+        if (positiveLight != null && negativeLight != null)
+        {
+            positiveLight.enabled = isPositiveCharge;
+            negativeLight.enabled = !isPositiveCharge;
+        }
+
+        // Mise à jour des aimants
         Magnets[] allMagnets = FindObjectsOfType<Magnets>();
         foreach (var magnet in allMagnets)
         {

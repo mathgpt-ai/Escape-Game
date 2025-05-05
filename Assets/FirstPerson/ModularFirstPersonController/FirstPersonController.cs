@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
     using UnityEditor;
@@ -18,8 +20,9 @@ using UnityEngine.SceneManagement;
 public class FirstPersonController : MonoBehaviour
 {
     private Rigidbody rb;
+    
 
-    #region Camera Movement Variables
+    #region Camera Mov#region Camera Movement Variables
 
     public Camera playerCamera;
 
@@ -39,6 +42,7 @@ public class FirstPersonController : MonoBehaviour
     private float yaw = 0.0f;
     private float pitch = 0.0f;
     private Image crosshairObject;
+
 
     #region Camera Zoom Variables
 
@@ -62,6 +66,7 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isWalking = false;
+    
 
     #region Sprint
 
@@ -101,8 +106,8 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isGrounded = false;
-
     #endregion
+    public bool IsGrounded => isGrounded;
 
     #region Crouch
 
@@ -132,6 +137,15 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
 
+    
+
+    [Header("Pause Settings")]
+    public bool enablePause = true;
+    public KeyCode pauseKey = KeyCode.P;
+    public string settingsSceneName = "Settings";
+    private bool isPaused = false;
+    private float timeScaleBeforePause;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -152,7 +166,7 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
-        if(lockCursor)
+        if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -365,6 +379,10 @@ public class FirstPersonController : MonoBehaviour
         {
             HeadBob();
         }
+        if (enablePause && Input.GetKeyDown(pauseKey))
+        {
+            TogglePause();
+        }
     }
 
     void FixedUpdate()
@@ -444,6 +462,52 @@ public class FirstPersonController : MonoBehaviour
         #endregion
     }
 
+    private void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        if (isPaused)
+        {
+            // Save current time scale
+            timeScaleBeforePause = Time.timeScale;
+
+            // Pause the game
+            Time.timeScale = 0f;
+
+            // Lock/unlock cursor during pause
+            if (lockCursor)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+
+            // Load the Settings scene additively
+            SceneManager.LoadScene(settingsSceneName, LoadSceneMode.Additive);
+
+            // Disable player input
+            playerCanMove = false;
+            cameraCanMove = false;
+        }
+        else
+        {
+            // Restore time scale
+            Time.timeScale = timeScaleBeforePause;
+
+            // Re-lock cursor if needed
+            if (lockCursor)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
+            // Unload the Settings scene
+            SceneManager.UnloadSceneAsync(settingsSceneName);
+
+            // Re-enable player input
+            playerCanMove = true;
+            cameraCanMove = true;
+        }
+    }
     // Sets isGrounded based on a raycast sent straigth down from the player object
     private void CheckGround()
     {
@@ -507,6 +571,7 @@ public class FirstPersonController : MonoBehaviour
             // Calculates HeadBob speed during sprint
             if(isSprinting)
             {
+
                 timer += Time.deltaTime * (bobSpeed + sprintSpeed);
             }
             // Calculates HeadBob speed during crouched movement
@@ -549,6 +614,8 @@ public class FirstPersonController : MonoBehaviour
 
     public override void OnInspectorGUI()
     {
+       
+
         SerFPC.Update();
 
         EditorGUILayout.Space();
@@ -695,7 +762,6 @@ public class FirstPersonController : MonoBehaviour
         EditorGUILayout.Space();
 
         #endregion
-
         #region Crouch
 
         GUILayout.Label("Crouch", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
