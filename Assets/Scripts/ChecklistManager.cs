@@ -111,7 +111,7 @@ public class ChecklistManager : MonoBehaviour
         }
         else
         {
-            //Toutes les tâches sont faites — afficher le texte final
+            // Toutes les tâches sont faites — afficher le texte final
             if (texteFinalInstruction != null)
             {
                 CanvasGroup finalGroup = texteFinalInstruction.GetComponent<CanvasGroup>();

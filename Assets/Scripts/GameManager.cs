@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField]
     private static string[] nomsScenesEnigmes = { "ÉnigmeTuyaux", "Énigme3", "Énigme4", "ÉnigmeLab" };
     [SerializeField]
     private GameObject porteDeFin;
@@ -48,6 +47,7 @@ public class GameManager : MonoBehaviour
             if (porteDeFin != null)
             {
                 porteDeFin.SetActive(true);
+                //a coder fin du jeu
             }
 
         }
