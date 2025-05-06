@@ -12,14 +12,23 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip interactionSound;
     [SerializeField] private float baseVolume = 1f;
     [SerializeField] private Sprite planetSprite; // Reference to the planet sprite to check for
+    [SerializeField] private string defaultCanvasText = "Interact with E"; // Default text to show
 
     private bool firstuse = true;
     private bool hasBeenActivated = false;
     private Canvas canvas;
+    private TMPro.TextMeshProUGUI canvasText;
 
     private void Start()
     {
         canvas = GetComponentInChildren<Canvas>();
+        canvasText = canvas?.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+
+        // Store the original text if it exists
+        if (canvasText != null && string.IsNullOrEmpty(defaultCanvasText))
+        {
+            defaultCanvasText = canvasText.text;
+        }
     }
 
     public void Interact()
@@ -78,15 +87,13 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
             else
             {
                 Debug.Log("Player doesn't have the planet in their inventory yet!");
-                // Maybe show a hint or a message to the player
-                if (canvas != null)
+                // Show a message to the player that they need the planet
+                if (canvasText != null)
                 {
-                    // You could set a Text component in the canvas to display a message
-                    TMPro.TextMeshProUGUI text = canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                    if (text != null)
-                    {
-                        text.text = "You need to find the planet first!";
-                    }
+                    canvasText.text = "You need to find the planet first!";
+
+                    // Reset text after 20 seconds
+                    StartCoroutine(ResetCanvasTextAfterDelay(20f));
                 }
             }
         }
@@ -121,6 +128,20 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
         }
 
         Debug.Log($"Deleted {count} objects with 'delete' tag after {delayInSeconds} seconds");
+    }
+
+    // New coroutine to reset canvas text after a delay
+    private IEnumerator ResetCanvasTextAfterDelay(float delayInSeconds)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delayInSeconds);
+
+        // Reset the text to the default value
+        if (canvasText != null)
+        {
+            canvasText.text = defaultCanvasText;
+            Debug.Log("Reset canvas text to default after " + delayInSeconds + " seconds");
+        }
     }
 
     // Helper method to find the player's inventory
