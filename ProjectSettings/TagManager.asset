@@ -12,6 +12,7 @@ TagManager:
   - AlarmLight
   - TrapTP
   - MazeCell
+  - delete
   layers:
   - Default
   - TransparentFX
