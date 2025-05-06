@@ -12,7 +12,7 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip interactionSound;
     [SerializeField] private float baseVolume = 1f;
     [SerializeField] private Sprite planetSprite; // Reference to the planet sprite to check for
-    [SerializeField] private string defaultCanvasText = "Interact with E"; // Default text to show
+    [SerializeField] private string defaultCanvasText = "Press E to Interact"; // Default text to show
 
     private bool firstuse = true;
     private bool hasBeenActivated = false;
