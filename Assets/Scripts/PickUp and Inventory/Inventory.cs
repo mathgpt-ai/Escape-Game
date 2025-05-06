@@ -37,13 +37,11 @@ public class Inventory : MonoBehaviour
             {
                 previousSelected = selected;
                 selected = i;
-
                 // Only play sound if we actually changed slots
                 if (previousSelected != selected && itemSwitchSound != null)
                 {
                     AudioSource.PlayClipAtPoint(itemSwitchSound, Camera.main.transform.position);
                 }
-
                 // Update visibility of all held objects
                 ObjectPickUp.UpdateAllObjectVisibility(selected);
             }
@@ -100,5 +98,24 @@ public class Inventory : MonoBehaviour
             inventoryItems[selected].sprite = null;
             inventoryItems[selected].enabled = false;
         }
+    }
+
+    // New method to check if a specific sprite is in the inventory
+    public bool HasItem(Sprite itemSprite)
+    {
+        for (int i = 0; i < inventoryItems.Length; i++)
+        {
+            if (inventoryItems[i].enabled && inventoryItems[i].sprite == itemSprite)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Get all inventory items (for external access)
+    public Image[] GetInventoryItems()
+    {
+        return inventoryItems;
     }
 }

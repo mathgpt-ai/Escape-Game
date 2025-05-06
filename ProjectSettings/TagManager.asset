@@ -13,6 +13,7 @@ TagManager:
   - TrapTP
   - MazeCell
   - delete
+  - screen
   layers:
   - Default
   - TransparentFX

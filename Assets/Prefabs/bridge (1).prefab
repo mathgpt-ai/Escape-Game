@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bridge (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 742c87e64bd0e3c46bf37b5e146d0f79, type: 3}
+      propertyPath: m_TagString
+      value: delete
+      objectReference: {fileID: 0}
     - target: {fileID: 1831828260601078800, guid: 742c87e64bd0e3c46bf37b5e146d0f79, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
