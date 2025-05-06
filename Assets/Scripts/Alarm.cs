@@ -114,7 +114,7 @@ public class Alarm : MonoBehaviour, IInteractable
             }
             if (checklistManager != null && taskObject != null)
             {
-                checklistManager.ForcerComplétion(taskObject);
+                //checklistManager.ForcerComplétion(taskObject);
             }
         }
     }

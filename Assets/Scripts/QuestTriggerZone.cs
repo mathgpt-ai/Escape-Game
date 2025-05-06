@@ -13,7 +13,7 @@ public class QuestTriggerZone : MonoBehaviour
         {
             if (checklistManager != null && taskObject != null)
             {
-                checklistManager.ForcerComplétion(taskObject);
+                //checklistManager.ForcerComplétion(taskObject);
                 gameObject.SetActive(false); // désactive le trigger après usage
             }
         }

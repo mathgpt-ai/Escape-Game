@@ -9,7 +9,7 @@ public class TaskObject : MonoBehaviour
     // Exemple : interaction avec souris
     private void OnMouseDown()
     {
-        ChecklistManager.CompleteStep(this);
+        //ChecklistManager.CompleteStep(this);
     }
 
     
