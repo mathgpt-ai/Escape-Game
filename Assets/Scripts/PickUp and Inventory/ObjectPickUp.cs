@@ -32,6 +32,10 @@ public class ObjectPickUp : MonoBehaviour, IPickable
     [SerializeField] private AudioClip pickupSound;
     [SerializeField] private AudioClip dropSound;
 
+    //[Header("Quest")]
+    //[SerializeField] private TaskObject TaskObject;
+    //[SerializeField] private ChecklistManager checklistManager;
+
     // Dictionary to store original scales
     private static Dictionary<string, Vector3> prefabOriginalScales = new Dictionary<string, Vector3>();
 
@@ -118,6 +122,11 @@ public class ObjectPickUp : MonoBehaviour, IPickable
 
         // Add item to inventory and track which slot it was added to
         inventorySlotIndex = inventory.AddItem(sp);
+
+        //if (TaskObject != null && checklistManager != null)
+        //{
+        //    checklistManager.ForcerComplétion(TaskObject);
+        //}
 
         if (inventorySlotIndex >= 0)
         {
