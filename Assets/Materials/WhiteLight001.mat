@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: WhiteLight001
   m_Shader: {fileID: 4800000, guid: 19e79e6fdce5d29418196afe8a2347a0, type: 3}
-  m_Parent: {fileID: 2100000, guid: 07553007ceddacc47bac6a131f3dc619, type: 2}
-  m_ModifiedSerializedProperties: 2
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _EMISSION
@@ -37,7 +37,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Cull: 2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _MovementDirection: {r: 0, g: -1, b: 0, a: 1}
