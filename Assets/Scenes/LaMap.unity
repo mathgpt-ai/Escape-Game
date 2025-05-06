@@ -19809,6 +19809,8 @@ MonoBehaviour:
   poweringUp: {fileID: 8300000, guid: 538a105c67583994c84691f22b1ced7e, type: 3}
   lightsTag: AlarmLight
   material: {fileID: 2100000, guid: f481cf43c7f7bca4295f4a47006da8d6, type: 2}
+  questManager: {fileID: 0}
+  questObject: {fileID: 0}
   scene3: {fileID: 509409060}
 --- !u!65 &893202792
 BoxCollider:
@@ -24327,6 +24329,57 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1952170455}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1287798395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1287798397}
+  - component: {fileID: 1287798396}
+  m_Layer: 0
+  m_Name: QuestManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1287798396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287798395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 324dd0359489b9849a433e4dbb1ea35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questSteps:
+  - description: balls
+    targetObject: {fileID: 0}
+  - description: 
+    targetObject: {fileID: 0}
+  uiText: {fileID: 0}
+  videoPlayer: {fileID: 0}
+--- !u!4 &1287798397
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287798395}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.874408, y: 1.2515736, z: -22.716925}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1293846479 stripped
 Transform:
@@ -33828,6 +33881,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100004, guid: 11f4e6a43d6b26545bfed04486e23aca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1985096544}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 11f4e6a43d6b26545bfed04486e23aca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1985096545}
   m_SourcePrefab: {fileID: 100100000, guid: 11f4e6a43d6b26545bfed04486e23aca, type: 3}
 --- !u!4 &1621534257 stripped
 Transform:
@@ -35755,6 +35811,7 @@ MonoBehaviour:
   interactionSound: {fileID: 0}
   baseVolume: 1
   planetSprite: {fileID: 21300000, guid: 05e46742284becd479df7f9b35610e39, type: 3}
+  defaultCanvasText: Press E to Interact
 --- !u!4 &1781756666 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4359604478885058, guid: 6568283ffc37c8841b72647ae937c485, type: 3}
@@ -38401,6 +38458,20 @@ MonoBehaviour:
   - {fileID: 799208434}
   indexEnigme: 0
   canvas: {fileID: 129182447}
+  questManager: {fileID: 1287798396}
+  questObject: {fileID: 1985096545}
+--- !u!114 &1985096545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985096538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a713a948cf44f04781a28f2208a6090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1993413194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41867,3 +41938,4 @@ SceneRoots:
   - {fileID: 503378122}
   - {fileID: 2143353543}
   - {fileID: 1769580789}
+  - {fileID: 1287798397}

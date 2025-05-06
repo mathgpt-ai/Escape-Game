@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class QuestTriggerZone : MonoBehaviour
 {
-    [SerializeField] private TaskObject taskObject; // L’objet de quête correspondant à cette tâche
-    [SerializeField] private ChecklistManager checklistManager; // Le gestionnaire de quête
+    [SerializeField] private QuestManager questManager;
+    [SerializeField] private QuestObject questObject;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // ou ton tag de joueur
+        if (other.CompareTag("Player"))
         {
-            if (checklistManager != null && taskObject != null)
+            if (questManager != null && questObject != null)
             {
-                //checklistManager.ForcerComplétion(taskObject);
-                gameObject.SetActive(false); // désactive le trigger après usage
+                questManager.ForcerComplétion(questObject);
+                gameObject.SetActive(false);
             }
         }
     }
