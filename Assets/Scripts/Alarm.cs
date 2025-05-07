@@ -8,7 +8,8 @@ public class Alarm : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip poweringUp;
     [SerializeField] private string lightsTag = "AlarmLight";
     [SerializeField] private Material material;
-
+    [SerializeField] private QuestManager questManager;
+    [SerializeField] private QuestObject questObject;
     public Scene3Trigger scene3;
 
     Canvas canvas;
@@ -110,6 +111,10 @@ public class Alarm : MonoBehaviour, IInteractable
                         }
                     }
                 }
+            }
+            if (questManager != null && questObject != null)
+            {
+                questManager.ForcerComplétion(questObject);
             }
         }
     }

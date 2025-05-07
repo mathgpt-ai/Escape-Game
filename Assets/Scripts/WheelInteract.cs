@@ -11,6 +11,8 @@ public class WheelInteract : MonoBehaviour, IInteractable
     [SerializeField] private float transitionSpeed = 5f;
     [SerializeField] private float rotationspeed = 30f;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private AudioSource valveAudioSource;
+    [SerializeField] private AudioClip valveTurnSound;
 
     private bool isInteracting = false;
     private float currentRotation;
@@ -38,12 +40,33 @@ public class WheelInteract : MonoBehaviour, IInteractable
                 float delta = rotationspeed * Time.deltaTime;
                 transform.Rotate(Vector3.up, delta);
                 currentRotation += delta;
+
+                if(!valveAudioSource.isPlaying)
+                {
+                    valveAudioSource.clip = valveTurnSound;
+                    valveAudioSource.loop = true;
+                    valveAudioSource.Play();
+                }
             }
             else if (Input.GetKey(KeyCode.L))
             {
                 float delta = -rotationspeed * Time.deltaTime;
                 transform.Rotate(Vector3.up, delta);
                 currentRotation += delta;
+
+                if(!valveAudioSource.isPlaying)
+                {
+                    valveAudioSource.clip = valveTurnSound;
+                    valveAudioSource.loop = true;
+                    valveAudioSource.Play();
+                }
+            }
+            else
+            {
+                if(valveAudioSource.isPlaying)
+                {
+                    valveAudioSource.Stop();
+                }
             }
 
             currentRotation = Mathf.Repeat(currentRotation, 360f);
