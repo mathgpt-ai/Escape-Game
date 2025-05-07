@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PipePuzzlePortal : MonoBehaviour, IInteractable
+public class EndTheGame : MonoBehaviour, IInteractable
 {
     [SerializeField]
-    private int ÉnigmeTuyeaux; 
-
+    private int Finale;
+    [SerializeField]
     private Canvas canvas;
 
     private void Start()
@@ -17,7 +17,7 @@ public class PipePuzzlePortal : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        SceneManager.LoadScene(ÉnigmeTuyeaux, LoadSceneMode.Single);
+        SceneManager.LoadScene(Finale, LoadSceneMode.Single);
     }
 
     public Canvas GetCanvas()

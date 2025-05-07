@@ -14,8 +14,13 @@ public class MenuActions : MonoBehaviour
     private int Settings;
     [SerializeField]
     private int MainMenu;
+    [SerializeField]
+    private int PauseMenu;
     public void StartButton()
     {
+        // Démarrage normal : activer l'oxygène
+        PlayerPrefs.SetInt("DisableOxygenSystem", 0);
+        PlayerPrefs.SetInt("SpawnPointIndex", 0); // Spawn par défaut
         SceneManager.LoadScene(Gameplay, LoadSceneMode.Single);
     }
 
@@ -32,5 +37,17 @@ public class MenuActions : MonoBehaviour
     public void BackButton()
     {
         SceneManager.LoadScene(MainMenu, LoadSceneMode.Single);
+    }
+
+    public void StartAtSpawnPoint(int i)
+    {
+        PlayerPrefs.SetInt("SpawnPointIndex", i);
+        PlayerPrefs.SetInt("DisableOxygenSystem", 1); // Désactiver OxygenSystem
+        SceneManager.LoadScene(Gameplay, LoadSceneMode.Single);
+    }
+
+    public void CloseButton()
+    {
+        SceneManager.UnloadSceneAsync(PauseMenu);
     }
 }
