@@ -43,6 +43,7 @@ public class MenuActions : MonoBehaviour
     {
         PlayerPrefs.SetInt("SpawnPointIndex", i);
         PlayerPrefs.SetInt("DisableOxygenSystem", 1); // Désactiver OxygenSystem
+        Time.timeScale = 1;
         SceneManager.LoadScene(Gameplay, LoadSceneMode.Single);
         Time.timeScale = 1;
     }
