@@ -24602,7 +24602,7 @@ MonoBehaviour:
     targetObject: {fileID: 0}
   - description: balls2
     targetObject: {fileID: 893202794}
-  uiText: {fileID: 0}
+  uiText: {fileID: 190857497}
   videoPlayer: {fileID: 0}
 --- !u!4 &1287798397
 Transform:
