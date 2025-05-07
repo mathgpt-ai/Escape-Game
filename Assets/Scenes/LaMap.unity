@@ -10965,7 +10965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &324734579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33900,13 +33900,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPivot: {fileID: 1815610066}
+  cameraExitPosition: {fileID: 0}
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
-  transitionSpeed: 5
-  rotationspeed: 30
   canvas: {fileID: 468060349}
   valveAudioSource: {fileID: 1835317808}
   valveTurnSound: {fileID: 8300000, guid: 2c25a4332b22ecc41b8837b44913dc9a, type: 3}
+  rotationSpeed: 30
 --- !u!135 &1564721473
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -35301,13 +35301,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPivot: {fileID: 2001691665}
+  cameraExitPosition: {fileID: 0}
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
-  transitionSpeed: 5
-  rotationspeed: 3
   canvas: {fileID: 1188746217}
   valveAudioSource: {fileID: 1014693627}
   valveTurnSound: {fileID: 8300000, guid: 2c25a4332b22ecc41b8837b44913dc9a, type: 3}
+  rotationSpeed: 30
 --- !u!135 &1645907723
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -36260,13 +36260,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPivot: {fileID: 314227988}
+  cameraExitPosition: {fileID: 0}
   playerCamera: {fileID: 1621998877}
   fpsControllerScript: {fileID: 1172542236}
-  transitionSpeed: 5
-  rotationspeed: 30
   canvas: {fileID: 1577007676}
   valveAudioSource: {fileID: 2139566098}
   valveTurnSound: {fileID: 8300000, guid: 2c25a4332b22ecc41b8837b44913dc9a, type: 3}
+  rotationSpeed: 30
 --- !u!135 &1702522633
 SphereCollider:
   m_ObjectHideFlags: 0

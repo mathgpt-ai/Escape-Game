@@ -142,7 +142,7 @@ public class FirstPersonController : MonoBehaviour
     [Header("Pause Settings")]
     public bool enablePause = true;
     public KeyCode pauseKey = KeyCode.P;
-    public string settingsSceneName = "Settings";
+    private string PauseSceneName = "Pause";
     private bool isPaused = false;
     private float timeScaleBeforePause;
 
@@ -480,9 +480,9 @@ public class FirstPersonController : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
-
+            Debug.Log("Loading scene: " + PauseSceneName);
             // Load the Settings scene additively
-            SceneManager.LoadScene(settingsSceneName, LoadSceneMode.Additive);
+            SceneManager.LoadScene(PauseSceneName, LoadSceneMode.Additive);
 
             // Disable player input
             playerCanMove = false;
@@ -501,7 +501,7 @@ public class FirstPersonController : MonoBehaviour
             }
 
             // Unload the Settings scene
-            SceneManager.UnloadSceneAsync(settingsSceneName);
+            SceneManager.UnloadSceneAsync(PauseSceneName);
 
             // Re-enable player input
             playerCanMove = true;
