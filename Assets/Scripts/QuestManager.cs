@@ -14,7 +14,6 @@ public class QuestManager : MonoBehaviour
 
     public QuestStep[] questSteps;
     public Text uiText; // UI Text à afficher pour chaque tâche
-    public VideoPlayer videoPlayer; // Vidéo à jouer à la fin
 
     private int currentStepIndex = 0;
 
@@ -36,7 +35,7 @@ public class QuestManager : MonoBehaviour
     {
         if (currentStepIndex < questSteps.Length && questSteps[currentStepIndex].targetObject == obj)
         {
-            obj.Deactivate(); // Optionnel : désactive l'objet interacté
+            obj.Deactivate();
             currentStepIndex++;
             ShowCurrentStep();
         }
@@ -65,12 +64,6 @@ public class QuestManager : MonoBehaviour
         else
         {
             uiText.text = "Toutes les tâches sont complétées !";
-
-            if (videoPlayer != null)
-            {
-                //videoPlayer.gameObject.SetActive(true);
-                //videoPlayer.Play();
-            }
         }
     }
 }

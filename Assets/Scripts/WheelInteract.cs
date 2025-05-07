@@ -13,7 +13,10 @@ public class WheelInteract : MonoBehaviour, IInteractable
     [SerializeField] private Canvas canvas;
     [SerializeField] private AudioSource valveAudioSource;
     [SerializeField] private AudioClip valveTurnSound;
+    [SerializeField] private Collider cameraTargetZone;
+    [SerializeField] private Transform cameraExitPosition;
 
+    private Quaternion returnRotation;
     private bool isInteracting = false;
     private float currentRotation;
     private Quaternion startRotation;
@@ -82,23 +85,35 @@ public class WheelInteract : MonoBehaviour, IInteractable
     public void Interact()
     {
         returnPosition = playerCamera.position;
+        returnRotation = playerCamera.rotation;
+
         isInteracting = true;
-        canvas.gameObject.SetActive(true);
+        Timer = 0f;
+
+        if (canvas != null)
+            canvas.gameObject.SetActive(true);
+
         if (fpsControllerScript != null)
-        {
             fpsControllerScript.enabled = false;
-        }
     }
 
     private void EndInteraction()
     {
         isInteracting = false;
-        playerCamera.position = returnPosition;
-        canvas.gameObject.SetActive(false);
-        if (fpsControllerScript != null)
+
+        if (canvas != null) canvas.gameObject.SetActive(false);
+
+        if (fpsControllerScript != null) fpsControllerScript.enabled = true;
+
+        if (valveAudioSource != null && valveAudioSource.isPlaying)
+            valveAudioSource.Stop();
+
+        if (cameraExitPosition != null)
         {
-            fpsControllerScript.enabled = true;
+            playerCamera.position = cameraExitPosition.position;
+            playerCamera.rotation = cameraExitPosition.rotation;
         }
+        StartCoroutine(CorrectCameraAfterDelay(0.2f));
     }
 
     public Canvas GetCanvas() => canvas;
@@ -109,6 +124,15 @@ public class WheelInteract : MonoBehaviour, IInteractable
         float angle = percent / 100f * 360f;
         currentRotation = angle;
     }
+    private IEnumerator CorrectCameraAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
+        if (!cameraTargetZone.bounds.Contains(playerCamera.position))
+        {
+            playerCamera.position = returnPosition;
+            playerCamera.rotation = returnRotation;
+        }
+    }
     public float GetCurrentRotation() => currentRotation;
 }
