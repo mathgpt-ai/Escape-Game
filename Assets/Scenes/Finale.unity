@@ -751,7 +751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: Succes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c880e6bfd846f49449e65c7603091a6d, type: 2}
   m_sharedMaterial: {fileID: -3800525333695607507, guid: c880e6bfd846f49449e65c7603091a6d, type: 2}
@@ -1081,6 +1081,7 @@ MonoBehaviour:
   GUI: 1
   Settings: 5
   MainMenu: 4
+  PauseMenu: 0
 --- !u!1 &1798177535
 GameObject:
   m_ObjectHideFlags: 0
