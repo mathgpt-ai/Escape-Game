@@ -4335,6 +4335,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cac90afcffe1974caaa6665631e6390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teleportSound: {fileID: 8300000, guid: 43ec585e355e3364d8b60bb9372aadd4, type: 3}
+  volume: 1
 --- !u!1001 &168919808
 PrefabInstance:
   m_ObjectHideFlags: 0

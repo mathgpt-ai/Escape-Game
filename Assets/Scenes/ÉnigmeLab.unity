@@ -867,7 +867,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2547,7 +2547,7 @@ Transform:
   m_GameObject: {fileID: 418577669}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 105, y: -49, z: 4}
+  m_LocalPosition: {x: 105, y: -49.025, z: 4.095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2565,8 +2565,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
-  m_Range: 3
+  m_Intensity: 5
+  m_Range: 6
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -3217,7 +3217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5327443c0f961d54e9c1543f20ea6577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerDuration: 75
+  timerDuration: 90
   timerText: {fileID: 300792829}
   spawnPoint: {fileID: 1698544009}
   respawnDelay: 2
@@ -6283,7 +6283,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 3
+  m_Intensity: 5
   m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
