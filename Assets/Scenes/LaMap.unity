@@ -37317,7 +37317,7 @@ MonoBehaviour:
   bridgePrefab: {fileID: 1012751603731823198, guid: 18a4f240b74822442899693a8dd20a13, type: 3}
   bridgeSpawnPoint: {fileID: 2060467476}
   sceneToLoad: "\xC9nigmeLab"
-  interactionSound: {fileID: 0}
+  interactionSound: {fileID: 8300000, guid: cb797cb3af0d7b44f8e9f5763c0d071f, type: 3}
   baseVolume: 1
   planetSprite: {fileID: 21300000, guid: 05e46742284becd479df7f9b35610e39, type: 3}
   defaultCanvasText: Press E to Interact

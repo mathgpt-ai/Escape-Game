@@ -10,7 +10,7 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
     [SerializeField] private Transform bridgeSpawnPoint;
     [SerializeField] private string sceneToLoad;
     [SerializeField] private AudioClip interactionSound;
-    [SerializeField] private float baseVolume = 1f;
+    [SerializeField] private float baseVolume = 2f;
     [SerializeField] private Sprite planetSprite; // Reference to the planet sprite to check for
     [SerializeField] private string defaultCanvasText = "Press E to Interact"; // Default text to show
 
@@ -64,6 +64,7 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
             {
                 StartCoroutine(LoadSceneAfterDelay());
             }
+            
 
             firstuse = false;
 
@@ -78,6 +79,7 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
             if (playerInventory != null && playerInventory.HasItem(planetSprite))
             {
                 Debug.Log("Player has the planet in their inventory!");
+                ActivatePower();
                 // Perform actions when player has the planet
                 // For example: unlock something, play a special sound, show a message
 
@@ -165,5 +167,56 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
     public Canvas GetCanvas()
     {
         return canvas;
+    }
+
+
+    public void ActivatePower()
+    {
+        // Find all inactive LabRoom objects in the current scene
+        GameObject[] labRooms = FindInactiveObjectsWithTag("LabRoom");
+
+        foreach (GameObject labRoom in labRooms)
+        {
+            // Activate the objects
+            labRoom.SetActive(true);
+            Debug.Log("Activated LabRoom object: " + labRoom.name);
+        }
+    }
+
+    // Method to find both active and inactive objects with a specific tag
+    private GameObject[] FindInactiveObjectsWithTag(string tag)
+    {
+        List<GameObject> results = new List<GameObject>();
+
+        // Get all root GameObjects in the active scene
+        Scene currentScene = SceneManager.GetActiveScene();
+        GameObject[] rootObjects = currentScene.GetRootGameObjects();
+
+        // Search through all objects including inactive ones
+        foreach (GameObject rootObject in rootObjects)
+        {
+            // Check if this root object has the tag
+            if (rootObject.CompareTag(tag))
+            {
+                results.Add(rootObject);
+            }
+
+            // Get all children (including inactive ones)
+            Transform[] childrenTransforms = rootObject.GetComponentsInChildren<Transform>(true);
+            foreach (Transform childTransform in childrenTransforms)
+            {
+                // Skip the root object which we already checked
+                if (childTransform == rootObject.transform)
+                    continue;
+
+                // Check if this child object has the tag
+                if (childTransform.CompareTag(tag))
+                {
+                    results.Add(childTransform.gameObject);
+                }
+            }
+        }
+
+        return results.ToArray();
     }
 }
