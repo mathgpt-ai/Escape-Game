@@ -979,6 +979,7 @@ MonoBehaviour:
   GUI: 1
   Settings: 5
   MainMenu: 4
+  PauseMenu: 9
 --- !u!1 &1024589831
 GameObject:
   m_ObjectHideFlags: 0
