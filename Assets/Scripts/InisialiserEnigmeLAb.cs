@@ -64,7 +64,6 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
             {
                 StartCoroutine(LoadSceneAfterDelay());
             }
-            
 
             firstuse = false;
 
@@ -79,12 +78,19 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
             if (playerInventory != null && playerInventory.HasItem(planetSprite))
             {
                 Debug.Log("Player has the planet in their inventory!");
-                ActivatePower();
-                // Perform actions when player has the planet
-                // For example: unlock something, play a special sound, show a message
 
-                // You could also remove the item if needed
-                // playerInventory.RemoveItem();
+                // Remove the planet from inventory before activating power
+                RemovePlanetFromInventory(playerInventory);
+
+                // Activate power components
+                ActivatePower();
+
+                // Update UI text to confirm power activation
+                if (canvasText != null)
+                {
+                    canvasText.text = "Power activated successfully!";
+                    StartCoroutine(ResetCanvasTextAfterDelay(20f));
+                }
             }
             else
             {
@@ -98,6 +104,19 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
                     StartCoroutine(ResetCanvasTextAfterDelay(20f));
                 }
             }
+        }
+    }
+
+    // Helper method to remove the planet from inventory
+    // Helper method to remove the planet from inventory
+    private void RemovePlanetFromInventory(Inventory playerInventory)
+    {
+        // The simpler approach - just call RemoveItem()
+        // This will remove the item from the currently selected slot
+        if (playerInventory.HasItem(planetSprite))
+        {
+            playerInventory.RemoveItem();
+            Debug.Log("Removed planet from inventory");
         }
     }
 
@@ -168,7 +187,6 @@ public class InitialiserEnigmeLab : MonoBehaviour, IInteractable
     {
         return canvas;
     }
-
 
     public void ActivatePower()
     {
