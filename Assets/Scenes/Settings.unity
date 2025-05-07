@@ -1691,6 +1691,7 @@ MonoBehaviour:
   GUI: 1
   Settings: 5
   MainMenu: 4
+  PauseMenu: 9
 --- !u!114 &973359469
 MonoBehaviour:
   m_ObjectHideFlags: 0

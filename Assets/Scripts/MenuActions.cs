@@ -16,6 +16,13 @@ public class MenuActions : MonoBehaviour
     private int MainMenu;
     [SerializeField]
     private int PauseMenu;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void StartButton()
     {
         // Démarrage normal : activer l'oxygène
