@@ -19,6 +19,10 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
     {
         if (ValeursSontVertes())
         {
+            if (questManager != null && questObject != null)
+            {
+                questManager.ForcerComplétion(questObject);
+            }
             Debug.Log("Les valeurs sont bonnes !");
             GameManager.MarquerEnigmeComplete(indexEnigme);
             //oxygen se reset au max 
@@ -29,7 +33,7 @@ public class AtmosphereResetButton : MonoBehaviour, IInteractable
                 HealthBar.Instance.SetHealth(HealthBar.Instance.GetMaxHealth());
 
             //Désactive complètement le système d’oxygène
-            GameObject oxygenSystemObj = GameObject.Find("OxygenSystem"); // ou ton vrai nom d'objet
+            GameObject oxygenSystemObj = GameObject.Find("OxygenSystem");
             if (oxygenSystemObj != null)
                 oxygenSystemObj.SetActive(false);
 
