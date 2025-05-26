@@ -22,8 +22,6 @@ public class MagnetsObjects : MonoBehaviour
 
         if (playerRb == null || playerCharge == null) return;
 
-        if (MagnetSelector.selectedMagnet != null && MagnetSelector.selectedMagnet != this) return;
-
         Vector3 direction = player.transform.position - transform.position;
         float distance = direction.magnitude;
 

@@ -39,7 +39,7 @@ public class Magnets : MonoBehaviour
         int wallLayerMask = LayerMask.GetMask("wall");
         if (Physics.Raycast(transform.position, direction.normalized, out RaycastHit hit, distance, wallLayerMask))
         {
-            Debug.Log($"Aimant {gameObject.name} bloqué par {hit.collider.gameObject.name}");
+            Debug.Log($"Aimant {gameObject.name} bloqued par {hit.collider.gameObject.name}");
             return;
         }
 

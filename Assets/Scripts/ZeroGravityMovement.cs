@@ -33,10 +33,7 @@ public class ZeroGravityMovement : MonoBehaviour
                 transform.position = spawnPoint.position;
                 transform.rotation = spawnPoint.rotation;
             }
-            else
-            {
-                Debug.LogWarning(" Aucun spawn point assigné au joueur.");
-            }
+           
             rb.useGravity = false;
             rb.drag = 0.5f;
             Cursor.lockState = CursorLockMode.Locked;
@@ -93,16 +90,11 @@ public class ZeroGravityMovement : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
-        Debug.Log("Player respawned!");
+        
     }
 
     void OnTriggerEnter(Collider other)
     {
-        //if (other.CompareTag("Deadly"))
-        //{
-        //    Debug.Log("dead trash bozo");
-        //    RespawnPlayer();
-        //}
         if (other.CompareTag("TrapTP"))
         {
             Debug.Log("DUMBASS");
@@ -117,8 +109,6 @@ public class ZeroGravityMovement : MonoBehaviour
         rotX = 0f;
         Camera.main.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         rb.angularVelocity = Vector3.zero;
-
-        Debug.Log("Rotation recentrée !");
     }
 
     void RotateCamera()
@@ -153,18 +143,17 @@ public class ZeroGravityMovement : MonoBehaviour
 
     void UpdateChargeEffect()
     {
-        // Changement de couleur du joueur
+       
         Color newColor = isPositiveCharge ? Color.red : Color.blue;
         GetComponent<Renderer>().material.color = newColor;
 
-        // Activation des bonnes lumières
+        
         if (positiveLight != null && negativeLight != null)
         {
             positiveLight.enabled = isPositiveCharge;
             negativeLight.enabled = !isPositiveCharge;
         }
 
-        // Mise à jour des aimants
         Magnets[] allMagnets = FindObjectsOfType<Magnets>();
         foreach (var magnet in allMagnets)
         {
