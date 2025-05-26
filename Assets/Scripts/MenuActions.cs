@@ -38,7 +38,11 @@ public class MenuActions : MonoBehaviour
 
     public void ExitGameButton()
     {
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     public void BackButton()
@@ -52,7 +56,7 @@ public class MenuActions : MonoBehaviour
         PlayerPrefs.SetInt("DisableOxygenSystem", 1); // Désactiver OxygenSystem
         Time.timeScale = 1;
         SceneManager.LoadScene(Gameplay, LoadSceneMode.Single);
-        Time.timeScale = 1;
+
     }
 
     public void CloseButton()

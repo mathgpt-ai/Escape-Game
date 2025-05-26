@@ -10,12 +10,13 @@ public class OxygenSystem : MonoBehaviour
     private OxygenBar oxygenBar;
     [SerializeField] 
     private HealthBar healthBar;
+    public bool IsOXy = true;
 
     //vitesse de damage
     [SerializeField] 
     private float oxygenDepletionRate = 1f; // Par seconde
     [SerializeField] 
-    private float healthDepletionRate = 2f; // Par seconde
+    private float healthDepletionRate = 0.5f; // Par seconde
 
     //scene de fin
     [SerializeField]
